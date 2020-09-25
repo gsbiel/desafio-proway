@@ -1,13 +1,13 @@
 import {
     IsString, 
     IsNotEmpty,
-    IsDateString, 
-    IsDate, 
-    IsPositive, 
-    IsInt} from 'class-validator';
+    } from 'class-validator';
 
 
 export class CreateSeasonDto {
 
+    @IsString()
+    @IsNotEmpty()
+    name: string
 
 }

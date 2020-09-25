@@ -1,4 +1,5 @@
-import { Get, Controller, Post } from "@nestjs/common";
+import { Get, Controller, Post, Body, Query } from "@nestjs/common";
+import { CreateSeasonDto } from "./seasons.dto";
 
 
 @Controller('seasons')
@@ -10,9 +11,8 @@ export class SeasonsController {
     }
 
     @Post()
-    createSeason(): string{
-        return 'Creating a season...'
+    createSeason(@Body() createSeasonDto: CreateSeasonDto): string{
+        return `creating season ${createSeasonDto.name}...`
     }
-
 
 }
