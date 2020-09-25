@@ -7,10 +7,12 @@ import { SeasonsModule } from './seasons/seasons.module';
 import { User } from './entities/user.entity';
 import { Season } from './entities/season.entity';
 import { Game } from './entities/game.entity';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     SeasonsModule,
+    UsersModule,
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: '../database.sql',
