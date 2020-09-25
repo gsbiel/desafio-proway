@@ -1,10 +1,12 @@
+import { Entity, Column } from "typeorm"
+import { Content } from "./common.content"
 
-// FALTA INSERIR O TYPEORM
-export class Game {
+@Entity()
+export class Game extends Content {
 
-    id: Number
-
+    @Column()
     score: Number
 
+    @Column()
     date: string
 }

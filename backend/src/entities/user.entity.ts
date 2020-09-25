@@ -1,16 +1,17 @@
 
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
+import { Content } from './common.content';
 
-// FALTA INSERIR O TYPEORM
+@Entity()
+export class User extends Content {
 
-export class User {
-
-    id: string
-
+    @PrimaryColumn("varchar", { length: 20 })
     login: string
 
-    password:string
-
-    name: string
-
+    @PrimaryColumn("varchar", { length: 100 })
     email: string
+
+    @Column("varchar", { length: 50 })
+    password:string
+    
 }
