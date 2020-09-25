@@ -4,6 +4,9 @@ import {Connection} from 'typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SeasonsModule } from './seasons/seasons.module';
+import { User } from './entities/user.entity';
+import { Season } from './entities/season.entity';
+import { Game } from './entities/game.entity';
 
 @Module({
   imports: [
@@ -11,7 +14,7 @@ import { SeasonsModule } from './seasons/seasons.module';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: '../database.sql',
-      entities: [],
+      entities: [User, Season, Game],
       synchronize: true
     })
   ],
