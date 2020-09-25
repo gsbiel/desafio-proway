@@ -1,8 +1,10 @@
 
 // FALTA INSERIR O TYPEORM
 
-import { Entity, Column } from "typeorm"
+import { Entity, Column, ManyToOne, OneToMany } from "typeorm"
 import { Content } from "./common.content"
+import { User } from "./user.entity"
+import { Game } from "./game.entity"
 
 @Entity()
 export class Season extends Content {
@@ -24,4 +26,10 @@ export class Season extends Content {
 
     @Column()
     max_score_count:Number
+
+    @ManyToOne(type => User, user => user.seasons)
+    user: User
+
+    @OneToMany(type => Game, game => game.season)
+    games: Game[]
 }

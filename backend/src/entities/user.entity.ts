@@ -1,6 +1,8 @@
 
-import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, OneToMany } from 'typeorm';
 import { Content } from './common.content';
+import { Season } from './season.entity';
+
 
 @Entity()
 export class User extends Content {
@@ -13,5 +15,8 @@ export class User extends Content {
 
     @Column("varchar", { length: 50 })
     password:string
+
+    @OneToMany(type => Season, season => season.user)
+    seasons: Season[]
     
 }

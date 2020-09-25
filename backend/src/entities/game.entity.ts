@@ -1,5 +1,6 @@
-import { Entity, Column } from "typeorm"
+import { Entity, Column, ManyToOne } from "typeorm"
 import { Content } from "./common.content"
+import { Season } from "./season.entity"
 
 @Entity()
 export class Game extends Content {
@@ -9,4 +10,7 @@ export class Game extends Content {
 
     @Column()
     date: string
+
+    @ManyToOne(type => Season, season => season.games)
+    season: Season
 }
