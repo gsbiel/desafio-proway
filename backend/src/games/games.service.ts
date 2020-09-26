@@ -1,5 +1,5 @@
 import { Injectable, HttpService, HttpException, HttpStatus } from "@nestjs/common";
-import { CreateGameDto, ListGamesDto, FindGameDto, UpdateGameDto } from "./games.dto";
+import { CreateGameDto, ListGamesDto, FindGameDto, UpdateGameDto, DeleteGamesDto } from "./games.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/entities/user.entity";
 import { Repository } from "typeorm";
@@ -104,8 +104,24 @@ export class GamesService {
         return game[0]
     }
 
-    deleteAllGames(): string{
-        return 'deleting all games...'
+    async deleteAllGames(deleteGamesDto: DeleteGamesDto){
+
+        const season = await this.seasonRepository.find({
+            where: {id: deleteGamesDto.seasonId},
+            relations: ["games"]
+        })
+
+        if(!season[0]){
+            throw new HttpException({
+                status: HttpStatus.NOT_ACCEPTABLE,
+                error: "There is nothing to be deleted."
+            },HttpStatus.NOT_ACCEPTABLE)
+        }
+
+        season[0].games.forEach(async game => {
+            await this.gameRepository.remove(game)
+        })
+        
     }
 
     deleteGameById(id:string):string{
