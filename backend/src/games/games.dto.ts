@@ -70,5 +70,14 @@ export class DeleteGamesDto {
     @IsString()
     @IsUUID()
     seasonId: string
+
+}
+
+export class DeleteGameByIdDto {
+
+    @IsNotEmpty()
+    @IsString()
+    @IsUUID()
+    gameId: string
     
 }
