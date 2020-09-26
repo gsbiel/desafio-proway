@@ -1,5 +1,7 @@
-import { Controller, Get, Param, Delete, Post, Put, Body } from "@nestjs/common";
+import { Controller, Get, Param, Delete, Post, Put, Body, Query } from "@nestjs/common";
 import { GamesService } from "./games.service";
+import { CreateGameDto, ListGamesDto } from "./games.dto";
+import { Game } from "src/entities/game.entity";
 
 @Controller('games')
 export class GamesController {
@@ -7,13 +9,13 @@ export class GamesController {
     constructor( private readonly gamesService: GamesService){}
 
     @Post()
-    createGame():string{
-        return this.gamesService.createGame()
+    async createGame(@Body() createGameDto: CreateGameDto): Promise<Game>{
+        return await this.gamesService.createGame(createGameDto)
     }
 
     @Get()
-    listGames():string{
-        return this.gamesService.findAllGames()
+    async listGames(@Query() listGamesDto: ListGamesDto): Promise<Game[]>{
+        return await this.gamesService.findAllGames(listGamesDto)
     }
 
     @Get(':id')
