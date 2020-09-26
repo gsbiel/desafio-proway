@@ -1,11 +1,24 @@
-import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { User } from "src/entities/user.entity";
+import { Repository } from "typeorm";
+import { Season } from "src/entities/season.entity";
+import { Game } from "src/entities/game.entity";
 
 
 @Injectable()
 export class GamesService {
 
-    createGame(): string {
-        return "creating game.."
+    constructor(
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
+
+        @InjectRepository(Season)
+        private seasonRepository: Repository<Season>,
+
+        @InjectRepository(Game)
+        private gameRepository: Repository<Game>
+
+    ){}
     }
 
     findAllGames():string {
