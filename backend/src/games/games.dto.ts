@@ -29,3 +29,12 @@ export class CreateGameDto {
     @IsUUID()
     userId: string
 }
+
+export class ListGamesDto {
+
+    @IsNotEmpty()
+    @IsString()
+    @IsUUID()
+    seasonId:string
+
+}
