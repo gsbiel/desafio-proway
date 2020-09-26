@@ -9,7 +9,7 @@ export class CreateSeasonDto {
     @IsString()
     @IsNotEmpty()
     name: string
-
+    
     @IsString()
     @IsNotEmpty()
     forUserId: string
