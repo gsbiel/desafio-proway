@@ -46,3 +46,20 @@ export class FindGameDto {
     gameId:string
 
 }
+
+export class UpdateGameDto {
+
+    @IsOptional()
+    @IsString()
+    name: string
+
+    @IsOptional()
+    @IsInt()
+    score: number
+
+    @IsNotEmpty()
+    @IsString()
+    @IsUUID()
+    gameId: string
+
+}
