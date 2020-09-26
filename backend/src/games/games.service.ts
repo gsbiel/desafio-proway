@@ -1,5 +1,5 @@
 import { Injectable, HttpService, HttpException, HttpStatus } from "@nestjs/common";
-import { CreateGameDto, ListGamesDto, FindGameDto } from "./games.dto";
+import { CreateGameDto, ListGamesDto, FindGameDto, UpdateGameDto } from "./games.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/entities/user.entity";
 import { Repository } from "typeorm";
@@ -72,8 +72,36 @@ export class GamesService {
         return game[0]
     }
 
-    updateGame(id: string): string{
-        return `update game by id ${id}`
+    async updateGame(updateGameDto: UpdateGameDto): Promise<Game>{
+
+        if(!updateGameDto.name && !updateGameDto.score){
+            throw new HttpException({
+                status: HttpStatus.BAD_REQUEST,
+                error:"Invalid data"
+            }, HttpStatus.BAD_REQUEST)
+        }
+
+        const game = await this.gameRepository.find({
+            where: {id: updateGameDto.gameId}
+        })
+
+        if(!game[0]){
+            throw new HttpException({
+                status: HttpStatus.NOT_FOUND,
+                error: "There is no resource to be updated"
+            }, HttpStatus.NOT_FOUND)
+        }
+
+        if(updateGameDto.name){
+            game[0].name = updateGameDto.name
+        }
+        if(updateGameDto.score){
+            game[0].score = updateGameDto.score
+        }
+
+        await this.gameRepository.save(game[0])
+
+        return game[0]
     }
 
     deleteAllGames(): string{
