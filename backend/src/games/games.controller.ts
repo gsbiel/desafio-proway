@@ -1,36 +1,38 @@
 import { Controller, Get, Param, Delete, Post, Put, Body } from "@nestjs/common";
-
+import { GamesService } from "./games.service";
 
 @Controller('games')
 export class GamesController {
 
+    constructor( private readonly gamesService: GamesService){}
+
     @Post()
     createGame():string{
-        return "create game..."
+        return this.gamesService.createGame()
     }
 
     @Get()
     listGames():string{
-        return 'list all games'
+        return this.gamesService.findAllGames()
     }
 
     @Get(':id')
     listGameById(@Param('id') id): string{
-        return `list game by id ${id}`
+        return this.gamesService.findGameById(id)
     }
 
     @Put()
     updateGame(@Body('id') id):string{
-        return `update game by id ${id}`
+        return this.gamesService.updateGame(id)
     }
 
     @Delete()
     deleteGames():string{
-        return 'delete all games'
+        return this.gamesService.deleteAllGames()
     }
 
     @Delete(':id')
     deleteGameById(@Param('id') id):string {
-        return `delete game by id ${id}`
+        return this.gamesService.deleteGameById(id)
     }
 }
