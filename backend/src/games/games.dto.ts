@@ -37,3 +37,12 @@ export class ListGamesDto {
     seasonId:string
 
 }
+
+export class FindGameDto {
+
+    @IsNotEmpty()
+    @IsString()
+    @IsUUID()
+    gameId:string
+
+}

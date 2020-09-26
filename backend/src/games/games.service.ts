@@ -1,11 +1,10 @@
 import { Injectable, HttpService, HttpException, HttpStatus } from "@nestjs/common";
-import { CreateGameDto, ListGamesDto } from "./games.dto";
+import { CreateGameDto, ListGamesDto, FindGameDto } from "./games.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/entities/user.entity";
 import { Repository } from "typeorm";
 import { Season } from "src/entities/season.entity";
 import { Game } from "src/entities/game.entity";
-
 
 
 @Injectable()
@@ -57,8 +56,20 @@ export class GamesService {
         return season[0] ? season[0].games : []
     }
 
-    findGameById(id: string): string { 
-        return `returning games by id ${id}`
+    async findGameById(findGameDto: FindGameDto): Promise<Game> { 
+
+        const game = await this.gameRepository.find({
+            where: {id: findGameDto.gameId}
+        })
+
+        if(!game[0]){
+            throw new HttpException({
+                status: HttpStatus.NOT_FOUND,
+                error: "Resource not found"
+            }, HttpStatus.NOT_FOUND)
+        }
+
+        return game[0]
     }
 
     updateGame(id: string): string{

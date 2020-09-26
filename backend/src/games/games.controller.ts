@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Delete, Post, Put, Body, Query } from "@nestjs/common";
 import { GamesService } from "./games.service";
-import { CreateGameDto, ListGamesDto } from "./games.dto";
+import { CreateGameDto, ListGamesDto, FindGameDto } from "./games.dto";
 import { Game } from "src/entities/game.entity";
 
 @Controller('games')
@@ -18,9 +18,9 @@ export class GamesController {
         return await this.gamesService.findAllGames(listGamesDto)
     }
 
-    @Get(':id')
-    listGameById(@Param('id') id): string{
-        return this.gamesService.findGameById(id)
+    @Get(':gameId')
+    async listGameById(@Param() findGameDto: FindGameDto): Promise<Game>{
+        return await this.gamesService.findGameById(findGameDto)
     }
 
     @Put()
