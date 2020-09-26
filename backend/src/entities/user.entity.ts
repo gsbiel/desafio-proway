@@ -18,9 +18,7 @@ export class User extends Content {
 
     @OneToMany(type => Season, season => season.user, 
         { 
-            cascade: true,
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
+            cascade: true
         })
     seasons: Season[]
     

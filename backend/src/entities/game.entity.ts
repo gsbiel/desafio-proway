@@ -11,6 +11,9 @@ export class Game extends Content {
     @Column("date")
     date: Date
 
-    @ManyToOne(type => Season, season => season.games)
+    @ManyToOne(type => Season, season => season.games,
+        { 
+            onDelete: 'CASCADE'
+        })
     season: Season
 }

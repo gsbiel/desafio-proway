@@ -27,14 +27,15 @@ export class Season extends Content {
     @Column("int",{ default:0 })
     max_score_count:Number
 
-    @ManyToOne(type => User, user => user.seasons)
+    @ManyToOne(type => User, user => user.seasons,
+        { 
+            onDelete: 'CASCADE'
+        })
     user: User
 
     @OneToMany(type => Game, game => game.season, 
         { 
-            cascade: true,
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
+            cascade: true
         })
     games: Game[]
 }
