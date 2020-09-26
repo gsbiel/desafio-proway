@@ -63,3 +63,12 @@ export class UpdateGameDto {
     gameId: string
 
 }
+
+export class DeleteGamesDto {
+
+    @IsNotEmpty()
+    @IsString()
+    @IsUUID()
+    seasonId: string
+    
+}
