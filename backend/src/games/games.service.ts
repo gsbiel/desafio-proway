@@ -1,5 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
-import { CreateGameDto, ListGamesDto, FindGameDto, UpdateGameDto, DeleteGamesDto, DeleteGameByIdDto } from "./games.dto";
+import { CreateGameDto, ListGamesDto, FindGameDto, UpdateGameDto, DeleteGameDto } from "./games.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/entities/user.entity";
 import { Repository } from "typeorm";
@@ -121,7 +121,7 @@ export class GamesService {
         return game
     }
 
-    async deleteAllGames(deleteGamesDto: DeleteGamesDto){
+    async deleteAllGames(deleteGamesDto: DeleteGameDto){
 
         const season = await this.findSeasonForUser(deleteGamesDto.userId, deleteGamesDto.seasonId, this.userRepository)
 
@@ -145,7 +145,7 @@ export class GamesService {
 
     }
 
-    async deleteGameById(deleteGameByIdDto: DeleteGameByIdDto){
+    async deleteGameById(deleteGameByIdDto: DeleteGameDto){
 
         const season = await this.findSeasonForUser(deleteGameByIdDto.userId, deleteGameByIdDto.seasonId, this.userRepository)
 
@@ -162,10 +162,16 @@ export class GamesService {
                 status: HttpStatus.NOT_FOUND
             }, HttpStatus.NOT_FOUND)
         }
-        
+
         return await this.gameRepository.remove(game)
     }
 
+
+/* 
+-----------------------------------------------------------------------------------------------------------------
+    HELPER FUNCTIONS
+-----------------------------------------------------------------------------------------------------------------
+*/
     async findSeasonForUser(userId: string, seasonId: string, userRepository: Repository<User>): Promise<Season>{
 
         const user = await this.findUserJoinedWithSeasons(userId, userRepository)

@@ -66,6 +66,11 @@ export class UpdateGameDto extends UserSeasonGameBaseDto {
 
 }
 
-export class DeleteGamesDto extends UserSeasonBaseDto {}
+export class DeleteGameDto extends UserSeasonGameBaseDto{
 
-export class DeleteGameByIdDto extends UserSeasonGameBaseDto { }
+    @IsOptional()
+    @IsString()
+    @IsUUID()
+    gameId:string
+
+}
