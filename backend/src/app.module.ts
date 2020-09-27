@@ -10,6 +10,7 @@ import { Game } from './entities/game.entity';
 import { UsersModule } from './users/users.module';
 import { GamesModule } from './games/games.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule} from '@nestjs/config';
 
 @Module({
   imports: [
@@ -22,6 +23,9 @@ import { AuthModule } from './auth/auth.module';
       database: '../database.sql',
       entities: [User, Season, Game],
       synchronize: true
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true
     })
   ],
   controllers: [AppController],
