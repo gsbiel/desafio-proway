@@ -1,8 +1,7 @@
 import { Get, Controller, Post, Body, Query, HttpException, HttpStatus, Delete } from "@nestjs/common";
-import { CreateSeasonDto } from "./seasons.dto";
+import { CreateSeasonDto, FindAllSeasonsDto, DeleteSeasonsDto } from "./seasons.dto";
 import { SeasonsService } from "./seasons.service";
 import { Season } from "src/entities/season.entity";
-
 
 @Controller('seasons')
 export class SeasonsController {
@@ -10,8 +9,8 @@ export class SeasonsController {
     constructor(private readonly seasonsService: SeasonsService) {}
 
     @Get()
-    async findAllSeasonsForUser(@Query('userId') id: string ): Promise<Season[]> {
-        return await this.seasonsService.findAllSeasonsForUser(id)
+    async findAllSeasonsForUser(@Query() findAllSeasonsDto: FindAllSeasonsDto ): Promise<Season[]> {
+        return await this.seasonsService.findAllSeasonsForUser(findAllSeasonsDto.userId)
     }
 
     @Post()
@@ -20,8 +19,12 @@ export class SeasonsController {
     }
 
     @Delete()
-    async deleteSeasons(@Query('userId') userId:string, @Query('seasonId') seasonId:string){
-        return await this.seasonsService.deleteSeasonForUserId(userId,seasonId)
+    async deleteSeasons(@Query() deleteSeasonsDto: DeleteSeasonsDto){
+        if(deleteSeasonsDto.seasonId){
+            return await this.seasonsService.deleteSeasonForUserId(deleteSeasonsDto.userId,deleteSeasonsDto.seasonId)
+        }
+        else{
+            return await this.seasonsService.deleteAllSeasonsForUserId(deleteSeasonsDto.userId)
+        } 
     }
-
 }
