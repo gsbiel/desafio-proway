@@ -28,7 +28,7 @@ export class UsersService {
         return user.length ? user[0] : null
     }
 
-    async createUser(createUserDto: CreateUserDto): Promise<User> {
+    async createUser(createUserDto: CreateUserDto): Promise<any> {
 
         try{
             await this.validateNewUser(createUserDto, this.usersRepository)
@@ -39,13 +39,20 @@ export class UsersService {
             }, HttpStatus.CONFLICT);
         }
 
+        const brcrypt = require('bcrypt')
+        // Criptografa a senha passada pelo usuário
+        const hashedPassword = await brcrypt.hash(createUserDto.password, 10)
+
         const user = new User()
         user.name = createUserDto.name
         user.email = createUserDto.email
         user.login = createUserDto.login
-        user.password = createUserDto.password
+        user.password = hashedPassword
+
         await this.usersRepository.save(user)
-        return user
+        
+        const {password, ...result} = user
+        return result
     }
 
     async deleteUserById(userDeleteDto: UserDeleteDto){
