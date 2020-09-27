@@ -15,8 +15,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    console.log("entrei no validate")
-    console.log(payload)
     return { userId: payload.sub, username: payload.username };
   }
 }
