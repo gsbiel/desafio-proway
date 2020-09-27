@@ -7,7 +7,37 @@ import {
     IsUUID,
     } from 'class-validator';
 
-export class CreateGameDto {
+/* 
+    Classe usada para evitar repetição de código nas que estão abaixo
+*/
+export class UserSeasonBaseDto {
+
+    @IsNotEmpty()
+    @IsString()
+    @IsUUID()
+    userId: string
+
+    @IsNotEmpty()
+    @IsString()
+    @IsUUID()
+    seasonId:string
+
+}
+
+/* 
+    Classe usada para evitar repetição de código nas que estão abaixo
+*/
+export class UserSeasonGameBaseDto extends UserSeasonBaseDto {
+
+    @IsNotEmpty()
+    @IsString()
+    @IsUUID()
+    gameId:string
+
+}
+
+
+export class CreateGameDto extends UserSeasonBaseDto {
 
     @IsNotEmpty()
     @IsString()
@@ -18,36 +48,13 @@ export class CreateGameDto {
     @IsInt()
     score: number
 
-    @IsNotEmpty()
-    @IsString()
-    @IsUUID()
-    seasonId: string
-
-    @IsNotEmpty()
-    @IsString()
-    @IsUUID()
-    userId: string
 }
 
-export class ListGamesDto {
+export class ListGamesDto extends UserSeasonBaseDto {}
 
-    @IsNotEmpty()
-    @IsString()
-    @IsUUID()
-    seasonId:string
+export class FindGameDto extends UserSeasonGameBaseDto { }
 
-}
-
-export class FindGameDto {
-
-    @IsNotEmpty()
-    @IsString()
-    @IsUUID()
-    gameId:string
-
-}
-
-export class UpdateGameDto {
+export class UpdateGameDto extends UserSeasonGameBaseDto {
 
     @IsOptional()
     @IsString()
@@ -57,27 +64,8 @@ export class UpdateGameDto {
     @IsInt()
     score: number
 
-    @IsNotEmpty()
-    @IsString()
-    @IsUUID()
-    gameId: string
-
 }
 
-export class DeleteGamesDto {
+export class DeleteGamesDto extends UserSeasonBaseDto {}
 
-    @IsNotEmpty()
-    @IsString()
-    @IsUUID()
-    seasonId: string
-
-}
-
-export class DeleteGameByIdDto {
-
-    @IsNotEmpty()
-    @IsString()
-    @IsUUID()
-    gameId: string
-    
-}
+export class DeleteGameByIdDto extends UserSeasonGameBaseDto { }
