@@ -60,3 +60,4 @@
 
 # Sensitive Data
 /backend/.env
+/backend/constants.ts

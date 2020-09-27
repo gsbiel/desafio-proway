@@ -14,6 +14,9 @@ import { ConfigModule} from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true
+    }),
     SeasonsModule,
     UsersModule,
     GamesModule,
@@ -23,9 +26,6 @@ import { ConfigModule} from '@nestjs/config';
       database: '../database.sql',
       entities: [User, Season, Game],
       synchronize: true
-    }),
-    ConfigModule.forRoot({
-      isGlobal: true
     })
   ],
   controllers: [AppController],
