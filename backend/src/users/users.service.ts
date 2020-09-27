@@ -1,5 +1,5 @@
 import { Injectable, HttpException, HttpStatus} from "@nestjs/common"
-import { CreateUserDto } from "./users.dto"
+import { CreateUserDto, UserFindByIdDto, UserDeleteDto } from "./users.dto"
 import { InjectRepository } from "@nestjs/typeorm"
 import { User } from "src/entities/user.entity"
 import { Repository} from "typeorm"
@@ -12,26 +12,59 @@ export class UsersService {
         private usersRepository: Repository<User>,
     ){}
 
-    async findUserById(id: string): Promise<User[]> {
-        let user = null
-        if(id){
-            user = await this.usersRepository.find({ where: { id: id} });
+    async findUserById(userFindByIdDto: UserFindByIdDto): Promise<User[]> {
+        if(userFindByIdDto.userId){
+            return await this.usersRepository.find({ where: { id: userFindByIdDto.userId} });
         }
         else{
-            user = await this.usersRepository.find();
+            return await this.usersRepository.find();
         }
-        return user
     }
 
     async createUser(createUserDto: CreateUserDto): Promise<User> {
 
-        // Checa se o usuário já existe
+        try{
+            await this.validateNewUser(createUserDto, this.usersRepository)
+        }catch(error){
+            throw new HttpException({
+                status: HttpStatus.CONFLICT,
+                error: error.message
+            }, HttpStatus.CONFLICT);
+        }
+
+        const user = new User()
+        user.name = createUserDto.name
+        user.email = createUserDto.email
+        user.login = createUserDto.login
+        user.password = createUserDto.password
+        await this.usersRepository.save(user)
+        return user
+    }
+
+    async deleteUserById(userDeleteDto: UserDeleteDto){
+        
         const userFound = await this.usersRepository.find({
+            where: {id: userDeleteDto.userId}
+        })
+
+        if(userFound.length > 0){
+            return await this.usersRepository.delete(userFound[0])
+        }
+        
+        return {}
+    }
+
+
+    async validateNewUser(createUserDto: CreateUserDto, repository: Repository<User>){
+
+        // Checa se o usuário já existe
+        const userFound = await repository.find({
             where: [
                 { login : createUserDto.login },
                 { email : createUserDto.email }
             ]
         })
+
         if(userFound.length > 0){
 
             let errorMessage = ""
@@ -44,31 +77,7 @@ export class UsersService {
                 errorMessage += " The e-mail is already in use."
             }
 
-            throw new HttpException({
-                status: HttpStatus.CONFLICT,
-                error: errorMessage
-            }, HttpStatus.CONFLICT);  
+            throw new Error(errorMessage)
         }
-
-        const user = new User()
-        user.name = createUserDto.name
-        user.email = createUserDto.email
-        user.login = createUserDto.login
-        user.password = createUserDto.password
-        await this.usersRepository.save(user)
-        return user
-    }
-
-    async deleteUserById(id: string){
-        
-        const userFound = await this.usersRepository.find({
-            where: {id:id}
-        })
-
-        if(userFound.length > 0){
-            return await this.usersRepository.delete(userFound[0])
-        }
-        
-        return {}
     }
 }

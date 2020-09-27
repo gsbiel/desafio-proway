@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Query, Delete } from "@nestjs/common";
 import { UsersService } from "./users.service";
-import { CreateUserDto } from "./users.dto";
+import { CreateUserDto, UserFindByIdDto, UserDeleteDto } from "./users.dto";
 import { User } from "src/entities/user.entity";
 
 
@@ -10,8 +10,8 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Get()
-    async findById(@Query('id') id: string): Promise<User[]>{
-        return await this.usersService.findUserById(id)
+    async findById(@Query() findByIdDto: UserFindByIdDto): Promise<User[]>{
+        return await this.usersService.findUserById(findByIdDto)
     }
 
     @Post()
@@ -20,8 +20,8 @@ export class UsersController {
     }
 
     @Delete()
-    async deleteById(@Query('id') id: string){
-        return await this.usersService.deleteUserById(id)
+    async deleteById(@Query() userDeleteDto: UserDeleteDto){
+        return await this.usersService.deleteUserById(userDeleteDto)
     }
 
 }

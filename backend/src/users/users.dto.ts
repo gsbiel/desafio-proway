@@ -2,6 +2,8 @@ import {
     IsString, 
     IsNotEmpty,
     IsEmail,
+    IsUUID,
+    IsOptional,
     } from 'class-validator';
 
 export class CreateUserDto{
@@ -23,3 +25,23 @@ export class CreateUserDto{
     @IsString()
     password: string
 }
+
+export class UserBaseDto {
+
+    @IsNotEmpty()
+    @IsString()
+    @IsUUID()
+    userId: string
+
+}
+
+export class UserFindByIdDto extends UserBaseDto {
+
+    @IsOptional()
+    @IsString()
+    @IsUUID()
+    userId: string
+
+}
+
+export class UserDeleteDto extends UserBaseDto {}
