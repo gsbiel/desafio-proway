@@ -44,4 +44,11 @@ export class UserFindByIdDto extends UserBaseDto {
 
 }
 
-export class UserDeleteDto extends UserBaseDto {}
+export class UserDeleteDto extends UserBaseDto {
+
+    @IsOptional()
+    @IsString()
+    @IsUUID()
+    userId: string
+    
+}
