@@ -21,7 +21,11 @@ export class UsersController {
 
     @Delete()
     async deleteById(@Query() userDeleteDto: UserDeleteDto){
-        return await this.usersService.deleteUserById(userDeleteDto)
+        if(userDeleteDto.userId){
+            return await this.usersService.deleteUserById(userDeleteDto)
+        }else{
+            return await this.usersService.deleteAllUsers()
+        }    
     }
 
 }
