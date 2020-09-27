@@ -68,6 +68,14 @@ export class UsersService {
         return {}
     }
 
+    async deleteAllUsers(){
+        const users = await this.usersRepository.find()
+        
+        return await users.forEach(async userItem => {
+            return await this.usersRepository.remove(userItem)
+        })
+    }
+
 
     async validateNewUser(createUserDto: CreateUserDto, repository: Repository<User>){
 
