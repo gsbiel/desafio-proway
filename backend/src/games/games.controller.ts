@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Delete, Post, Put, Body, Query } from "@nestjs/common";
 import { GamesService } from "./games.service";
-import { CreateGameDto, ListGamesDto, FindGameDto, UpdateGameDto, DeleteGamesDto } from "./games.dto";
+import { CreateGameDto, ListGamesDto, FindGameDto, UpdateGameDto, DeleteGamesDto, DeleteGameByIdDto } from "./games.dto";
 import { Game } from "src/entities/game.entity";
 
 @Controller('games')
@@ -18,7 +18,7 @@ export class GamesController {
         return await this.gamesService.findAllGames(listGamesDto)
     }
 
-    @Get(':gameId')
+    @Get(':userId/:seasonId/:gameId')
     async listGameById(@Param() findGameDto: FindGameDto): Promise<Game>{
         return await this.gamesService.findGameById(findGameDto)
     }
@@ -34,7 +34,7 @@ export class GamesController {
     }
 
     @Delete(':id')
-    deleteGameById(@Param('id') id):string {
-        return this.gamesService.deleteGameById(id)
+    async deleteGameById(@Param() deleteGameByIdDto: DeleteGameByIdDto) {
+        return await this.gamesService.deleteGameById(deleteGameByIdDto)
     }
 }
