@@ -9,12 +9,14 @@ import { Season } from './entities/season.entity';
 import { Game } from './entities/game.entity';
 import { UsersModule } from './users/users.module';
 import { GamesModule } from './games/games.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     SeasonsModule,
     UsersModule,
     GamesModule,
+    AuthModule,
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: '../database.sql',

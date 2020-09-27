@@ -21,6 +21,13 @@ export class UsersService {
         }
     }
 
+    async findUserByLogin(username: string): Promise<User>{
+        const user = await this.usersRepository.find({
+            where: {login:username}
+        })
+        return user.length ? user[0] : null
+    }
+
     async createUser(createUserDto: CreateUserDto): Promise<User> {
 
         try{
