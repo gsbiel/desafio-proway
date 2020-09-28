@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import {colorTheme} from '../../constants';
 import Paper from "@material-ui/core/Paper";
 
-import sportsImage from '../../assets/sports_sk8t.jpg'
+import sportsImage from '../../assets/sports_drawing.jpeg'
 
 const leftBoxWidth = 35;
 
@@ -37,7 +37,7 @@ export const FakeOpacityBox = styled.div`
     background-color:#ffff;
     position: absolute;
     z-index: 1;
-    background-color: rgba(255, 255, 255, 1);
+    background-color: rgba(255, 255, 255, 0.88);
 `;
 
 export const StyledPaper = styled(Paper)`
