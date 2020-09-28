@@ -4,7 +4,8 @@ import {
     LoginField,
     PasswordField,
     LoginTitle,
-    LoginButton
+    LoginButton,
+    RegisterButton
 } from './styles';
 
 enum TextFieldErrorState {
@@ -116,6 +117,10 @@ const LoginForm = () => {
             >
                 Login
             </LoginButton>
+
+            <RegisterButton variant="contained" color="secondary">
+                Sign In
+            </RegisterButton>
 
         </LoginFormContainer>
     )
