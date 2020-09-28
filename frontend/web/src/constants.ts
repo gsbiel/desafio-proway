@@ -10,3 +10,7 @@ export const colorTheme = {
 
     textColor: "#ffff"
 }
+
+export const K = {
+    leftBoxWidth : 35
+}

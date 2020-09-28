@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import {colorTheme} from '../../constants';
 import Paper from "@material-ui/core/Paper";
+import {K} from '../../constants';
 
 import sportsImage from '../../assets/sports_drawing.jpeg'
 
-const leftBoxWidth = 35;
+const leftBoxWidth = K.leftBoxWidth;
 
 export const AuthContainer = styled.div`
     width:100%;
@@ -32,12 +33,11 @@ export const RightBackgroundBox = styled.div`
 
 export const FakeOpacityBox = styled.div`
     float: right;
+    position: absolute;
     width: ${100-leftBoxWidth}%;
     height:100%;
-    background-color:#ffff;
-    position: absolute;
-    z-index: 1;
     background-color: rgba(255, 255, 255, 0.88);
+    z-index: 1;
 `;
 
 export const StyledPaper = styled(Paper)`
