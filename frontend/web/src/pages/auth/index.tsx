@@ -7,7 +7,9 @@ import {
     RightBackgroundBox,
     FakeOpacityBox
 } from './styles';
+
 import LoginForm from "./components/loginForm";
+import SignUpForm from './components/signUpForm';
 
 const Auth = () => {
     return(
@@ -22,6 +24,8 @@ const Auth = () => {
                     <FakeOpacityBox/>
 
                     <LoginForm />
+
+                    {/* <SignUpForm /> */}
 
                 </RightBackgroundBox>
 

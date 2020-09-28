@@ -119,7 +119,7 @@ const LoginForm = () => {
             </LoginButton>
 
             <RegisterButton variant="contained" color="secondary">
-                Sign In
+                Sign Up
             </RegisterButton>
 
         </LoginFormContainer>
