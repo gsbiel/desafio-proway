@@ -14,7 +14,11 @@ enum TextFieldErrorState {
     MISSING_DATA= "Missing data"
 }
 
-const LoginForm = () => {
+interface PropsType {
+    openSignUpForm: () => void
+}
+
+const LoginForm = (props: PropsType) => {
 
     const [loginField, setLoginField] = useState("")
     const [passwordField, setPasswordField] = useState("")
@@ -118,7 +122,11 @@ const LoginForm = () => {
                 Login
             </LoginButton>
 
-            <RegisterButton variant="contained" color="secondary">
+            <RegisterButton 
+                variant="contained" 
+                color="secondary"
+                onClick={() => props.openSignUpForm()}
+            >
                 Sign Up
             </RegisterButton>
 

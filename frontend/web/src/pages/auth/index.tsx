@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useState} from "react";
 
 import {
     AuthContainer,
@@ -12,6 +12,17 @@ import LoginForm from "./components/loginForm";
 import SignUpForm from './components/signUpForm';
 
 const Auth = () => {
+
+    const [signUpFormShouldOpen, shouldOpenSignUpForm] = useState(false)
+
+    const openSignUpForm = () => {
+        shouldOpenSignUpForm(true)
+    }
+
+    const closeSignUpForm = () => {
+        shouldOpenSignUpForm(false)
+    }
+
     return(
         <AuthContainer>
 
@@ -23,9 +34,14 @@ const Auth = () => {
 
                     <FakeOpacityBox/>
  
-                    <LoginForm />
+                    <LoginForm openSignUpForm={openSignUpForm}/>
 
-                    <SignUpForm />
+                    {
+                        signUpFormShouldOpen ? 
+                        <SignUpForm closeSignUpForm={closeSignUpForm}/> :
+                        null   
+                    }
+                    
 
                 </RightBackgroundBox>
 

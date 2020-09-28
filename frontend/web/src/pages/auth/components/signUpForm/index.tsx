@@ -14,7 +14,13 @@ import {
     HorizontalBox
 } from './styles';
 
-const SignUpForm = () => {
+
+
+interface PropsType{
+    closeSignUpForm: () => void
+}
+
+const SignUpForm = (props: PropsType) => {
 
     return(
         <SignUpFormContainer>
@@ -24,6 +30,7 @@ const SignUpForm = () => {
                     variant="contained"
                     color="primary"
                     size="large"
+                    onClick={() => props.closeSignUpForm()}
                 >
                     X
                 </CancelButton>
