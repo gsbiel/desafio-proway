@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import {colorTheme} from '../../constants';
 import Paper from "@material-ui/core/Paper";
 
+import sportsImage from '../../assets/sports_sk8t.jpg'
+
 const leftBoxWidth = 35;
 
 export const AuthContainer = styled.div`
@@ -16,6 +18,26 @@ export const LeftBackgroundBox = styled.div`
     width: ${leftBoxWidth}%;
     height:100%;
     background-color:${colorTheme.primaryDark};
+`;
+
+export const RightBackgroundBox = styled.div`
+    float: right;
+    width: ${100-leftBoxWidth}%;
+    height:100%;
+    background-color:#ffff;
+    background-image: url(${sportsImage});
+    background-size: cover;
+    background-repeat: no-repeat;
+`;
+
+export const FakeOpacityBox = styled.div`
+    float: right;
+    width: ${100-leftBoxWidth}%;
+    height:100%;
+    background-color:#ffff;
+    position: absolute;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 1);
 `;
 
 export const StyledPaper = styled(Paper)`
