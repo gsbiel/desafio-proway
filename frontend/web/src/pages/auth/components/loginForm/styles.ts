@@ -36,6 +36,15 @@ export const PasswordField = styled(TextField)`
 `;
 
 export const LoginButton = styled(Button)`
+    text-transform: capitalize !important;
+    font-weight: bolder !important;
     width:50%;
     top:50%;
+`;
+
+export const RegisterButton = styled(Button)`
+    text-transform: capitalize !important;
+    font-weight: bolder !important;
+    width:50%;
+    top:53%;
 `;
