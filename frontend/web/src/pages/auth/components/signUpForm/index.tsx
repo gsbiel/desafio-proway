@@ -1,7 +1,8 @@
 import React from 'react';
 
 import {
-    SignUpFormContainer
+    SignUpFormContainer,
+    FormContainer
 } from './styles';
 
 
@@ -9,7 +10,9 @@ const SignUpForm = () => {
 
     return(
         <SignUpFormContainer>
+            <FormContainer>
 
+            </FormContainer>
         </SignUpFormContainer>
     );
 

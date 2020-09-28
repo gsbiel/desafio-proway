@@ -3,18 +3,16 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import {colorTheme} from '../../../../constants';
 
-import {K} from '../../../../constants';
-
 export const LoginFormContainer = styled.div`
-    position:relative;
-    width:100%;
+    position:absolute;
+    width: 100%;
     height:100%;
     padding:20px;
     box-sizing: border-box;
     display:flex;
     flex-direction: column;
     align-items:center;
-    z-index:10;
+    z-index:3;
 `;
 
 export const LoginTitle = styled.span`

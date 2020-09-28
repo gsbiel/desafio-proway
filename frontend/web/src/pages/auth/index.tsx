@@ -22,10 +22,10 @@ const Auth = () => {
                 <RightBackgroundBox>
 
                     <FakeOpacityBox/>
-
+ 
                     <LoginForm />
 
-                    {/* <SignUpForm /> */}
+                    <SignUpForm />
 
                 </RightBackgroundBox>
 
