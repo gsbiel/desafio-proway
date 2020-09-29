@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -45,7 +44,7 @@ const EnhancedTableToolbar = (props) => {
           </Typography>
         ) : (
           <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-            Nutrition
+              Seasons
           </Typography>
         )}
   
@@ -55,13 +54,7 @@ const EnhancedTableToolbar = (props) => {
               <DeleteIcon />
             </IconButton>
           </Tooltip>
-        ) : (
-          <Tooltip title="Filter list">
-            <IconButton aria-label="filter list">
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
-        )}
+        ) : null}
       </Toolbar>
     );
   };

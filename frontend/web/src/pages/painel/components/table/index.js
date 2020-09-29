@@ -18,22 +18,32 @@ import {
   useStyles
 } from './util';
 
-const customRowsPerPage = 6
+const customRowsPerPage = 8
 
 const rows = [
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Donut', 452, 25.0, 51, 4.9),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Honeycomb', 408, 3.2, 87, 6.5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Jelly Bean', 375, 0.0, 94, 0.0),
-  createData('KitKat', 518, 26.0, 65, 7.0),
-  createData('Lollipop', 392, 0.2, 98, 0.0),
-  createData('Marshmallow', 318, 0, 81, 2.0),
-  createData('Nougat', 360, 19.0, 9, 37.0),
-  createData('Oreo', 437, 18.0, 63, 4.0),
+  createData('Cupcake', 305, 3.7, 67, 4.3,'02/03/2020','03/03/2020'),
+  createData('Donut', 452, 25.0, 51, 4.9,'04/03/2020','07/02/2020'),
+  createData('Eclair', 262, 16.0, 24, 6.0,'06/03/2020','07/02/2020'),
+  createData('Frozen yoghurt', 159, 6.0, 24, 4.0,'08/03/2020','09/02/2020'),
+  createData('Gingerbread', 356, 16.0, 49, 3.9,'10/03/2020','11/03/2020'),
+  createData('Honeycomb', 408, 3.2, 87, 6.5,'02/03/2020',''),
+  createData('Ice cream sandwich', 237, 9.0, 37, 4.3,'02/03/2020',''),
+  createData('Jelly Bean', 375, 0.0, 94, 0.0,'02/03/2020',''),
+  createData('KitKat', 518, 26.0, 65, 7.0,'02/03/2020',''),
+  createData('Lollipop', 392, 0.2, 98, 0.0,'02/03/2020',''),
+  createData('Marshmallow', 318, 0, 81, 2.0,'02/03/2020',''),
+  createData('Nougat', 360, 19.0, 9, 37.0,'02/03/2020',''),
+  createData('Oreo', 437, 18.0, 63, 4.0,'02/03/2020',''),
+];
+
+const headCells = [
+  { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
+  { id: 'highest_score', numeric: true, disablePadding: false, label: 'Highest Score' },
+  { id: 'lowest_score', numeric: true, disablePadding: false, label: 'Lowest Score' },
+  { id: 'high_score_brks', numeric: true, disablePadding: false, label: 'Highest score breaks' },
+  { id: 'low_score_brks', numeric: true, disablePadding: false, label: 'Lowest score breaks' },
+  { id: 'start', numeric: false, disablePadding: false, label: 'Start'},
+  { id: 'end', numeric: false, disablePadding: false, label: 'End' },
 ];
 
 function EnhancedTable() {
@@ -111,6 +121,7 @@ function EnhancedTable() {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
+              headCells={headCells}
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
@@ -138,10 +149,13 @@ function EnhancedTable() {
                       <TableCell component="th" id={labelId} scope="row" padding="none">
                         {row.name}
                       </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
+                      {/* name, highest, lowest, highestBreaks, lowestBreaks, start, end */}
+                      <TableCell align="right">{row.highest}</TableCell>
+                      <TableCell align="right">{row.lowest}</TableCell>
+                      <TableCell align="right">{row.highestBreaks}</TableCell>
+                      <TableCell align="right">{row.lowestBreaks}</TableCell>
+                      <TableCell align="right">{row.start}</TableCell>
+                      <TableCell align="right">{row.end}</TableCell>
                     </TableRow>
                   );
                 })}

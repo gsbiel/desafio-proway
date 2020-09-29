@@ -1,8 +1,8 @@
 
 import { makeStyles } from '@material-ui/core/styles';
 
-export function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
+export function createData(name, highest, lowest, highestBreaks, lowestBreaks, start, end) {
+    return { name, highest, lowest, highestBreaks, lowestBreaks, start, end };
 }
 
 export function descendingComparator(a, b, orderBy) {
