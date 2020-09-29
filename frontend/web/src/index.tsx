@@ -1,17 +1,32 @@
 import 'fontsource-roboto';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {combineReducers, compose, applyMiddleware, createStore} from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import * as serviceWorker from './serviceWorker';
+import {ThemeProvider } from '@material-ui/core/styles';
+
 import './index.css';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
-
-import {ThemeProvider } from '@material-ui/core/styles';
 import {theme} from './my-theme';
+import authReducer from './store/reducers/auth'
+
+const rootReducer = combineReducers({
+  auth: authReducer,
+});
+
+const store = createStore(rootReducer, composeWithDevTools(
+  applyMiddleware(thunk)
+));
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
