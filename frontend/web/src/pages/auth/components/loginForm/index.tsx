@@ -1,4 +1,10 @@
 import React, {useState, useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+
+import {
+    auth
+ } from '../../../../store/actions/auth'
+
 import {
     LoginFormContainer,
     LoginField,
@@ -19,6 +25,8 @@ interface PropsType {
 }
 
 const LoginForm = (props: PropsType) => {
+
+    const dispatch = useDispatch()
 
     const [loginField, setLoginField] = useState("")
     const [passwordField, setPasswordField] = useState("")
@@ -85,6 +93,11 @@ const LoginForm = (props: PropsType) => {
         }
     }
 
+    const loginHandler = () => {
+        console.log("loginHandler function called")
+        dispatch(auth("gabriel.sgaspar@yahoo.com.br","blablabla",false))
+    }
+
     return (
         <LoginFormContainer>
 
@@ -118,6 +131,7 @@ const LoginForm = (props: PropsType) => {
                 variant="contained" 
                 color="primary"
                 disabled = {!loginBtnEnabled}
+                onClick={() => loginHandler()}
             >
                 Login
             </LoginButton>
