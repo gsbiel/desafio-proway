@@ -32,8 +32,57 @@ const useToolbarStyles = makeStyles((theme) => ({
   }));
 
 const EnhancedTableToolbar = (props) => {
+
+    const {
+      handleOpenFormDialogue,
+      handleCloseFormDialogue,
+      tablePath
+    } = props
+
     const classes = useToolbarStyles()
     const { numSelected } = props;
+
+    const onEditHandler = () => {
+      handleOpenFormDialogue("edit")
+    }
+
+    const onDeleteHandler = () => {
+      console.log("Delete!")
+    }
+
+    const onAddHandler = () => {
+      handleOpenFormDialogue("add")
+    }
+
+    let tooltips = <Tooltip title="Add" aria-label="add" onClick={() => onAddHandler()}>
+                    <Fab color="secondary" className={classes.fab}>
+                      <AddIcon style={{ fontSize: 30}} />
+                    </Fab>
+                  </Tooltip>;
+
+    if(numSelected > 1){
+      tooltips =  <Tooltip key="AB" onClick={() => onDeleteHandler()} title="Delete">
+                    <IconButton aria-label="delete">
+                      <DeleteIcon />
+               
+                    </IconButton>
+                  </Tooltip>;
+    }
+    if(numSelected == 1){
+      tooltips = [
+                  <Tooltip key="AB" onClick={() => onDeleteHandler()} title="Delete">
+                    <IconButton aria-label="delete">
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>,
+
+                  <Tooltip key="BA" onClick={() => onEditHandler()} title="Edit" aria-label="add">
+                    <Fab color="secondary" className={classes.fab}>
+                      <EditIcon />
+                    </Fab>
+                  </Tooltip>
+                ]
+    }
   
     return (
       <Toolbar
@@ -47,31 +96,12 @@ const EnhancedTableToolbar = (props) => {
           </Typography>
         ) : (
           <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-              {props.tablePath}
+              {tablePath}
           </Typography>
         )}
   
-        {numSelected > 0 ? (
-          [
-            <Tooltip title="Delete">
-              <IconButton aria-label="delete">
-                <DeleteIcon />
-              </IconButton>
-            </Tooltip>,
+        {tooltips}
 
-            <Tooltip title="Edit" aria-label="add">
-            <Fab color="secondary" className={classes.fab}>
-              <EditIcon />
-            </Fab>
-            </Tooltip>
-          ]
-        ) : 
-          <Tooltip title="Add" aria-label="add">
-            <Fab color="secondary" className={classes.fab}>
-              <AddIcon style={{ fontSize: 30}} />
-            </Fab>
-          </Tooltip>
-        }
       </Toolbar>
     );
   };

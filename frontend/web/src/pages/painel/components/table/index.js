@@ -72,7 +72,13 @@ String.prototype.shuffle = function () {
   return a.join("");
 }
 
-function EnhancedTable() {
+function EnhancedTable(props) {
+
+  const {
+    handleOpen,
+    handleClose
+  } = props
+
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
@@ -105,9 +111,11 @@ function EnhancedTable() {
     await set_delay(50)
     if(!checkBoxClicked){
       setSelected([])
-      setTablePath(`Games of season ${name}`)
-      setHeadCells(headCellsForGames)
-      setRows(rowsForGames)
+      if(!tablePath.includes("Games")){
+        setTablePath(`Games of season ${name}`)
+        setHeadCells(headCellsForGames)
+        setRows(rowsForGames)
+      }
     }
     checkBoxClicked = false
   };
@@ -152,7 +160,12 @@ function EnhancedTable() {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} tablePath={tablePath} />
+        <EnhancedTableToolbar 
+          numSelected={selected.length} 
+          tablePath={tablePath}
+          handleOpenFormDialogue={handleOpen}
+          handleCloseFormDialogue={handleClose} 
+        />
         <TableContainer>
           <Table
             className={classes.table}
