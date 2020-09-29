@@ -3,11 +3,15 @@ import {
     PainelContainer
 } from './styles';
 
+import Table from './components/table';
+
 const Painel = () => {
 
     return(
         <PainelContainer>
-            <h1>Painel Aqui</h1>
+            <Table />
         </PainelContainer>
     )
 }
+
+export default Painel
