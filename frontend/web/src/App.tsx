@@ -1,12 +1,25 @@
 import React from 'react';
-import './App.css';
 import Auth from './pages/auth';
+
+import {
+  AppContainer,
+  StyledPaper,
+  LeftBackgroundBox,
+  RightBackgroundBox,
+  FakeOpacityBox
+} from './App_styles.js'
 
 function App() {
   return (
-    <div className="App">
-      <Auth/>
-    </div>
+    <AppContainer>
+      <StyledPaper elevation={3}>
+        <LeftBackgroundBox/>
+        <RightBackgroundBox>
+            <FakeOpacityBox/>
+
+        </RightBackgroundBox>
+      </StyledPaper>
+    </AppContainer>
   );
 }
 
