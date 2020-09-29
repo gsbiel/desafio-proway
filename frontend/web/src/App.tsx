@@ -1,12 +1,12 @@
 import React from 'react';
 import Auth from './pages/auth';
+import Painel from './pages/painel';
 
 import {
   AppContainer,
   StyledPaper,
   LeftBackgroundBox,
   RightBackgroundBox,
-  FakeOpacityBox
 } from './App_styles.js'
 
 function App() {
@@ -15,7 +15,9 @@ function App() {
       <StyledPaper elevation={3}>
         <LeftBackgroundBox/>
         <RightBackgroundBox>
-            <FakeOpacityBox/>
+
+            {/* <Auth /> */}
+            <Painel/>
 
         </RightBackgroundBox>
       </StyledPaper>

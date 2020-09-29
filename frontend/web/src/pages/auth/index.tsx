@@ -2,9 +2,6 @@ import React, {useState} from "react";
 
 import {
     AuthContainer,
-    StyledPaper,
-    LeftBackgroundBox,
-    RightBackgroundBox,
     FakeOpacityBox
 } from './styles';
 
@@ -26,26 +23,15 @@ const Auth = () => {
     return(
         <AuthContainer>
 
-            <StyledPaper elevation={3}>
+            <FakeOpacityBox />
 
-                <LeftBackgroundBox />
+            <LoginForm openSignUpForm={openSignUpForm}/>
 
-                <RightBackgroundBox>
-
-                    <FakeOpacityBox/>
- 
-                    <LoginForm openSignUpForm={openSignUpForm}/>
-
-                    {
-                        signUpFormShouldOpen ? 
-                        <SignUpForm closeSignUpForm={closeSignUpForm}/> :
-                        null   
-                    }
-                    
-
-                </RightBackgroundBox>
-
-            </StyledPaper>
+            {
+                signUpFormShouldOpen ? 
+                <SignUpForm closeSignUpForm={closeSignUpForm}/> :
+                null   
+            }
 
         </AuthContainer>
     );
