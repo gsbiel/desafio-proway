@@ -1,5 +1,4 @@
 import React from 'react';
-import Auth from './pages/auth';
 import Painel from './pages/painel';
 
 import {
