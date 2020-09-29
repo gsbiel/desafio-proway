@@ -11,32 +11,39 @@ import Checkbox from '@material-ui/core/Checkbox';
 import EnhancedTableHead from './EnhancedTableHead'
 import EnhancedTableToolbar from './EnhancedTableToobar'
 import {
-  createData,
-  descendingComparator,
+  createSeasonData,
+  createGameData,
   getComparator,
   stableSort,
   useStyles
 } from './util';
 
 const customRowsPerPage = 8
+const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-const rows = [
-  createData('Cupcake', 305, 3.7, 67, 4.3,'02/03/2020','03/03/2020'),
-  createData('Donut', 452, 25.0, 51, 4.9,'04/03/2020','07/02/2020'),
-  createData('Eclair', 262, 16.0, 24, 6.0,'06/03/2020','07/02/2020'),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0,'08/03/2020','09/02/2020'),
-  createData('Gingerbread', 356, 16.0, 49, 3.9,'10/03/2020','11/03/2020'),
-  createData('Honeycomb', 408, 3.2, 87, 6.5,'02/03/2020',''),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3,'02/03/2020',''),
-  createData('Jelly Bean', 375, 0.0, 94, 0.0,'02/03/2020',''),
-  createData('KitKat', 518, 26.0, 65, 7.0,'02/03/2020',''),
-  createData('Lollipop', 392, 0.2, 98, 0.0,'02/03/2020',''),
-  createData('Marshmallow', 318, 0, 81, 2.0,'02/03/2020',''),
-  createData('Nougat', 360, 19.0, 9, 37.0,'02/03/2020',''),
-  createData('Oreo', 437, 18.0, 63, 4.0,'02/03/2020',''),
+const rowsForSeasons = [
+  createSeasonData('Cupcake', 305, 3.7, 67, 4.3,'02/03/2020','03/03/2020'),
+  createSeasonData('Donut', 452, 25.0, 51, 4.9,'04/03/2020','07/02/2020'),
+  createSeasonData('Eclair', 262, 16.0, 24, 6.0,'06/03/2020','07/02/2020'),
+  createSeasonData('Frozen yoghurt', 159, 6.0, 24, 4.0,'08/03/2020','09/02/2020'),
+  createSeasonData('Gingerbread', 356, 16.0, 49, 3.9,'10/03/2020','11/03/2020'),
+  createSeasonData('Honeycomb', 408, 3.2, 87, 6.5,'02/03/2020',''),
+  createSeasonData('Ice cream sandwich', 237, 9.0, 37, 4.3,'02/03/2020',''),
+  createSeasonData('Jelly Bean', 375, 0.0, 94, 0.0,'02/03/2020',''),
+  createSeasonData('KitKat', 518, 26.0, 65, 7.0,'02/03/2020',''),
+  createSeasonData('Lollipop', 392, 0.2, 98, 0.0,'02/03/2020',''),
+  createSeasonData('Marshmallow', 318, 0, 81, 2.0,'02/03/2020',''),
+  createSeasonData('Nougat', 360, 19.0, 9, 37.0,'02/03/2020',''),
+  createSeasonData('Oreo', 437, 18.0, 63, 4.0,'02/03/2020',''),
 ];
 
-const headCells = [
+const rowsForGames= [
+  createGameData('Jogo dos migos',150,'01/03/2020'),
+  createGameData('Jogo da escola',50,'01/03/2020'),
+  createGameData('ajsdajskdk',30,'01/03/2020')
+]
+
+const headCellsForSeasons = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
   { id: 'highest_score', numeric: true, disablePadding: false, label: 'Highest Score' },
   { id: 'lowest_score', numeric: true, disablePadding: false, label: 'Lowest Score' },
@@ -46,13 +53,38 @@ const headCells = [
   { id: 'end', numeric: false, disablePadding: false, label: 'End' },
 ];
 
+const headCellsForGames = [
+  { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
+  { id: 'score', numeric: true, disablePadding: false, label: 'Highest Score' },
+  { id: 'date', numeric: false, disablePadding: false, label: 'Date' }
+];
+
+String.prototype.shuffle = function () {
+  var a = this.split(""),
+      n = a.length;
+
+  for(var i = n - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i];
+      a[i] = a[j];
+      a[j] = tmp;
+  }
+  return a.join("");
+}
+
 function EnhancedTable() {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('name');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(customRowsPerPage);
+
+  const [headCells, setHeadCells] = React.useState(headCellsForSeasons);
+  const [rows, setRows] = React.useState(rowsForSeasons)
+  const [tablePath, setTablePath] = React.useState("Seasons")
+
+  let checkBoxClicked = false
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -69,25 +101,40 @@ function EnhancedTable() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
+  const handleClick = async (event, name) => {
+    await set_delay(50)
+    if(!checkBoxClicked){
+      setSelected([])
+      setTablePath(`Games of season ${name}`)
+      setHeadCells(headCellsForGames)
+      setRows(rowsForGames)
+    }
+    checkBoxClicked = false
+  };
 
+  const handleCheckboxClick = (event, name) => {
+    checkBoxClicked = true
+    let selectedIndex = selected.indexOf(name);
+    let newSelected = [];
+    let stateCopy = [...selected];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(stateCopy, name);
     } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
+      newSelected = newSelected.concat(stateCopy.slice(1));
+    } else if (selectedIndex === stateCopy.length - 1) {
+      newSelected = newSelected.concat(stateCopy.slice(0, -1));
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        stateCopy.slice(0, selectedIndex),
+        stateCopy.slice(selectedIndex + 1),
       );
     }
-
     setSelected(newSelected);
-  };
+  }
+
+  const set_delay = (ms) => {
+    return new Promise((resolve, reject) => setTimeout(resolve, ms));
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -105,7 +152,7 @@ function EnhancedTable() {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} tablePath={tablePath} />
         <TableContainer>
           <Table
             className={classes.table}
@@ -137,25 +184,27 @@ function EnhancedTable() {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={characters.shuffle()}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
-                          checked={isItemSelected}
+                          onChange={ (event)=>handleCheckboxClick(event, row.name)}
+                          checked={ isItemSelected}
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.name}
-                      </TableCell>
-                      {/* name, highest, lowest, highestBreaks, lowestBreaks, start, end */}
-                      <TableCell align="right">{row.highest}</TableCell>
-                      <TableCell align="right">{row.lowest}</TableCell>
-                      <TableCell align="right">{row.highestBreaks}</TableCell>
-                      <TableCell align="right">{row.lowestBreaks}</TableCell>
-                      <TableCell align="right">{row.start}</TableCell>
-                      <TableCell align="right">{row.end}</TableCell>
+                      {
+                        Object.keys(row).map(key => {
+                          if(key==0){
+                            return  <TableCell key={characters.shuffle()} component="th" id={labelId} scope="row" padding="none">
+                                      {row[key]}
+                                    </TableCell>
+                          }else{
+                            return <TableCell key={characters.shuffle()} align="right">{row[key]}</TableCell>
+                          }
+                        })
+                      }
                     </TableRow>
                   );
                 })}
@@ -175,7 +224,7 @@ function EnhancedTable() {
           page={page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
+        />  
       </Paper>
     </div>
   );
