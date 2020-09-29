@@ -1,8 +1,12 @@
 
 import { makeStyles } from '@material-ui/core/styles';
 
-export function createData(name, highest, lowest, highestBreaks, lowestBreaks, start, end) {
+export function createSeasonData(name, highest, lowest, highestBreaks, lowestBreaks, start, end) {
     return { name, highest, lowest, highestBreaks, lowestBreaks, start, end };
+}
+
+export function createGameData(name, highest, date) {
+    return { name, highest, date };
 }
 
 export function descendingComparator(a, b, orderBy) {
