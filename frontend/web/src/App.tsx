@@ -1,5 +1,6 @@
 import React from 'react';
 import Painel from './pages/painel';
+import Auth from './pages/auth';
 
 import {
   AppContainer,
@@ -15,8 +16,8 @@ function App() {
         <LeftBackgroundBox/>
         <RightBackgroundBox>
 
-            {/* <Auth /> */}
-            <Painel/>
+            <Auth />
+            {/* <Painel/> */}
 
         </RightBackgroundBox>
       </StyledPaper>
