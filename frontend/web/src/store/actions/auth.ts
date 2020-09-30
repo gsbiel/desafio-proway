@@ -4,10 +4,10 @@ import {
     AUTH_FAIL
 } from './actionTypes';
 
-// import axios from 'axios';
+import axios from 'axios';
 
-const AUTH_SIGN_UP_URL = ``;
-const AUTH_SIGN_IN_URL = ``;
+const AUTH_SIGN_UP_URL = `${process.env.REACT_APP_DEV_BACKEND_BASE_URL}/signup`;
+const AUTH_SIGN_IN_URL = `${process.env.REACT_APP_DEV_BACKEND_BASE_URL}/auth/login`;
 
 export const authStart = () => {
     return {
@@ -15,11 +15,14 @@ export const authStart = () => {
     };
 };
 
-export const authSuccess = (token: string, userId: string) => {
+export const authSuccess = (token: string, userId: string, userName: string) => {
     return {
         type: AUTH_SUCCESS,
-        token: token,
-        idToken: userId
+        payload:{
+            token: token,
+            userId: userId,
+            userName: userName
+        }
     };
 };
 
@@ -30,13 +33,13 @@ export const authFail = (error:string) => {
     };
 };
 
-export const auth = (email: string, password: string, isSignup: boolean) => {
+export const auth = (username: string, password: string, isSignup: boolean) => {
 
     const set_delay = (ms: any): Promise<any> => {
         return new Promise( (resolve, reject) => {
             console.log("iniciando contagem do login...")
             setTimeout(resolve, ms)
-            console.log("terminando contagem do login...")
+            
         });
     }
 
@@ -45,23 +48,20 @@ export const auth = (email: string, password: string, isSignup: boolean) => {
         dispatch(authStart());
 
         const authData = {
-            email: email,
-            password: password,
-            returnSecureToken: true
+            username: username,
+            password: password
         };
 
         let AUTH_URL = isSignup ? AUTH_SIGN_UP_URL : AUTH_SIGN_IN_URL;
 
-        // axios.post(AUTH_URL, authData)
-        //     .then(resp => {
-        //         console.log(resp.data.idToken);
-        //         console.log(resp.data.localId);
-        //         dispatch(authSuccess(resp.data.idToken, resp.data.localId));
-        //     })
-        //     .catch(err => {
-        //         dispatch(authFail(err.response.data.error));
-        //     });
+        axios.post(AUTH_URL, authData)
+            .then(resp => {
+                dispatch(authSuccess(resp.data.access_token, resp.data.userId, resp.data.name));
+            })
+            .catch(err => {
+                dispatch(authFail(err.response.data.error));
+            });
 
-        return await set_delay(3000)
+        return
     };
 };

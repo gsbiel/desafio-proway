@@ -94,8 +94,7 @@ const LoginForm = (props: PropsType) => {
     }
 
     const loginHandler = () => {
-        console.log("loginHandler function called")
-        dispatch(auth("gabriel.sgaspar@yahoo.com.br","blablabla",false))
+        dispatch(auth("gsbiel","123456",false))
     }
 
     return (
