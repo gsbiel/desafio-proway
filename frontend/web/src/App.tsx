@@ -1,6 +1,21 @@
 import React from 'react';
+
+import {
+  useSelector
+} from 'react-redux';
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect
+} from "react-router-dom";
+
 import Painel from './pages/painel';
 import Auth from './pages/auth';
+
+import { RootState } from './index';
 
 import {
   AppContainer,
@@ -10,14 +25,32 @@ import {
 } from './App_styles.js'
 
 function App() {
+
+  const isUserLogged = useSelector( (state: RootState) => state.auth.isUserLogged )
+
   return (
     <AppContainer>
       <StyledPaper elevation={3}>
         <LeftBackgroundBox/>
         <RightBackgroundBox>
 
-            <Auth />
-            {/* <Painel/> */}
+          <Switch>
+
+            <Route path="/painel" >
+              <Painel />
+            </Route>
+            
+            <Route path="/login">
+              <Auth />
+            </Route>
+
+            <Route exact path="/" >
+              <Redirect to="/login" /> 
+            </Route>
+
+          </Switch>
+          
+          {isUserLogged ? <Redirect to="/painel"/> : <Redirect to="/login"/>}
 
         </RightBackgroundBox>
       </StyledPaper>

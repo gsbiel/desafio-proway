@@ -7,6 +7,9 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import * as serviceWorker from './serviceWorker';
 import {ThemeProvider } from '@material-ui/core/styles';
+import {
+  BrowserRouter
+} from "react-router-dom";
 
 import './index.css';
 import App from './App';
@@ -17,17 +20,21 @@ const rootReducer = combineReducers({
   auth: authReducer,
 });
 
+export type RootState = ReturnType<typeof rootReducer>
+
 const store = createStore(rootReducer, composeWithDevTools(
   applyMiddleware(thunk)
 ));
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </ThemeProvider>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+          <Provider store={store}>
+            <App />
+          </Provider>
+        </ThemeProvider>    
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -1,4 +1,10 @@
 import React, {useState} from "react";
+import {
+    Route,
+    useLocation,
+    useHistory
+  } from "react-router-dom";
+
 
 import {
     AuthContainer,
@@ -10,15 +16,21 @@ import SignUpForm from './components/signUpForm';
 
 const Auth = () => {
 
+    const location = useLocation()
+    const history = useHistory()
+
     const [signUpFormShouldOpen, shouldOpenSignUpForm] = useState(false)
 
     const openSignUpForm = () => {
-        shouldOpenSignUpForm(true)
+        // shouldOpenSignUpForm(true)
+        history.push(`/login/register`)
     }
 
     const closeSignUpForm = () => {
-        shouldOpenSignUpForm(false)
+        history.goBack()
     }
+
+    // console.log(location.pahname)
 
     return(
         <AuthContainer>
@@ -27,11 +39,9 @@ const Auth = () => {
 
             <LoginForm openSignUpForm={openSignUpForm}/>
 
-            {
-                signUpFormShouldOpen ? 
-                <SignUpForm closeSignUpForm={closeSignUpForm}/> :
-                null   
-            }
+            <Route path={`/login/register`}>
+                <SignUpForm closeSignUpForm={closeSignUpForm}/>
+            </Route>
 
         </AuthContainer>
     );
