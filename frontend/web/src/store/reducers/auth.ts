@@ -8,7 +8,8 @@ import {
     AUTH_FAIL
 } from '../actions/actionTypes'
 
-export interface StateSliceType {
+export interface AuthStateSliceType {
+    isUserLogged: boolean,
     token: string,
     userId: string,
     error: string,
@@ -21,26 +22,29 @@ export interface ActionType {
 }
 
 export interface PayloadType {
+    isUserLogged?: boolean,
     token?: string,
     userId?: string,
     error?: string;
     loading?: boolean
 }
 
-const initialState: StateSliceType = {
+const initialState: AuthStateSliceType = {
+    isUserLogged: false,
     token: '',
     userId: '',
     error: '',
     loading: false
 };
 
-const authStart = (state: StateSliceType, action:ActionType) => {
+const authStart = (state: AuthStateSliceType, action:ActionType) => {
     console.log("authStart function called")
     return updateObject(state,{error: '', loading: true});
 }
 
-const authSuccess = (state: StateSliceType, action:ActionType) => {
+const authSuccess = (state: AuthStateSliceType, action:ActionType) => {
     return updateObject(state, {
+        isUserLogged: true,
         token: action.payload.token,
         userId: action.payload.userId,
         error:'',
@@ -48,17 +52,18 @@ const authSuccess = (state: StateSliceType, action:ActionType) => {
     });
 }
 
-const authFail =(state: StateSliceType, action:ActionType) => {
+const authFail =(state: AuthStateSliceType, action:ActionType) => {
     return updateObject(state, {
+        isUserLogged: false,
         error: action.payload.error,
         loading: false
     });
 }
 
 const reducer = (
-        state: StateSliceType = initialState, 
+        state: AuthStateSliceType = initialState, 
         action: ActionType
-    ): StateSliceType => {
+    ): AuthStateSliceType => {
 
     switch(action.type){
         case AUTH_START:

@@ -14,8 +14,6 @@ import {
     HorizontalBox
 } from './styles';
 
-
-
 interface PropsType{
     closeSignUpForm: () => void
 }

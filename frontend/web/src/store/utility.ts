@@ -1,6 +1,6 @@
-import {StateSliceType, PayloadType} from './reducers/auth';
+import {AuthStateSliceType, PayloadType} from './reducers/auth';
 
-export const updateObject = (oldObject: StateSliceType, updatedProperties:PayloadType) => {
+export const updateObject = (oldObject: AuthStateSliceType, updatedProperties:PayloadType) => {
     return {
         ...oldObject,
         ...updatedProperties
