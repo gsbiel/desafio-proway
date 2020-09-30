@@ -15,9 +15,11 @@ import './index.css';
 import App from './App';
 import {theme} from './my-theme';
 import authReducer from './store/reducers/auth'
+import signupReducer from './store/reducers/signup';
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  signup: signupReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>
