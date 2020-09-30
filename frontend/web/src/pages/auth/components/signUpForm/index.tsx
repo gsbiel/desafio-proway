@@ -11,7 +11,8 @@ import {
     Title,
     SignUpBtn,
     CancelButton,
-    HorizontalBox
+    HorizontalBox,
+    LoadingSpinner
 } from './styles';
 
 interface PropsType{
@@ -39,6 +40,7 @@ enum InputCase {
 const SignUpForm = (props: PropsType) => {
 
     const [isLoginDisabled, setLoginDisable] = useState(false)
+    const [isFormFieldDisabled, setFieldDisabled] = useState(false)
 
     const [nameField, setNameField] = useState('');
     const [nameFieldStateError, setNameFieldStateError] = useState(false);
@@ -116,8 +118,9 @@ const SignUpForm = (props: PropsType) => {
         setPasswordField(event.target.value);
     }
 
-    const onLoginBtnPressed = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-
+    const onSignUpBtnHandler = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setFieldDisabled(true);
+        setLoginDisable(true);
     }
 
     const validateInput = (type: InputCase, data: string) => {
@@ -200,6 +203,7 @@ const SignUpForm = (props: PropsType) => {
                     color="primary"
                     size="large"
                     onClick={() => props.closeSignUpForm()}
+                    disabled={isFormFieldDisabled}
                 >
                     X
                 </CancelButton>
@@ -211,6 +215,7 @@ const SignUpForm = (props: PropsType) => {
                 <NameField 
                     error={nameFieldStateError}
                     label="Name"
+                    disabled={isFormFieldDisabled}
                     id="outlined-margin-none"
                     defaultValue="" 
                     value={nameField}
@@ -223,6 +228,7 @@ const SignUpForm = (props: PropsType) => {
                 <EmailField 
                     error={emailFieldStateError}
                     label="E-mail"
+                    disabled={isFormFieldDisabled}
                     id="outlined-margin-none"
                     defaultValue=""
                     value={emailField}
@@ -236,6 +242,7 @@ const SignUpForm = (props: PropsType) => {
                     <LoginField 
                         error={loginFieldStateError}                    
                         label="Username"
+                        disabled={isFormFieldDisabled}
                         id="outlined-margin-none"
                         defaultValue=""
                         value={loginField}
@@ -249,6 +256,7 @@ const SignUpForm = (props: PropsType) => {
                         error={passwordFieldStateError}
                         type="password"
                         label="Password"
+                        disabled={isFormFieldDisabled}
                         id="outlined-margin-none"
                         defaultValue=""
                         value={passwordField}
@@ -265,9 +273,12 @@ const SignUpForm = (props: PropsType) => {
                     size="large"
                     startIcon={<SaveIcon />}
                     disabled={isLoginDisabled}
+                    onClick={(event) => onSignUpBtnHandler(event)}
                 >
                     Save
                 </SignUpBtn>
+
+                <LoadingSpinner color="primary" />
 
             </FormContainer>
         </SignUpFormContainer>

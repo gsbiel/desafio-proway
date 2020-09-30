@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import {colorTheme} from '../../../../constants';
 
@@ -93,3 +94,7 @@ export const SignUpBtn = styled(Button)`
     text-transform: capitalize !important;
 `;
 
+export const LoadingSpinner = styled(CircularProgress)`
+    position:relative;
+    top:38%;
+`;

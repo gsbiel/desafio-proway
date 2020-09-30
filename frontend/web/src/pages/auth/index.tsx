@@ -17,7 +17,7 @@ import {
 
 import LoginForm from "./components/loginForm";
 import SignUpForm from './components/signUpForm';
-import Spinner from './components/spinner';
+import Spinner from './components/loginForm/spinner';
 
 const Auth = () => {
 
