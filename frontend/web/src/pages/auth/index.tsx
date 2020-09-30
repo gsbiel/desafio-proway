@@ -20,8 +20,7 @@ import SignUpForm from './components/signUpForm';
 import Spinner from './components/loginForm/spinner';
 
 const Auth = () => {
-
-    const location = useLocation()
+    
     const history = useHistory()
 
     const isLoading = useSelector( (state: RootState) => state.auth.loading )
