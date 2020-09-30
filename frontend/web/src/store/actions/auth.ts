@@ -35,7 +35,15 @@ export const authFail = (error:string) => {
     };
 };
 
-export const auth = (username: string, password: string, isSignup: boolean) => {
+export interface AuthArgsType {
+    username: string,
+    password: string,
+    isSignUp?: boolean
+    email?: string,
+    name?: string
+}
+
+export const auth = (props: AuthArgsType) => {
 
     const set_delay = (ms: any): Promise<any> => {
         return new Promise( (resolve, reject) => {
