@@ -56,6 +56,8 @@ export const auth = (username: string, password: string, isSignup: boolean) => {
 
         let AUTH_URL = isSignup ? AUTH_SIGN_UP_URL : AUTH_SIGN_IN_URL;
 
+        // Esse delay está sendo aplicado apenas para fins 
+        // de visualização do backdrop com spinner.
         await set_delay(1000)
 
         axios.post(AUTH_URL, authData)
