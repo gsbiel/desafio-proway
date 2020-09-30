@@ -29,7 +29,9 @@ export const authSuccess = (token: string, userId: string, userName: string) => 
 export const authFail = (error:string) => {
     return {
         type: AUTH_FAIL,
-        error: error
+        payload: {
+            error: error
+        }
     };
 };
 
@@ -54,12 +56,14 @@ export const auth = (username: string, password: string, isSignup: boolean) => {
 
         let AUTH_URL = isSignup ? AUTH_SIGN_UP_URL : AUTH_SIGN_IN_URL;
 
+        await set_delay(1000)
+
         axios.post(AUTH_URL, authData)
             .then(resp => {
                 dispatch(authSuccess(resp.data.access_token, resp.data.userId, resp.data.name));
             })
             .catch(err => {
-                dispatch(authFail(err.response.data.error));
+                dispatch(authFail(err.response?.data.error ? err.response?.data.error : "Serviço indisponível."));
             });
 
         return
