@@ -1,7 +1,11 @@
 import {
     AUTH_START,
     AUTH_SUCCESS,
-    AUTH_FAIL
+    AUTH_FAIL,
+    SIGNUP_START,
+    SIGNUP_SUCCESS,
+    SIGNUP_FAIL,
+    SIGNUP_RECOVER_FROM_FAILURE
 } from './actionTypes';
 
 import axios from 'axios';
@@ -32,6 +36,33 @@ export const authFail = (error:string) => {
         payload: {
             error: error
         }
+    };
+};
+
+export const signupStart = () => {
+    return {
+        type: SIGNUP_START
+    };
+};
+
+export const signupfail = (error: SignupErrorType) => {
+    return {
+        type: SIGNUP_FAIL,
+        payload: {
+            error: error
+        }
+    };
+};
+
+export const signupSuccess = () => {
+    return {
+        type: SIGNUP_SUCCESS,
+    };
+};
+
+export const signupRecoverFromFailure = () => {
+    return {
+        type: SIGNUP_RECOVER_FROM_FAILURE,
     };
 };
 
