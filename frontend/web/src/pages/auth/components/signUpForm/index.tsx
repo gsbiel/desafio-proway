@@ -1,5 +1,18 @@
 import React, {useState, useEffect} from 'react';
 import SaveIcon from '@material-ui/icons/Save';
+import {useDispatch, useSelector} from 'react-redux';
+
+import {useHistory} from 'react-router';
+
+import {
+    auth, 
+    AuthArgsType,
+    signupRecoverFromFailure
+ } from '../../../../store/actions/auth';
+
+import {
+    RootState
+} from '../../../../index';
 
 import {
     SignUpFormContainer,
@@ -39,8 +52,16 @@ enum InputCase {
 
 const SignUpForm = (props: PropsType) => {
 
-    const [isLoginDisabled, setLoginDisable] = useState(false)
-    const [isFormFieldDisabled, setFieldDisabled] = useState(false)
+    const history = useHistory();
+    const dispatch = useDispatch();
+
+    const isLoading = useSelector( (state: RootState) => state.signup.isLoading);
+    const isCompleted = useSelector( (state: RootState) => state.signup.isCompleted);
+    const isOnError = useSelector( (state: RootState) => state.signup.isOnError);
+    const errors = useSelector( (state: RootState) => state.signup.error);
+
+    const [isLoginDisabled, setLoginDisable] = useState(false);
+    const [isFormFieldDisabled, setFieldDisabled] = useState(false);
 
     const [nameField, setNameField] = useState('');
     const [nameFieldStateError, setNameFieldStateError] = useState(false);
@@ -54,25 +75,47 @@ const SignUpForm = (props: PropsType) => {
     const [loginFieldStateError, setLoginFieldStateError] = useState(false);
     const [loginFieldErrorMsg, setLoginFieldErrorMsg] = useState("");
 
-    const [passwordField, setPasswordField]= useState('')
+    const [passwordField, setPasswordField]= useState('');
     const [passwordFieldStateError, setPasswordFieldStateError] = useState(false);
     const [passwordFieldErrorMsg, setPasswordFieldErrorMsg] = useState("");
 
+
+    useEffect(()=>{
+        if(isCompleted){
+            history.goBack();
+        }
+    }, [isCompleted])
+
     useEffect(() => {
-        validateInput(InputCase.NAME, nameField)
+        validateInput(InputCase.NAME, nameField);
     },[nameField])
 
     useEffect(() => {
-        validateInput(InputCase.EMAIL, emailField)
+        validateInput(InputCase.EMAIL, emailField);
     },[emailField])
 
     useEffect(() => {
-        validateInput(InputCase.LOGIN, loginField)
+        validateInput(InputCase.LOGIN, loginField);
     },[loginField])
 
     useEffect(() => {
-        validateInput(InputCase.PASSSWORD, passwordField)
+        validateInput(InputCase.PASSSWORD, passwordField);
     },[passwordField])
+
+    useEffect(() => {
+        if(isOnError){
+            setFieldDisabled(false);
+            if(errors.email){
+                setEmailFieldStateError(true);
+                setEmailFieldErrorMsg(errors.email);
+            }
+            if(errors.login){
+                setLoginFieldStateError(true);
+                setLoginFieldErrorMsg(errors.login);
+            }
+            dispatch(signupRecoverFromFailure())
+        }
+    },[isOnError])
 
     useEffect(() => {
         if(nameFieldStateError || emailFieldStateError || loginFieldStateError || passwordFieldStateError){
@@ -121,6 +164,14 @@ const SignUpForm = (props: PropsType) => {
     const onSignUpBtnHandler = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setFieldDisabled(true);
         setLoginDisable(true);
+        const data: AuthArgsType = {
+            username: loginField,
+            password: passwordField,
+            isSignUp: true,
+            email: emailField,
+            name: nameField
+        };
+        dispatch(auth(data));
     }
 
     const validateInput = (type: InputCase, data: string) => {
@@ -278,8 +329,12 @@ const SignUpForm = (props: PropsType) => {
                     Save
                 </SignUpBtn>
 
-                <LoadingSpinner color="primary" />
-
+                {
+                    isLoading ? 
+                    <LoadingSpinner color="primary" /> :
+                    null
+                }
+                
             </FormContainer>
         </SignUpFormContainer>
     );
