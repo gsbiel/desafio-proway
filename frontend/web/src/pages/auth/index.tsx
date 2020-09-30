@@ -1,10 +1,14 @@
-import React, {useState} from "react";
+import React from "react";
+import {useSelector} from 'react-redux';
 import {
     Route,
     useLocation,
     useHistory
   } from "react-router-dom";
 
+import {
+    RootState
+} from '../../index';
 
 import {
     AuthContainer,
@@ -13,13 +17,14 @@ import {
 
 import LoginForm from "./components/loginForm";
 import SignUpForm from './components/signUpForm';
+import Spinner from './components/spinner';
 
 const Auth = () => {
 
     const location = useLocation()
     const history = useHistory()
 
-    const [signUpFormShouldOpen, shouldOpenSignUpForm] = useState(false)
+    const isLoading = useSelector( (state: RootState) => state.auth.loading )
 
     const openSignUpForm = () => {
         // shouldOpenSignUpForm(true)
@@ -42,6 +47,8 @@ const Auth = () => {
             <Route path={`/login/register`}>
                 <SignUpForm closeSignUpForm={closeSignUpForm}/>
             </Route>
+
+            {isLoading ? <Spinner /> : null}
 
         </AuthContainer>
     );

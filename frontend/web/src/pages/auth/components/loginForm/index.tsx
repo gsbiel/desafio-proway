@@ -27,14 +27,14 @@ interface PropsType {
 const LoginForm = (props: PropsType) => {
 
     const dispatch = useDispatch()
-
-    const [loginField, setLoginField] = useState("")
-    const [passwordField, setPasswordField] = useState("")
+    
     const [loginBtnEnabled, setLoginBtnEnabled] = useState(false)
 
+    const [passwordField, setPasswordField] = useState("")
     const [passwordFieldError, setPasswordFieldError] = useState(false)
     const [passwordFieldErrorState, setPasswordFieldErrorState] = useState(TextFieldErrorState.OK)
 
+    const [loginField, setLoginField] = useState("")
     const [loginFieldError, setLoginFieldError] = useState(false)
     const [loginFieldErrorState, setLoginFieldErrorState] = useState(TextFieldErrorState.OK)
 
