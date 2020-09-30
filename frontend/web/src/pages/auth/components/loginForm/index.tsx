@@ -2,7 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {
-    auth
+    auth, 
+    AuthArgsType
  } from '../../../../store/actions/auth'
 
 import {
@@ -94,7 +95,14 @@ const LoginForm = (props: PropsType) => {
     }
 
     const loginHandler = () => {
-        dispatch(auth("gsbiel","123456",false))
+
+        const data: AuthArgsType = {
+            username: "gsbiel",
+            password: "123456",
+            isSignUp: false
+        }
+
+        dispatch(auth(data))
     }
 
     return (
