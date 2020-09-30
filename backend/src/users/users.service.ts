@@ -89,17 +89,23 @@ export class UsersService {
 
         if(userFound.length > 0){
 
-            let errorMessage = ""
+            let errorMessage = { }
 
             if(userFound[0].login == createUserDto.login){
-                errorMessage = "The user already exists."
+                errorMessage = {
+                    ...errorMessage,
+                    login: "The user already exists."
+                }
             }
 
             if(userFound[0].email == createUserDto.email){
-                errorMessage += " The e-mail is already in use."
+                errorMessage = {
+                    ...errorMessage,
+                    email: "The e-mail is already in use."
+                }
             }
 
-            throw new Error(errorMessage)
+            throw new Error(JSON.stringify(errorMessage))
         }
     }
 }
