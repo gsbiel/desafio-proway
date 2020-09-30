@@ -31,15 +31,6 @@ export interface PayloadType {
     loading?: boolean
 }
 
-const initialState: AuthStateSliceType = {
-    isUserLogged: false,
-    token: '',
-    userName:'',
-    userId: '',
-    error: '',
-    loading: false
-};
-
 const authStart = (state: AuthStateSliceType, action:ActionType) => {
     return updateObject(state,{error: '', loading: true});
 }
@@ -62,6 +53,15 @@ const authFail =(state: AuthStateSliceType, action:ActionType) => {
         loading: false
     });
 }
+
+const initialState: AuthStateSliceType = {
+    isUserLogged: false,
+    token: '',
+    userName:'',
+    userId: '',
+    error: '',
+    loading: false
+};
 
 const reducer = (
         state: AuthStateSliceType = initialState, 
