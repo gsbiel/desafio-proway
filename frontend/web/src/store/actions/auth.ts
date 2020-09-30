@@ -9,6 +9,7 @@ import {
 } from './actionTypes';
 
 import axios from 'axios';
+import { SignupErrorType } from '../reducers/signup';
 
 const AUTH_SIGN_UP_URL = `${process.env.REACT_APP_DEV_BACKEND_BASE_URL}/signup`;
 const AUTH_SIGN_IN_URL = `${process.env.REACT_APP_DEV_BACKEND_BASE_URL}/auth/login`;
@@ -86,12 +87,30 @@ export const auth = (props: AuthArgsType) => {
 
     return async (dispatch:any) => {
 
-        dispatch(authStart());
+        const isSignup = props.isSignUp ? props.isSignUp : false
 
-        const authData = {
-            username: username,
-            password: password
-        };
+        if(!isSignup){
+            dispatch(authStart());
+        }else{
+            dispatch(signupStart())
+        }
+
+        let data = {}
+        if(!isSignup){
+            data = {
+                username: props.username,
+                password: props.password
+            }
+        }else{
+            data = {
+                name: props.name,
+                email: props.email,
+                login: props.username,
+                password: props.password
+            }
+        }
+
+        const authData = data
 
         let AUTH_URL = isSignup ? AUTH_SIGN_UP_URL : AUTH_SIGN_IN_URL;
 
@@ -100,13 +119,26 @@ export const auth = (props: AuthArgsType) => {
         await set_delay(1000)
 
         axios.post(AUTH_URL, authData)
-            .then(resp => {
-                dispatch(authSuccess(resp.data.access_token, resp.data.userId, resp.data.name));
+            .then(async resp => {
+                if(!isSignup){
+                    dispatch(authSuccess(resp.data.access_token, resp.data.userId, resp.data.name));
+                }else{
+                    dispatch(signupSuccess());
+                    dispatch(auth({
+                        username: props.username,
+                        password: props.password
+                    }))
+                }
             })
             .catch(err => {
-                dispatch(authFail(err.response?.data.error ? err.response?.data.error : "Serviço indisponível."));
+                if(!isSignup){
+                    dispatch(authFail(err.response?.data.error ? err.response?.data.error : "Serviço indisponível."));
+                }else{
+                    console.log(err.response?.data);
+                    console.log(JSON.parse(err.response?.data.error))
+                    dispatch(signupfail(JSON.parse(err.response?.data.error))) 
+                }
             });
-
         return
     };
 };
