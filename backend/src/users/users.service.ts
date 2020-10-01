@@ -60,7 +60,7 @@ export class UsersService {
     }
 
     validateGender = (gender: string): boolean => {
-        if(gender == 'm' || gender == 'f'){
+        if(gender == 'm' || gender == 'f' || gender == 'o'){
             return true;
         }else{
             throw new HttpException({
