@@ -37,9 +37,11 @@ function App() {
         <LeftBackgroundBox>
 
           <Bubble />
-          
-          <UserProfile />
 
+          <Route path="/painel">
+            <UserProfile />
+          </Route>
+          
         </LeftBackgroundBox>
         
         <RightBackgroundBox>

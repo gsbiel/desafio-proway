@@ -55,7 +55,7 @@ const authFail =(state: AuthStateSliceType, action:ActionType) => {
 }
 
 const initialState: AuthStateSliceType = {
-    isUserLogged: true,
+    isUserLogged: false,
     token: '',
     userName:'',
     userId: '',
