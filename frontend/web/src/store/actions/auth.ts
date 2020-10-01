@@ -131,7 +131,6 @@ export const auth = (props: AuthArgsType) => {
         axios.post(AUTH_URL, authData)
             .then(async resp => {
                 if(!isSignup){
-                    console.log(resp.data)
                     dispatch(authSuccess(resp.data.access_token, resp.data.userId, resp.data.name, resp.data.gender));
                 }else{
                     dispatch(signupSuccess());
@@ -145,8 +144,8 @@ export const auth = (props: AuthArgsType) => {
                 if(!isSignup){
                     dispatch(authFail(err.response?.data.error ? err.response?.data.error : "Serviço indisponível."));
                 }else{
-                    console.log(err.response?.data);
-                    console.log(JSON.parse(err.response?.data.error))
+                    // console.log(err.response?.data);
+                    // console.log(JSON.parse(err.response?.data.error))
                     dispatch(signupfail(JSON.parse(err.response?.data.error))) 
                 }
             });

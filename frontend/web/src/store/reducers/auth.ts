@@ -39,7 +39,6 @@ const authStart = (state: AuthStateSliceType, action:ActionType) => {
 }
 
 const authSuccess = (state: AuthStateSliceType, action:ActionType) => {
-    console.log(`Gender: ${action.payload.gender}`)
     return updateObject(state, {
         isUserLogged: true,
         token: action.payload.token,
