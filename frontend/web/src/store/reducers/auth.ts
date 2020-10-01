@@ -5,7 +5,8 @@ import {
 import {
     AUTH_START,
     AUTH_SUCCESS,
-    AUTH_FAIL
+    AUTH_FAIL,
+    AUTH_RESET_STATE
 } from '../actions/actionTypes'
 
 export interface AuthStateSliceType {
@@ -46,12 +47,16 @@ const authSuccess = (state: AuthStateSliceType, action:ActionType) => {
     });
 }
 
-const authFail =(state: AuthStateSliceType, action:ActionType) => {
+const authFail = (state: AuthStateSliceType, action:ActionType) => {
     return updateObject(state, {
         isUserLogged: false,
         error: action.payload.error,
         loading: false
     });
+}
+
+const authResetState =(state: AuthStateSliceType, action:ActionType) => {
+    return updateObject(state, {...initialState})
 }
 
 const initialState: AuthStateSliceType = {
@@ -75,6 +80,8 @@ const reducer = (
             return authSuccess(state, action);
         case AUTH_FAIL:
             return authFail(state, action);
+        case AUTH_RESET_STATE:
+            return authResetState(state,action);
         default:
             return state;
     }

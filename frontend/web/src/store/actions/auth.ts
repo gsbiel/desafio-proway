@@ -2,6 +2,7 @@ import {
     AUTH_START,
     AUTH_SUCCESS,
     AUTH_FAIL,
+    AUTH_RESET_STATE,
     SIGNUP_START,
     SIGNUP_SUCCESS,
     SIGNUP_FAIL,
@@ -39,6 +40,12 @@ export const authFail = (error:string) => {
         }
     };
 };
+
+export const authResetState = () => {
+    return{
+        type: AUTH_RESET_STATE
+    }
+}
 
 export const signupStart = () => {
     return {

@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {
     auth, 
+    authResetState,
     AuthArgsType
  } from '../../../../store/actions/auth'
 
@@ -15,9 +16,13 @@ import {
     RegisterButton
 } from './styles';
 
+import {
+    RootState
+} from '../../../../index';
+
 enum TextFieldErrorState {
     OK = "",
-    WRONG_DATA = "Wrong data",
+    WRONG_DATA = "Wrong username or password",
     MISSING_DATA= "Missing data"
 }
 
@@ -28,6 +33,7 @@ interface PropsType {
 const LoginForm = (props: PropsType) => {
 
     const dispatch = useDispatch()
+    const authError = useSelector( (state: RootState) => state.auth.error );
     
     const [loginBtnEnabled, setLoginBtnEnabled] = useState(false)
 
@@ -38,6 +44,14 @@ const LoginForm = (props: PropsType) => {
     const [loginField, setLoginField] = useState("")
     const [loginFieldError, setLoginFieldError] = useState(false)
     const [loginFieldErrorState, setLoginFieldErrorState] = useState(TextFieldErrorState.OK)
+
+    useEffect(() => {
+        if(authError.length){
+            setLoginFieldError(true);
+            setLoginFieldErrorState(TextFieldErrorState.WRONG_DATA);
+            dispatch(authResetState());
+        }
+    },[authError])
 
     useEffect(() => {
         validateLoginFieldState(loginField)
@@ -97,8 +111,8 @@ const LoginForm = (props: PropsType) => {
     const loginHandler = () => {
 
         const data: AuthArgsType = {
-            username: "gsbiel",
-            password: "123456",
+            username: loginField,
+            password: passwordField,
             isSignUp: false
         }
 
