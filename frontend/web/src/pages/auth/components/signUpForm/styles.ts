@@ -3,6 +3,7 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Radio from '@material-ui/core/Radio';
 
 import {colorTheme} from '../../../../constants';
 
@@ -58,10 +59,33 @@ export const NameField = styled(TextField)`
     top:20%;
 `;
 
+export const RadioGroup = styled.div`
+    position: relative;
+    width:80%;
+    height: 50px;
+    top: 22%;
+    z-index:4;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+`;
+
+export const RadioItem = styled(Radio)`
+    position: relative !important;
+    margin-right:20px;
+`;
+
+export const RadioLabel = styled.span`
+    font-size: 18px;
+    margin-left:20px;
+    color: ${colorTheme.primaryDark}
+`;
+
 export const EmailField = styled(TextField)`
     position:relative;
     width:80%;
-    top:23%;
+    top:24%;
 `;
 
 export const HorizontalBox = styled.div`
@@ -76,6 +100,7 @@ export const HorizontalBox = styled.div`
 export const LoginField =styled(TextField)`
     position:relative;
     width:50%;
+    // top: 27%;
     box-sizing: border-box !important;
     margin-right: 5px !important;
 `;
@@ -83,6 +108,7 @@ export const LoginField =styled(TextField)`
 export const PasswordField = styled(TextField)`
     position:relative;
     width:50%;
+    // top: 27%;
     box-sizing: border-box;
     box-sizing: border-box !important;
 `;

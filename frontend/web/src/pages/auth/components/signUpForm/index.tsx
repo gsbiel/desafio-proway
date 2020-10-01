@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import SaveIcon from '@material-ui/icons/Save';
+import Radio, { RadioProps } from '@material-ui/core/Radio';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {useHistory} from 'react-router';
@@ -25,7 +26,10 @@ import {
     SignUpBtn,
     CancelButton,
     HorizontalBox,
-    LoadingSpinner
+    LoadingSpinner,
+    RadioGroup,
+    RadioItem,
+    RadioLabel
 } from './styles';
 
 interface PropsType{
@@ -78,6 +82,8 @@ const SignUpForm = (props: PropsType) => {
     const [passwordField, setPasswordField]= useState('');
     const [passwordFieldStateError, setPasswordFieldStateError] = useState(false);
     const [passwordFieldErrorMsg, setPasswordFieldErrorMsg] = useState("");
+
+    const [selectedGenderValue, setSelectedGenderValue] = React.useState('m');
 
 
     useEffect(()=>{
@@ -172,6 +178,10 @@ const SignUpForm = (props: PropsType) => {
             name: nameField
         };
         dispatch(auth(data));
+    }
+
+    const handleGenderChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setSelectedGenderValue(event.target.value);
     }
 
     const validateInput = (type: InputCase, data: string) => {
@@ -275,6 +285,36 @@ const SignUpForm = (props: PropsType) => {
                     variant="outlined"
                     onChange={(event) => nameFieldChangedHandler(event)}
                 />
+
+                <RadioGroup>
+
+                    <RadioLabel>Male</RadioLabel>
+                    <RadioItem
+                        checked={selectedGenderValue === 'm'}
+                        onChange={(event) => handleGenderChange(event)}
+                        value="m"
+                        name="radio-button-demo"
+                        inputProps={{ 'aria-label': 'A' }}
+                    />
+
+                    <RadioLabel>Female</RadioLabel>
+                    <RadioItem
+                        checked={selectedGenderValue === 'f'}
+                        onChange={(event) => handleGenderChange(event)}
+                        value="f"
+                        name="radio-button-demo"
+                        inputProps={{ 'aria-label': 'B' }}
+                    />
+
+                    <RadioLabel>Other</RadioLabel>
+                    <RadioItem
+                        checked={selectedGenderValue === 'o'}
+                        onChange={(event) => handleGenderChange(event)}
+                        value="o"
+                        name="radio-button-demo"
+                        inputProps={{ 'aria-label': 'C' }}
+                    />
+                </RadioGroup>
 
                 <EmailField 
                     error={emailFieldStateError}
