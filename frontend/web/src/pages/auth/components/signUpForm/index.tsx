@@ -175,7 +175,8 @@ const SignUpForm = (props: PropsType) => {
             password: passwordField,
             isSignUp: true,
             email: emailField,
-            name: nameField
+            name: nameField,
+            gender: selectedGenderValue
         };
         dispatch(auth(data));
     }
@@ -290,6 +291,7 @@ const SignUpForm = (props: PropsType) => {
 
                     <RadioLabel>Male</RadioLabel>
                     <RadioItem
+                        disabled={isFormFieldDisabled}
                         checked={selectedGenderValue === 'm'}
                         onChange={(event) => handleGenderChange(event)}
                         value="m"
@@ -299,6 +301,7 @@ const SignUpForm = (props: PropsType) => {
 
                     <RadioLabel>Female</RadioLabel>
                     <RadioItem
+                        disabled={isFormFieldDisabled}
                         checked={selectedGenderValue === 'f'}
                         onChange={(event) => handleGenderChange(event)}
                         value="f"
@@ -308,6 +311,7 @@ const SignUpForm = (props: PropsType) => {
 
                     <RadioLabel>Other</RadioLabel>
                     <RadioItem
+                        disabled={isFormFieldDisabled}
                         checked={selectedGenderValue === 'o'}
                         onChange={(event) => handleGenderChange(event)}
                         value="o"

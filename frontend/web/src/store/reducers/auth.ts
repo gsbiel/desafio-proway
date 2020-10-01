@@ -15,7 +15,8 @@ export interface AuthStateSliceType {
     userName:string,
     userId: string,
     error: string,
-    loading: boolean
+    loading: boolean,
+    gender: string
 }
 
 export interface ActionType {
@@ -29,7 +30,8 @@ export interface PayloadType {
     userName?: string,
     userId?: string,
     error?: string;
-    loading?: boolean
+    loading?: boolean,
+    gender?: string
 }
 
 const authStart = (state: AuthStateSliceType, action:ActionType) => {
@@ -37,11 +39,13 @@ const authStart = (state: AuthStateSliceType, action:ActionType) => {
 }
 
 const authSuccess = (state: AuthStateSliceType, action:ActionType) => {
+    console.log(`Gender: ${action.payload.gender}`)
     return updateObject(state, {
         isUserLogged: true,
         token: action.payload.token,
         userName: action.payload.userName,
         userId: action.payload.userId,
+        gender: action.payload.gender,
         error:'',
         loading: false
     });
@@ -65,7 +69,8 @@ const initialState: AuthStateSliceType = {
     userName:'',
     userId: '',
     error: '',
-    loading: false
+    loading: false,
+    gender: ''
 };
 
 const reducer = (

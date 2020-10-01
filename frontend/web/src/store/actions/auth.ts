@@ -21,13 +21,14 @@ export const authStart = () => {
     };
 };
 
-export const authSuccess = (token: string, userId: string, userName: string) => {
+export const authSuccess = (token: string, userId: string, userName: string, gender: string) => {
     return {
         type: AUTH_SUCCESS,
         payload:{
             token: token,
             userId: userId,
-            userName: userName
+            userName: userName,
+            gender: gender
         }
     };
 };
@@ -80,6 +81,7 @@ export interface AuthArgsType {
     isSignUp?: boolean
     email?: string,
     name?: string
+    gender?: string
 }
 
 export const auth = (props: AuthArgsType) => {
@@ -113,7 +115,8 @@ export const auth = (props: AuthArgsType) => {
                 name: props.name,
                 email: props.email,
                 login: props.username,
-                password: props.password
+                password: props.password,
+                gender: props.gender
             }
         }
 
@@ -128,7 +131,8 @@ export const auth = (props: AuthArgsType) => {
         axios.post(AUTH_URL, authData)
             .then(async resp => {
                 if(!isSignup){
-                    dispatch(authSuccess(resp.data.access_token, resp.data.userId, resp.data.name));
+                    console.log(resp.data)
+                    dispatch(authSuccess(resp.data.access_token, resp.data.userId, resp.data.name, resp.data.gender));
                 }else{
                     dispatch(signupSuccess());
                     dispatch(auth({
