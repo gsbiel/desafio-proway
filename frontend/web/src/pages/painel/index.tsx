@@ -1,9 +1,12 @@
 import React, {useState} from 'react';
 
 import DialogForm from './components/formDialog';
+import PainelHeader from './components/painelHeader'
 
 import {
-    PainelContainer
+    PainelContainer,
+    StaticBar,
+    LoadingBar
 } from './styles';
 
 import Table from './components/table';
@@ -25,6 +28,9 @@ const Painel = () => {
 
     return(
         <PainelContainer>
+            <PainelHeader />
+            {/* <StaticBar /> */}
+            <LoadingBar color={"secondary"} />
             <Table handleOpen={handleClickOpen} handleClose={handleClose}/>
             <DialogForm shouldOpen={open} handleClose={handleClose} mode={dialogueFormMode}/>
         </PainelContainer>
