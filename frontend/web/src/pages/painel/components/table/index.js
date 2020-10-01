@@ -18,6 +18,10 @@ import {
   useStyles
 } from './util';
 
+import {
+  CustomPaper
+} from './styles';
+
 const customRowsPerPage = 8
 const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -158,8 +162,7 @@ function EnhancedTable(props) {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
+      <CustomPaper >
         <EnhancedTableToolbar 
           numSelected={selected.length} 
           tablePath={tablePath}
@@ -238,8 +241,7 @@ function EnhancedTable(props) {
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />  
-      </Paper>
-    </div>
+      </CustomPaper>
   );
 }
 
