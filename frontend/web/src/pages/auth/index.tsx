@@ -1,8 +1,8 @@
 import React from "react";
 import {useSelector} from 'react-redux';
 import {
+    Redirect,
     Route,
-    useLocation,
     useHistory
   } from "react-router-dom";
 
@@ -24,6 +24,7 @@ const Auth = () => {
     const history = useHistory()
 
     const isLoading = useSelector( (state: RootState) => state.auth.loading )
+    const isUserLoggedIn = useSelector( (state: RootState) => state.auth.isUserLogged)
 
     const openSignUpForm = () => {
         // shouldOpenSignUpForm(true)
@@ -48,6 +49,8 @@ const Auth = () => {
             </Route>
 
             {isLoading ? <Spinner /> : null}
+
+            {isUserLoggedIn ? <Redirect to="/painel" /> : null}
 
         </AuthContainer>
     );

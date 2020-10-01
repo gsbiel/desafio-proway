@@ -40,6 +40,7 @@ export const LeftBackgroundBox = styled.div`
     height:100%;
     background-color:${colorTheme.primaryDark};
     border-radius: 20px 0 0 20px;
+    overflow: hidden;
 `;
 
 export const RightBackgroundBox = styled.div`

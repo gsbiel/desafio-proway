@@ -8,12 +8,14 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   Redirect
 } from "react-router-dom";
 
+
 import Painel from './pages/painel';
 import Auth from './pages/auth';
+import Bubble from './components/bubble/Bubble';
+import UserProfile from './components/userProfile'
 
 import { RootState } from './index';
 
@@ -31,7 +33,15 @@ function App() {
   return (
     <AppContainer>
       <StyledPaper elevation={3}>
-        <LeftBackgroundBox/>
+
+        <LeftBackgroundBox>
+
+          <Bubble />
+          
+          <UserProfile />
+
+        </LeftBackgroundBox>
+        
         <RightBackgroundBox>
 
           <Switch>
