@@ -12,6 +12,9 @@ export class User extends Content {
     @PrimaryColumn("varchar", { length: 100, unique: true, nullable: false})
     email: string
 
+    @Column("varchar", { length: 1, nullable: false})
+    gender: string
+
     @Column("varchar", { nullable: false})
     password:string
 

@@ -4,6 +4,9 @@ import {
     IsEmail,
     IsUUID,
     IsOptional,
+    MinLength,
+    MaxLength,
+    IsLowercase
     } from 'class-validator';
 
 export class CreateUserDto{
@@ -24,6 +27,14 @@ export class CreateUserDto{
     @IsNotEmpty()
     @IsString()
     password: string
+
+    @IsNotEmpty()
+    @IsString()
+    @MinLength(1)
+    @MaxLength(1)
+    @IsLowercase()
+    gender: string
+
 }
 
 export class UserBaseDto {

@@ -18,9 +18,6 @@ export class UsersController {
         return await this.usersService.createUser(createUserDto)
     }
 
-    // @Post("/signin")
-    // async loginUser("")
-
     @Delete()
     async deleteById(@Query() userDeleteDto: UserDeleteDto){
         if(userDeleteDto.userId){

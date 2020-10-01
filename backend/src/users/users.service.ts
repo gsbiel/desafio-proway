@@ -47,12 +47,27 @@ export class UsersService {
         user.name = createUserDto.name
         user.email = createUserDto.email
         user.login = createUserDto.login
+
+        this.validateGender(createUserDto.gender)
+        user.gender = createUserDto.gender
+
         user.password = hashedPassword
 
         await this.usersRepository.save(user)
         
         const {password, ...result} = user
         return result
+    }
+
+    validateGender = (gender: string): boolean => {
+        if(gender == 'm' || gender == 'f'){
+            return true;
+        }else{
+            throw new HttpException({
+                status: HttpStatus.BAD_REQUEST,
+                error: "Invalid gender"
+            }, HttpStatus.BAD_REQUEST)
+        }
     }
 
     async deleteUserById(userDeleteDto: UserDeleteDto){
