@@ -86,10 +86,13 @@ export const painelCrudFailed =  () => {
     }
 }
 
-export const painelRefreshTableData =  () => {
+export const painelRefreshTableData =  (mode: DialogueFormModeType) => {
     console.log("Refresh na tabela!")
     return {
-        type: PAINEL_REFRESH_TABLE_DATA
+        type: PAINEL_REFRESH_TABLE_DATA,
+        payload: {
+            formMode: mode
+        }
     }
 }
 

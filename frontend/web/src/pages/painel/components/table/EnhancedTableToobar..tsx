@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -47,6 +47,12 @@ const EnhancedTableToolbar = (props:any) => {
 
     const classes = useToolbarStyles()
     const { numSelected } = props;
+
+    useEffect(() => {
+      
+
+    }, [formDialogueMode]);
+
 
     const onEditHandler = () => {
       dispatch(painelOpenDialogueForm(formDialogueMode, DialogueFormActionType.EDIT));

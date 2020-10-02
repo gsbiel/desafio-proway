@@ -1,4 +1,5 @@
-import React from 'react';
+import React,{useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,10 +18,14 @@ import {
   useStyles
 } from './util';
 
+import {RootState} from '../../../../index';
+
 
 import {
   CustomPaper
 } from './styles';
+import { painelRefreshTableData } from '../../../../store/actions/painel';
+import { DialogueFormModeType } from '../../../../store/reducers/painel';
 
 const customRowsPerPage = 8
 const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -78,6 +83,9 @@ String.prototype.shuffle = function () {
 
 function EnhancedTable() {
 
+  const dispatch = useDispatch()
+  const formDialogueMode = useSelector( (state) => state.painel.dialogueEntityMode);
+
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
@@ -90,6 +98,14 @@ function EnhancedTable() {
   const [tablePath, setTablePath] = React.useState("Seasons")
 
   let checkBoxClicked = false
+
+  useEffect(() => {
+    if(formDialogueMode == DialogueFormModeType.SEASON){
+      setTablePath(`Season`)
+      setHeadCells(headCellsForSeasons)
+      setRows(rowsForSeasons)
+    }
+  },[formDialogueMode])
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -110,10 +126,11 @@ function EnhancedTable() {
     await set_delay(50)
     if(!checkBoxClicked){
       setSelected([])
-      if(!tablePath.includes("Games")){
-        setTablePath(`Games of season ${name}`)
+      if(formDialogueMode == DialogueFormModeType.SEASON){
+        setTablePath(`Games for <${name}>`)
         setHeadCells(headCellsForGames)
         setRows(rowsForGames)
+        dispatch(painelRefreshTableData(DialogueFormModeType.GAME));
       }
     }
     checkBoxClicked = false

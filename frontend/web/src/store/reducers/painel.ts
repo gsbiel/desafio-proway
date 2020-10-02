@@ -53,7 +53,8 @@ export interface PainelActionType{
 }
 
 export interface PainelPayloadType {
-    formAction?: DialogueFormActionType
+    formAction?: DialogueFormActionType,
+    formMode?: DialogueFormModeType
 }
 
 const painelCreateGame = (state: PainelStateSliceType, action: PainelActionType) => {
@@ -93,7 +94,10 @@ const painelCrudFailed =  (state: PainelStateSliceType, action: PainelActionType
 }
 
 const painelRefreshTableData =  (state: PainelStateSliceType, action: PainelActionType) => {
-    return state;
+    return {
+        ...state,
+        dialogueEntityMode: action.payload?.formMode ? action.payload?.formMode : DialogueFormModeType.SEASON
+    };
 }
 
 const painelOpenDialogueForm = (state: PainelStateSliceType, action: PainelActionType) => {
