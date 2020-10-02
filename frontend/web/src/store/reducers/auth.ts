@@ -63,7 +63,7 @@ const authResetState =(state: AuthStateSliceType, action:ActionType) => {
 }
 
 const initialState: AuthStateSliceType = {
-    isUserLogged: false,
+    isUserLogged: true,
     token: '',
     userName:'',
     userId: '',
