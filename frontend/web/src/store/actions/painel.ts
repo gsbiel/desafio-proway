@@ -17,7 +17,7 @@ import {
 } from '../actions/actionTypes';
 
 import axios from 'axios';
-import { DialogueFormActionType } from '../reducers/painel';
+import { DialogueFormActionType, PainelActionType } from '../reducers/painel';
 import { DialogueFormModeType } from '../reducers/painel';
 
 const GAME_URL = `${process.env.REACT_APP_DEV_BACKEND_BASE_URL}/games`;
@@ -93,11 +93,12 @@ export const painelRefreshTableData =  () => {
     }
 }
 
-export const painelOpenDialogueForm = (formMode: DialogueFormModeType, formAction: DialogueFormActionType ) => {
+export const painelOpenDialogueForm = (formMode: DialogueFormModeType, formAction: DialogueFormActionType ): PainelActionType => {
     return {
         type: PAINEL_OPEN_DIALOGUE_FORM,
-        formMode: formMode,
-        formAction: formAction
+        payload:{
+            formAction: formAction
+        }
     }
 }
 

@@ -49,11 +49,11 @@ export interface PainelStateSliceType {
 
 export interface PainelActionType{
     type: string,
-    payload: PainelPayloadType
+    payload?: PainelPayloadType
 }
 
 export interface PainelPayloadType {
-
+    formAction?: DialogueFormActionType
 }
 
 const painelCreateGame = (state: PainelStateSliceType, action: PainelActionType) => {
@@ -99,7 +99,8 @@ const painelRefreshTableData =  (state: PainelStateSliceType, action: PainelActi
 const painelOpenDialogueForm = (state: PainelStateSliceType, action: PainelActionType) => {
     return {
         ...state,
-        isDialogueFormOpen: true
+        isDialogueFormOpen: true,
+        dialogueActionMode: action.payload?.formAction ? action.payload?.formAction : DialogueFormActionType.NONE
     }
 }
 
