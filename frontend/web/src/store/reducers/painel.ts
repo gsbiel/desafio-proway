@@ -13,7 +13,9 @@ import {
 
     PAINEL_REFRESH_TABLE_DATA,
     PAINEL_OPEN_DIALOGUE_FORM,
-    PAINEL_CLOSE_DIALOGUE_FORM
+    PAINEL_CLOSE_DIALOGUE_FORM,
+
+    PAINEL_LOGOUT
 } from '../actions/actionTypes';
 
 export enum DialogueFormModeType {
@@ -115,6 +117,12 @@ const painelCloseDialogueForm = (state: PainelStateSliceType, action: PainelActi
     }
 }
 
+const painelLogout = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...initialState
+    }
+}
+
 const initialState: PainelStateSliceType = {
     currentTableSection: DialogueFormModeType.SEASON,
     seasons: [],
@@ -156,6 +164,8 @@ const reducer = (
             return painelOpenDialogueForm(state, action);
         case PAINEL_CLOSE_DIALOGUE_FORM:
             return painelCloseDialogueForm(state,action);
+        case PAINEL_LOGOUT:
+            return painelLogout(state, action);
         default:
             return state;
     }

@@ -13,7 +13,9 @@ import {
 
     PAINEL_REFRESH_TABLE_DATA,
     PAINEL_OPEN_DIALOGUE_FORM,
-    PAINEL_CLOSE_DIALOGUE_FORM
+    PAINEL_CLOSE_DIALOGUE_FORM,
+     
+    PAINEL_LOGOUT,
 } from '../actions/actionTypes';
 
 import axios from 'axios';
@@ -108,5 +110,11 @@ export const painelOpenDialogueForm = (formMode: DialogueFormModeType, formActio
 export const painelCloseDialogueForm = () => {
     return{
         type: PAINEL_CLOSE_DIALOGUE_FORM
+    }
+}
+
+export const painelLogout = () => {
+    return{
+        type: PAINEL_LOGOUT
     }
 }

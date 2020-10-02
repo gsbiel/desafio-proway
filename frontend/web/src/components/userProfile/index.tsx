@@ -1,5 +1,6 @@
 import React from 'react';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import {useHistory} from 'react-router';
 
 import otherAvatar from '../../assets/avatar-profile-other.png'
 import maleAvatar from '../../assets/avatar-profile-male.jpg'
@@ -17,11 +18,21 @@ import {
     LogoutBtn,
     LogoutIcon
 } from "./styles";
+import { painelLogout } from '../../store/actions/painel';
+import { authResetState } from '../../store/actions/auth';
 
 const UserProfile = () => {
 
     const gender = useSelector( (state: RootState) => state.auth.gender )
     const userName = useSelector( (state: RootState) => state.auth.userName )
+    const history = useHistory();
+    const dispatch = useDispatch();
+
+    const onLogoutHandler = () => {
+        dispatch(authResetState())
+        dispatch(painelLogout());
+        history.push("/login");
+    }
 
     let avatar = ""
     if(gender == "m"){
@@ -41,6 +52,7 @@ const UserProfile = () => {
                         variant="contained"
                         color="secondary"
                         startIcon={<LogoutIcon />}
+                        onClick={() => onLogoutHandler()}
                     >
                         Logout
                     </LogoutBtn>
