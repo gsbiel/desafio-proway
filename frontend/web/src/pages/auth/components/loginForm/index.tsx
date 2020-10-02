@@ -20,7 +20,7 @@ import {
     RootState
 } from '../../../../index';
 
-enum TextFieldErrorState {
+export enum TextFieldErrorState {
     OK = "",
     WRONG_DATA = "Wrong username or password",
     MISSING_DATA= "Missing data"
