@@ -16,10 +16,12 @@ import App from './App';
 import {theme} from './my-theme';
 import authReducer from './store/reducers/auth'
 import signupReducer from './store/reducers/signup';
+import painelReducer from './store/reducers/painel';
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  signup: signupReducer
+  signup: signupReducer,
+  painel: painelReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>

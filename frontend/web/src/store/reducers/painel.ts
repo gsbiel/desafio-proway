@@ -12,18 +12,20 @@ import {
     PAINEL_CRUD_FAILED,
 
     PAINEL_REFRESH_TABLE_DATA,
+    PAINEL_OPEN_DIALOGUE_FORM,
+    PAINEL_CLOSE_DIALOGUE_FORM
 } from '../actions/actionTypes';
 
 export enum DialogueFormModeType {
-    SEASON,
-    GAME,
+    SEASON = "SEASON",
+    GAME = "GAME",
 }
 
 export enum DialogueFormActionType {
-    ADD,
-    EDIT,
-    DELETE,
-    NONE
+    ADD ="ADD",
+    EDIT = "EDIT",
+    DELETE = "DELETE",
+    NONE = "NONE",
 }
 
 export interface GameType {
@@ -94,6 +96,20 @@ const painelRefreshTableData =  (state: PainelStateSliceType, action: PainelActi
     return state;
 }
 
+const painelOpenDialogueForm = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isDialogueFormOpen: true
+    }
+}
+
+const painelCloseDialogueForm = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isDialogueFormOpen: false
+    }
+}
+
 const initialState: PainelStateSliceType = {
     currentTableSection: DialogueFormModeType.SEASON,
     seasons: [],
@@ -131,6 +147,10 @@ const reducer = (
             return painelCrudFailed(state, action);
         case PAINEL_REFRESH_TABLE_DATA:
             return painelRefreshTableData(state, action);
+        case PAINEL_OPEN_DIALOGUE_FORM:
+            return painelOpenDialogueForm(state, action);
+        case PAINEL_CLOSE_DIALOGUE_FORM:
+            return painelCloseDialogueForm(state,action);
         default:
             return state;
     }

@@ -12,7 +12,8 @@ import {
     PAINEL_CRUD_FAILED,
 
     PAINEL_REFRESH_TABLE_DATA,
-    PAINEL_OPEN_DIALOGUE_FORM
+    PAINEL_OPEN_DIALOGUE_FORM,
+    PAINEL_CLOSE_DIALOGUE_FORM
 } from '../actions/actionTypes';
 
 import axios from 'axios';
@@ -92,10 +93,16 @@ export const painelRefreshTableData =  () => {
     }
 }
 
-export const painelOpenDialogueForm = (action: string, formMode: DialogueFormModeType, formAction: DialogueFormActionType ) => {
+export const painelOpenDialogueForm = (formMode: DialogueFormModeType, formAction: DialogueFormActionType ) => {
     return {
         type: PAINEL_OPEN_DIALOGUE_FORM,
         formMode: formMode,
         formAction: formAction
+    }
+}
+
+export const painelCloseDialogueForm = () => {
+    return{
+        type: PAINEL_CLOSE_DIALOGUE_FORM
     }
 }

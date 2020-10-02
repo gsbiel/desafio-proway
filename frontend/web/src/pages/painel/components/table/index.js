@@ -5,11 +5,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 
 import EnhancedTableHead from './EnhancedTableHead'
-import EnhancedTableToolbar from './EnhancedTableToobar'
+import EnhancedTableToolbar from './EnhancedTableToobar.'
 import {
   createSeasonData,
   createGameData,
@@ -17,6 +16,7 @@ import {
   stableSort,
   useStyles
 } from './util';
+
 
 import {
   CustomPaper
@@ -76,12 +76,7 @@ String.prototype.shuffle = function () {
   return a.join("");
 }
 
-function EnhancedTable(props) {
-
-  const {
-    handleOpen,
-    handleClose
-  } = props
+function EnhancedTable() {
 
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
@@ -166,8 +161,6 @@ function EnhancedTable(props) {
         <EnhancedTableToolbar 
           numSelected={selected.length} 
           tablePath={tablePath}
-          handleOpenFormDialogue={handleOpen}
-          handleCloseFormDialogue={handleClose} 
         />
         <TableContainer>
           <Table

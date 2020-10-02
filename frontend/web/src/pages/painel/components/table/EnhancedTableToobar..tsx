@@ -1,4 +1,5 @@
 import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import Toolbar from '@material-ui/core/Toolbar';
 import clsx from 'clsx';
@@ -10,6 +11,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import EditIcon from '@material-ui/icons/Edit';
+
+import {RootState} from '../../../../index';
+import {painelOpenDialogueForm} from '../../../../store/actions/painel';
+import { DialogueFormActionType } from '../../../../store/reducers/painel';
 
 const useToolbarStyles = makeStyles((theme) => ({
     root: {
@@ -31,11 +36,12 @@ const useToolbarStyles = makeStyles((theme) => ({
     },
   }));
 
-const EnhancedTableToolbar = (props) => {
+const EnhancedTableToolbar = (props:any) => {
+
+    const dispatch = useDispatch();
+    const formDialogueMode = useSelector( (state: RootState) => state.painel.dialogueEntityMode);
 
     const {
-      handleOpenFormDialogue,
-      handleCloseFormDialogue,
       tablePath
     } = props
 
@@ -43,41 +49,60 @@ const EnhancedTableToolbar = (props) => {
     const { numSelected } = props;
 
     const onEditHandler = () => {
-      handleOpenFormDialogue("edit")
+      dispatch(painelOpenDialogueForm(formDialogueMode, DialogueFormActionType.EDIT));
     }
 
     const onDeleteHandler = () => {
-      console.log("Delete!")
+      dispatch(painelOpenDialogueForm(formDialogueMode, DialogueFormActionType.DELETE));
     }
 
     const onAddHandler = () => {
-      handleOpenFormDialogue("add")
+      dispatch(painelOpenDialogueForm(formDialogueMode, DialogueFormActionType.ADD));
     }
 
-    let tooltips = <Tooltip title="Add" aria-label="add" onClick={() => onAddHandler()}>
-                    <Fab color="secondary" className={classes.fab}>
-                      <AddIcon style={{ fontSize: 30}} />
-                    </Fab>
-                  </Tooltip>;
+    let tooltips =  [
+                      <Tooltip 
+                        title="Add" 
+                        aria-label="add" 
+                        onClick={() => onAddHandler()}
+                      >
+                        <Fab color="secondary">
+                          <AddIcon style={{ fontSize: 30}} />
+                        </Fab>
+                      </Tooltip>
+                    ];
 
     if(numSelected > 1){
-      tooltips =  <Tooltip key="AB" onClick={() => onDeleteHandler()} title="Delete">
-                    <IconButton aria-label="delete">
-                      <DeleteIcon />
-               
-                    </IconButton>
-                  </Tooltip>;
+      tooltips =  [
+                    <Tooltip 
+                        title="Delete"
+                        key="AB" 
+                        onClick={() => onDeleteHandler()}  
+                    >
+                      <IconButton aria-label="delete">
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  ];
     }
     if(numSelected == 1){
       tooltips = [
-                  <Tooltip key="AB" onClick={() => onDeleteHandler()} title="Delete">
+                  <Tooltip 
+                      title="Delete"
+                      key="AB" 
+                      onClick={() => onDeleteHandler()}   
+                  >
                     <IconButton aria-label="delete">
                       <DeleteIcon />
                     </IconButton>
                   </Tooltip>,
 
-                  <Tooltip key="BA" onClick={() => onEditHandler()} title="Edit" aria-label="add">
-                    <Fab color="secondary" className={classes.fab}>
+                  <Tooltip 
+                      title="Edit" 
+                      key="BA" 
+                      onClick={() => onEditHandler()} 
+                      aria-label="add">
+                    <Fab color="secondary">
                       <EditIcon />
                     </Fab>
                   </Tooltip>

@@ -15,7 +15,7 @@ export const PainelContainer = styled.div`
 
 export const StaticBar = styled.div`
     width:100%;
-    height: 50px;
+    height: 15px;
     border-radius: 10px 10px 0 0;
     background-color: #E8E0EF;
     margin-right: 20px;
