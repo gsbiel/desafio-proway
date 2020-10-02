@@ -6,6 +6,9 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import { KeyboardDatePicker, MuiPickersUtilsProvider,} from '@material-ui/pickers';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
 
 import {
     painelCloseDialogueForm
@@ -22,6 +25,8 @@ const CreateSeasonForm = () => {
     const [seasonName, setSeasonName] = useState("");
     const [isSeasonNameValid, setSeasonNameValidationState] = useState(true);
     const [seasonNameErrorMsg, setSeasonNameErrorMsg] = useState(TextFieldErrorState.OK);
+
+    const [selectedDate, setSelectedDate] = React.useState(new Date());
 
     useEffect(() => {
         if(!seasonName.trim().length){
@@ -50,6 +55,10 @@ const CreateSeasonForm = () => {
         dispatch(painelCloseDialogueForm());
     }
 
+    const onDateChangeHandler = (date:any) => {
+        setSelectedDate(date);
+    }
+
     return (
         <Fragment>
             <DialogTitle id="form-dialog-title">Create a new season</DialogTitle>
@@ -68,6 +77,21 @@ const CreateSeasonForm = () => {
                     helperText={seasonNameErrorMsg}
                     onChange={(event) => onSeasonNameChangeHandler(event)}
                 />
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                        disableToolbar
+                        variant="inline"
+                        format="MM/dd/yyyy"
+                        margin="normal"
+                        id="date-picker-inline"
+                        label="Date picker inline"
+                        value={selectedDate}
+                        onChange={(date) => onDateChangeHandler(date)}
+                        KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                        }}
+                    />
+                </MuiPickersUtilsProvider>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">
