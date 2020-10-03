@@ -63,9 +63,9 @@ const headCellsForSeasons = [
 ];
 
 const headCellsForGames = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-  { id: 'score', numeric: true, disablePadding: false, label: 'Highest Score' },
-  { id: 'date', numeric: false, disablePadding: false, label: 'Date' }
+  { id: 'GameName', numeric: false, disablePadding: true, label: 'Name' },
+  { id: 'GameScore', numeric: true, disablePadding: false, label: 'Score' },
+  { id: 'GameDate', numeric: false, disablePadding: false, label: 'Date' }
 ];
 
 String.prototype.shuffle = function () {
