@@ -1,5 +1,6 @@
 import React,{useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -7,16 +8,14 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
-
 import EnhancedTableHead from './EnhancedTableHead'
 import EnhancedTableToolbar from './EnhancedTableToobar.'
+
 import {
   getComparator,
   stableSort,
   useStyles
 } from './util';
-
-import {RootState} from '../../../../index';
 
 import {
   CustomPaper
@@ -25,12 +24,14 @@ import {
 import { 
   painelRefreshTableData, 
   painelFetchSeasons, 
-  painelFetchGames
+  painelFetchGames,
+  painelSelectSeason,
+  painelUnselectSeason
 } from '../../../../store/actions/painel';
 
 import { DialogueFormModeType } from '../../../../store/reducers/painel';
 
-const customRowsPerPage = 8
+const customRowsPerPage = 8;
 const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 const headCellsForSeasons = [
@@ -68,7 +69,11 @@ function EnhancedTable() {
   const formDialogueMode = useSelector( (state) => state.painel.dialogueEntityMode);
 
   const userSeasons = useSelector( (state) => state.painel.seasons);
+  const selectedSeasonId = useSelector( (state) => state.painel.selectedSeasonId);
   const userGames = useSelector ((state) => state.painel.games);
+
+  const userId = useSelector( (state) => state.auth.userId);
+  const userToken = useSelector( (state) => state.auth.token);
 
   const [rowsForSeasons, setRowsForSeasons] = React.useState([])
   const [rowsForGames, setRowsForGames] = React.useState([])
@@ -85,26 +90,29 @@ function EnhancedTable() {
   const [tablePath, setTablePath] = React.useState("Seasons")
 
   let checkBoxClicked = false
+  let seasonIdSelected = ""
 
   useEffect(()=> {
     if(formDialogueMode == DialogueFormModeType.SEASON){
       if(!userSeasons.length){
-        dispatch(painelFetchSeasons("sadasd","sdfsdf"));
-      }
-    }
-    else{
-      if(!userGames.length){
-        dispatch(painelFetchGames("fsdfdsf","fsdfds"));
+        dispatch(painelFetchSeasons(userToken,userId));
       }
     }
   },[])
 
+  useEffect(() => {
+    if(formDialogueMode == DialogueFormModeType.GAME && selectedSeasonId.length){
+      console.log(`Diapachando com seasonID: ${selectedSeasonId}`)
+      dispatch(painelFetchGames(userToken,userId, selectedSeasonId));
+    }
+  }, [selectedSeasonId])
+
   useEffect(()=>{
     const rowsForSeasons = userSeasons.map(seasonItem => {
       const startArray = seasonItem.start.toISOString().split('T')[0].split("-");
-      const startDate = `${startArray[2]}/${startArray[1]}/${startArray[0]}}`;
-      const endArray = seasonItem.end.toISOString().split('T')[0].split("-");
-      const endDate = `${endArray[2]}/${endArray[1]}/${endArray[0]}}`;
+      const startDate = `${startArray[2]}/${startArray[1]}/${startArray[0]}`;
+      const endArray = seasonItem.end ? seasonItem.end.toISOString().split('T')[0].split("-") : null;
+      const endDate = endArray ? `${endArray[2]}/${endArray[1]}/${endArray[0]}` : "";
       return{
         name: seasonItem.name,
         highest: seasonItem.max_score,
@@ -113,6 +121,7 @@ function EnhancedTable() {
         lowestBreaks: seasonItem.min_score_count,
         start: startDate,
         end: endDate,
+        id: seasonItem.id
       }
     });
     setRowsForSeasons(rowsForSeasons);
@@ -120,17 +129,21 @@ function EnhancedTable() {
   }, [userSeasons])
 
   useEffect(()=>{
-    const rowsForGames = userGames.map(gameItem => {
-      const gameDateArray = gameItem.date.toISOString().split('T')[0].split("-");
-      const gameDate = `${gameDateArray[2]}/${gameDateArray[1]}/${gameDateArray[0]}}`;
-      return{
-        name: gameItem.name,
-        score: gameItem.score,
-        date: gameDate
-      };
-    });
-    setRowsForGames(rowsForGames);
-    setRows(rowsForGames);
+    if(userGames.length){
+      console.log(userGames)
+      const rowsForGames = userGames.map(gameItem => {
+        const gameDateArray = gameItem.date.toISOString().split('T')[0].split("-");
+        const gameDate = `${gameDateArray[2]}/${gameDateArray[1]}/${gameDateArray[0]}`;
+        return{
+          name: gameItem.name,
+          score: gameItem.score,
+          date: gameDate,
+          id: gameItem.id
+        };
+      });
+      setRowsForGames(rowsForGames);
+      setRows(rowsForGames);
+    } 
   }, [userGames]) 
 
   useEffect(() => {
@@ -138,11 +151,12 @@ function EnhancedTable() {
       setTablePath(`Season`)
       setHeadCells(headCellsForSeasons)
       setRows(rowsForSeasons)
-    }else{
-      if(!userGames.length){
-        dispatch(painelFetchGames("fsdfdsf","fsdfds"));
-      }
     }
+    // else{
+    //   if(!userGames.length){
+    //     dispatch(painelFetchGames(userToken,userId));
+    //   }
+    // }
   },[formDialogueMode])
 
   const handleRequestSort = (event, property) => {
@@ -153,34 +167,36 @@ function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = async (event, name) => {
+  const handleClick = async (event, name, id) => {
+    console.log(`Clicou na celula de id: ${id}`);
     await set_delay(50)
     if(!checkBoxClicked){
       setSelected([])
       if(formDialogueMode == DialogueFormModeType.SEASON){
         setTablePath(`Games for <${name}>`)
+        dispatch(painelSelectSeason(id));
         setHeadCells(headCellsForGames)
-        setRows(rowsForGames)
-        dispatch(painelRefreshTableData(DialogueFormModeType.GAME));
+        // dispatch(painelRefreshTableData(DialogueFormModeType.GAME,[],[], id));
       }
     }
     checkBoxClicked = false
   };
 
-  const handleCheckboxClick = (event, name) => {
+  const handleCheckboxClick = (event, name, id) => {
+    console.log(`selecionada célula de id: ${id}`)
     checkBoxClicked = true
-    let selectedIndex = selected.indexOf(name);
+    let selectedIndex = selected.indexOf(id);
     let newSelected = [];
     let stateCopy = [...selected];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(stateCopy, name);
+      newSelected = newSelected.concat(stateCopy, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(stateCopy.slice(1));
     } else if (selectedIndex === stateCopy.length - 1) {
@@ -207,7 +223,7 @@ function EnhancedTable() {
     setPage(0);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (id) => selected.indexOf(id) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -238,13 +254,13 @@ function EnhancedTable() {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, row.name, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -253,8 +269,8 @@ function EnhancedTable() {
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
-                          onChange={ (event)=>handleCheckboxClick(event, row.name)}
-                          checked={ isItemSelected}
+                          onChange={(event)=>handleCheckboxClick(event, row.name, row.id)}
+                          checked={isItemSelected}
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
@@ -265,7 +281,7 @@ function EnhancedTable() {
                             return  <TableCell key={characters.shuffle()} component="th" id={labelId} scope="row" padding="none">
                                       {row[key]}
                                     </TableCell>
-                          }else{
+                          }else if(key!== "id"){
                             return <TableCell key={characters.shuffle()} align="right">{row[key]}</TableCell>
                           }
                         })

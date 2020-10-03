@@ -3,17 +3,20 @@ import {
     PAINEL_DELETE_GAME,
     PAINEL_UPDATE_GAME,
 
+    PAINEL_SELECT_SEASON,
+    PAINEL_UNSELECT_SEASON,
+
     PAINEL_CREATE_SEASON,
     PAINEL_DELETE_SEASON,
     PAINEL_UPDATE_SEASON,
 
-    PAINEL_CRUD_START,
-    PAINEL_CRUD_SUCCESS,
-    PAINEL_CRUD_FAILED,
-
     PAINEL_REFRESH_TABLE_DATA,
     PAINEL_OPEN_DIALOGUE_FORM,
     PAINEL_CLOSE_DIALOGUE_FORM,
+
+    PAINEL_FETCH_SEASONS_START,
+    PAINEL_FETCH_SEASONS_SUCCESS,
+    PAINEL_FETCH_SEASONS_FAIL,
 
     PAINEL_CLEAN_GAMES,
 
@@ -26,6 +29,21 @@ import { DialogueFormModeType } from '../reducers/painel';
 
 const GAME_URL = `${process.env.REACT_APP_DEV_BACKEND_BASE_URL}/games`;
 const SEASON_URL = `${process.env.REACT_APP_DEV_BACKEND_BASE_URL}/seasons`;
+
+export const painelSelectSeason = (seasonId: string) => {
+    return {
+        type: PAINEL_SELECT_SEASON,
+        payload:{
+            selectedSeasonId: seasonId
+        }
+    };
+};
+
+export const painelUnselectSeason = () => {
+    return {
+        type: PAINEL_UNSELECT_SEASON
+    };
+};
 
 export const painelCreateGame = () => {
     console.log("Criar game!")
@@ -69,44 +87,22 @@ export const painelUpdateSeason =  () => {
     }
 }
 
-export const painelCrudStart = () => {
-    console.log("Operação CRUD iniciando...")
-    return {
-        type: PAINEL_CRUD_START
-    }
-}
-
-export const painelCrudSuccess =  () => {
-    console.log("Operação CRUD bem sucedida! :)")
-    return {
-        type: PAINEL_CRUD_SUCCESS
-    }
-}
-
-export const painelCrudFailed =  () => {
-    console.log("Operação CRUD falhou! :(")
-    return {
-        type: PAINEL_CRUD_FAILED
-    }
-}
-
 export const painelRefreshTableData =  (
     mode: DialogueFormModeType, 
     seasons: SeasonType[] = [], 
     games: GameType[] = [] ,
     selectedRow:any = null) => {
 
-    console.log("Refresh na tabela!")
+    console.log("Refresh na tabela!");
     return {
         type: PAINEL_REFRESH_TABLE_DATA,
         payload: {
             formMode: mode,
             seasons: seasons,
             games: games,
-            selectedRow: selectedRow
+            selectedSeasonId: selectedRow
         }
     }
-
 }
 
 export const painelOpenDialogueForm = (formMode: DialogueFormModeType, formAction: DialogueFormActionType ): PainelActionType => {
@@ -130,6 +126,27 @@ export const painelLogout = () => {
     }
 }
 
+export const painelFetchSeasonsStart = () => {
+    return{
+        type: PAINEL_FETCH_SEASONS_START
+    }
+}
+
+export const painelFetchSeasonsSuccess = (seasons: SeasonType[]) => {
+    return{
+        type: PAINEL_FETCH_SEASONS_SUCCESS,
+        payload:{
+            seasons: seasons
+        }
+    }
+}
+
+export const painelFetchSeasonsFail = () => {
+    return{
+        type: PAINEL_FETCH_SEASONS_FAIL
+    }
+}
+
 export const painelFetchSeasons = (token: string, userId: string) => {
 
     const set_delay = (ms: any): Promise<any> => {
@@ -141,15 +158,41 @@ export const painelFetchSeasons = (token: string, userId: string) => {
     }
 
     return async (dispatch:any) => {
-        dispatch(painelCrudStart());
-        await set_delay(2000);
-        const seasons = fetchSeasons();
-        dispatch(painelRefreshTableData(DialogueFormModeType.SEASON, seasons, [], null));
-        dispatch(painelCrudSuccess());
+
+        dispatch(painelFetchSeasonsStart());
+
+        await set_delay(1500);
+
+        axios({
+            method: 'get',
+            url: SEASON_URL,
+            data: null,
+            params: {
+                userId
+            },
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(async resp => {
+            const seasons = resp.data.map((dataItem: any) => {
+                return {
+                    ...dataItem,
+                    start: new Date(dataItem.start),
+                    end: dataItem.end ?  new Date(dataItem.end) : null
+                };
+            })
+            dispatch(painelFetchSeasonsSuccess(seasons))
+            dispatch(painelRefreshTableData(DialogueFormModeType.SEASON, seasons, [], null));
+        })
+        .catch(err => {
+            console.log("Erro!")
+            // console.log(err.response.data)
+        });
     }
 }
 
-export const painelFetchGames = (token: string, forUserId: string, forSeason: SeasonType) => {
+export const painelFetchGames = (token: string, forUserId: string, forSeason: string) => {
 
     const set_delay = (ms: any): Promise<any> => {
         return new Promise( (resolve, reject) => {
@@ -160,11 +203,35 @@ export const painelFetchGames = (token: string, forUserId: string, forSeason: Se
     }
 
     return async (dispatch:any) => {
-        dispatch(painelCrudStart());
-        await set_delay(2000);
-        const games = fetchGames();
-        dispatch(painelRefreshTableData(DialogueFormModeType.GAME, [], games, null));
-        dispatch(painelCrudSuccess());
+
+        await set_delay(1500);
+
+        axios({
+            method: 'get',
+            url: GAME_URL,
+            data: null,
+            params: {
+                userId: forUserId,
+                seasonId: forSeason
+            },
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(async resp => {
+            console.log(resp.data)
+            const games = resp.data.map((dataItem: any) => {
+                return {
+                    ...dataItem,
+                    date: new Date(dataItem.date),
+                };
+            })
+            dispatch(painelRefreshTableData(DialogueFormModeType.SEASON, [], games, null));
+        })
+        .catch(err => {
+            console.log("Erro!")
+            // console.log(err.response.data)
+        });
     }
 
 }
@@ -173,42 +240,6 @@ export const painelCleanGames = () => {
     return {
         type: PAINEL_CLEAN_GAMES
     }
-}
-
-const fetchSeasons = (): SeasonType[] => {
-    return [
-        createSeasonData("ABsd",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData("AfffB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData("AeeeB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData("ArtfB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData("AdvbhB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData("AgfhfB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData("AbnnbB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData("AghfB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData("Acvb klB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData("AuuuiiB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData("AB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData("AkjllB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData("AmB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData(" bnmmm  ",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData("AnbmbB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-        createSeasonData("AghBg",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
-    ];
-};
-
-const fetchGames = (): GameType[] => {
-    return [
-        createGameData('ghgfhfg','Jogo dos migos',150, new Date('01/03/2020')),
-        createGameData('zxcdhgd','Jogo da escola',50, new Date('01/03/2020')),
-        createGameData('werteryt','ajsdajskdk',30, new Date('01/03/2020')),
-        createGameData('wesdfrteryt','ajsdajskdk',30, new Date('01/03/2020')),
-        createGameData('wefgdgrteryt','ajsdajskdk',30, new Date('01/03/2020')),
-        createGameData('werdfawteryt','ajsdajskdk',30, new Date('01/03/2020')),
-        createGameData('wertcberyt','ajsdajskdk',30, new Date('01/03/2020')),
-        createGameData('werertyteryt','ajsdajskdk',30, new Date('01/03/2020')),
-        createGameData('werutuiteryt','ajsdajskdk',30, new Date('01/03/2020')),
-        createGameData('wernvbnkteryt','ajsdajskdk',30, new Date('01/03/2020')),
-    ]
 }
 
 export const createSeasonData = (
