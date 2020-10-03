@@ -14,7 +14,9 @@ import {
     PAINEL_REFRESH_TABLE_DATA,
     PAINEL_OPEN_DIALOGUE_FORM,
     PAINEL_CLOSE_DIALOGUE_FORM,
-     
+
+    PAINEL_CLEAN_GAMES,
+
     PAINEL_LOGOUT,
 } from '../actions/actionTypes';
 
@@ -165,6 +167,12 @@ export const painelFetchGames = (token: string, forUserId: string, forSeason: Se
         dispatch(painelCrudSuccess());
     }
 
+}
+
+export const painelCleanGames = () => {
+    return {
+        type: PAINEL_CLEAN_GAMES
+    }
 }
 
 const fetchSeasons = (): SeasonType[] => {

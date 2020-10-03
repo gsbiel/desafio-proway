@@ -19,6 +19,8 @@ import {
 
     PAINEL_FETCH_SEASONS,
     PAINEL_FETCH_GAMES,
+
+    PAINEL_CLEAN_GAMES
 } from '../actions/actionTypes';
 
 export enum DialogueFormModeType {
@@ -171,6 +173,13 @@ const painelFetchGames = (state: PainelStateSliceType, action: PainelActionType)
     return state;
 };
 
+const painelCleanGames =  (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        games: []
+    }
+}
+
 const initialState: PainelStateSliceType = {
     currentTableSection: DialogueFormModeType.SEASON,
     seasons: [],
@@ -216,6 +225,8 @@ const reducer = (
             return painelFetchSeasons(state, action);
         case PAINEL_FETCH_GAMES:
             return painelFetchGames(state, action);
+        case PAINEL_CLEAN_GAMES:
+            return painelCleanGames(state, action);
         case PAINEL_LOGOUT:
             return painelLogout(state, action);
         default:

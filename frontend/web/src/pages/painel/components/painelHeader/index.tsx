@@ -11,7 +11,11 @@ import {
     BackButton
 } from './styles';
 
-import {painelRefreshTableData} from '../../../../store/actions/painel';
+import {
+    painelRefreshTableData,
+    painelCleanGames
+} from '../../../../store/actions/painel';
+
 import { DialogueFormModeType } from '../../../../store/reducers/painel';
 
 
@@ -21,7 +25,8 @@ const PainelHeader = () => {
     const formDialogueMode = useSelector( (state: RootState) => state.painel.dialogueEntityMode);
 
     const onBackButtonHandler = () => {
-        dispatch(painelRefreshTableData(DialogueFormModeType.SEASON))
+        dispatch(painelCleanGames());
+        dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));
     }
 
     return(
