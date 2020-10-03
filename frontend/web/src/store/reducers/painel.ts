@@ -15,28 +15,38 @@ import {
     PAINEL_OPEN_DIALOGUE_FORM,
     PAINEL_CLOSE_DIALOGUE_FORM,
 
-    PAINEL_LOGOUT
+    PAINEL_LOGOUT,
+
+    PAINEL_FETCH_SEASONS,
+    PAINEL_FETCH_GAMES,
 } from '../actions/actionTypes';
 
 export enum DialogueFormModeType {
     SEASON = "SEASON",
     GAME = "GAME",
-}
+};
 
 export enum DialogueFormActionType {
     ADD ="ADD",
     EDIT = "EDIT",
     DELETE = "DELETE",
     NONE = "NONE",
-}
+};
 
 export interface GameType {
 
-}
+};
 
 export interface SeasonType {
-
-}
+    id: string,
+    name: string,
+    start: Date,
+    end: Date,
+    min_score: number,
+    max_score: number,
+    min_score_count: number,
+    max_score_count: number
+};
 
 export interface PainelStateSliceType {
     currentTableSection: DialogueFormModeType,
@@ -47,87 +57,114 @@ export interface PainelStateSliceType {
     isDialogueFormOpen: boolean,
     dialogueEntityMode: DialogueFormModeType,
     dialogueActionMode: DialogueFormActionType
-}
+};
 
 export interface PainelActionType{
     type: string,
     payload?: PainelPayloadType
-}
+};
 
 export interface PainelPayloadType {
     formAction?: DialogueFormActionType,
-    formMode?: DialogueFormModeType
-}
+    formMode?: DialogueFormModeType,
+    seasons?: SeasonType[]
+};
 
 const painelCreateGame = (state: PainelStateSliceType, action: PainelActionType) => {
     return state;
-}
+};
 
 const painelDeleteGame =  (state: PainelStateSliceType, action: PainelActionType) => {
     return state;
-}
+};
 
 const painelUpdateGame =  (state: PainelStateSliceType, action: PainelActionType) => {
     return state;
-}
+};
 
 const painelCreateSeason =  (state: PainelStateSliceType, action: PainelActionType) => {
     return state;
-}
+};
 
 const painelDeleteSeason = (state: PainelStateSliceType, action: PainelActionType) => {
     return state;
-}
+};
 
 const painelUpdateSeason =  (state: PainelStateSliceType, action: PainelActionType) => {
     return state;
-}
+};
 
 const painelCrudStart =  (state: PainelStateSliceType, action: PainelActionType) => {
-    return state;
-}
-
-const painelCrudSuccess =  (state: PainelStateSliceType, action: PainelActionType) => {
-    return state;
-}
-
-const painelCrudFailed =  (state: PainelStateSliceType, action: PainelActionType) => {
-    return state;
-}
-
-const painelRefreshTableData =  (state: PainelStateSliceType, action: PainelActionType) => {
     return {
         ...state,
-        dialogueEntityMode: action.payload?.formMode ? action.payload?.formMode : DialogueFormModeType.SEASON
+        isLoading: true
     };
-}
+};
+
+const painelCrudSuccess =  (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isLoading: false,
+    };
+};
+
+const painelCrudFailed =  (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isLoading: false,
+        isOnError: true
+    };
+};
+
+const painelRefreshTableData =  (state: PainelStateSliceType, action: PainelActionType) => {
+    if(action.payload?.seasons?.length){
+        return {
+            ...state,
+            dialogueEntityMode: action.payload?.formMode ? action.payload?.formMode : DialogueFormModeType.SEASON,
+            seasons: action.payload?.seasons
+        }
+    }else{
+        return {
+            ...state,
+            dialogueEntityMode: action.payload?.formMode ? action.payload?.formMode : DialogueFormModeType.SEASON,
+        }
+    }
+};
 
 const painelOpenDialogueForm = (state: PainelStateSliceType, action: PainelActionType) => {
     return {
         ...state,
         isDialogueFormOpen: true,
         dialogueActionMode: action.payload?.formAction ? action.payload?.formAction : DialogueFormActionType.NONE
-    }
-}
+    };
+};
 
 const painelCloseDialogueForm = (state: PainelStateSliceType, action: PainelActionType) => {
     return {
         ...state,
         isDialogueFormOpen: false
-    }
-}
+    };
+};
 
 const painelLogout = (state: PainelStateSliceType, action: PainelActionType) => {
     return {
         ...initialState
-    }
-}
+    };
+};
+
+const painelFetchSeasons = (state: PainelStateSliceType, action: PainelActionType) => {
+    return state;
+};
+
+const painelFetchGames = (state: PainelStateSliceType, action: PainelActionType) => {
+    return state;
+};
 
 const initialState: PainelStateSliceType = {
     currentTableSection: DialogueFormModeType.SEASON,
     seasons: [],
     games: [],
-    isLoading: true,
+    isLoading: false,
     isOnError: false,
     isDialogueFormOpen: false,
     dialogueEntityMode: DialogueFormModeType.SEASON,
@@ -164,11 +201,15 @@ const reducer = (
             return painelOpenDialogueForm(state, action);
         case PAINEL_CLOSE_DIALOGUE_FORM:
             return painelCloseDialogueForm(state,action);
+        case PAINEL_FETCH_SEASONS:
+            return painelFetchSeasons(state, action);
+        case PAINEL_FETCH_GAMES:
+            return painelFetchGames(state, action);
         case PAINEL_LOGOUT:
             return painelLogout(state, action);
         default:
             return state;
     }
-}
+};
 
 export default reducer;

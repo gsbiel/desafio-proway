@@ -20,37 +20,38 @@ import {
 
 import {RootState} from '../../../../index';
 
-
 import {
   CustomPaper
 } from './styles';
-import { painelRefreshTableData } from '../../../../store/actions/painel';
+
+import { painelRefreshTableData, painelFetchSeasons} from '../../../../store/actions/painel';
+
 import { DialogueFormModeType } from '../../../../store/reducers/painel';
 
 const customRowsPerPage = 8
 const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-const rowsForSeasons = [
-  createSeasonData('Cupcake', 305, 3.7, 67, 4.3,'02/03/2020','03/03/2020'),
-  createSeasonData('Donut', 452, 25.0, 51, 4.9,'04/03/2020','07/02/2020'),
-  createSeasonData('Eclair', 262, 16.0, 24, 6.0,'06/03/2020','07/02/2020'),
-  createSeasonData('Frozen yoghurt', 159, 6.0, 24, 4.0,'08/03/2020','09/02/2020'),
-  createSeasonData('Gingerbread', 356, 16.0, 49, 3.9,'10/03/2020','11/03/2020'),
-  createSeasonData('Honeycomb', 408, 3.2, 87, 6.5,'02/03/2020',''),
-  createSeasonData('Ice cream sandwich', 237, 9.0, 37, 4.3,'02/03/2020',''),
-  createSeasonData('Jelly Bean', 375, 0.0, 94, 0.0,'02/03/2020',''),
-  createSeasonData('KitKat', 518, 26.0, 65, 7.0,'02/03/2020',''),
-  createSeasonData('Lollipop', 392, 0.2, 98, 0.0,'02/03/2020',''),
-  createSeasonData('Marshmallow', 318, 0, 81, 2.0,'02/03/2020',''),
-  createSeasonData('Nougat', 360, 19.0, 9, 37.0,'02/03/2020',''),
-  createSeasonData('Oreo', 437, 18.0, 63, 4.0,'02/03/2020',''),
-];
+// const rowsForSeasons = [
+//   createSeasonData('Cupcake', 305, 3.7, 67, 4.3,'02/03/2020','03/03/2020'),
+//   createSeasonData('Donut', 452, 25.0, 51, 4.9,'04/03/2020','07/02/2020'),
+//   createSeasonData('Eclair', 262, 16.0, 24, 6.0,'06/03/2020','07/02/2020'),
+//   createSeasonData('Frozen yoghurt', 159, 6.0, 24, 4.0,'08/03/2020','09/02/2020'),
+//   createSeasonData('Gingerbread', 356, 16.0, 49, 3.9,'10/03/2020','11/03/2020'),
+//   createSeasonData('Honeycomb', 408, 3.2, 87, 6.5,'02/03/2020',''),
+//   createSeasonData('Ice cream sandwich', 237, 9.0, 37, 4.3,'02/03/2020',''),
+//   createSeasonData('Jelly Bean', 375, 0.0, 94, 0.0,'02/03/2020',''),
+//   createSeasonData('KitKat', 518, 26.0, 65, 7.0,'02/03/2020',''),
+//   createSeasonData('Lollipop', 392, 0.2, 98, 0.0,'02/03/2020',''),
+//   createSeasonData('Marshmallow', 318, 0, 81, 2.0,'02/03/2020',''),
+//   createSeasonData('Nougat', 360, 19.0, 9, 37.0,'02/03/2020',''),
+//   createSeasonData('Oreo', 437, 18.0, 63, 4.0,'02/03/2020',''),
+// ];
 
-const rowsForGames= [
-  createGameData('Jogo dos migos',150,'01/03/2020'),
-  createGameData('Jogo da escola',50,'01/03/2020'),
-  createGameData('ajsdajskdk',30,'01/03/2020')
-]
+// const rowsForGames= [
+//   createGameData('Jogo dos migos',150,'01/03/2020'),
+//   createGameData('Jogo da escola',50,'01/03/2020'),
+//   createGameData('ajsdajskdk',30,'01/03/2020')
+// ]
 
 const headCellsForSeasons = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
@@ -86,6 +87,11 @@ function EnhancedTable() {
   const dispatch = useDispatch()
   const formDialogueMode = useSelector( (state) => state.painel.dialogueEntityMode);
 
+  const userSeasons = useSelector( (state) => state.painel.seasons);
+  const rowsForGames = useSelector( (state) => state.painel.games);
+
+  const [rowsForSeasons, setRowsForSeasons] = React.useState([])
+
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
@@ -94,10 +100,48 @@ function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(customRowsPerPage);
 
   const [headCells, setHeadCells] = React.useState(headCellsForSeasons);
-  const [rows, setRows] = React.useState(rowsForSeasons)
+  const [rows, setRows] = React.useState([])
   const [tablePath, setTablePath] = React.useState("Seasons")
 
   let checkBoxClicked = false
+
+  useEffect(()=> {
+    if(formDialogueMode == DialogueFormModeType.SEASON){
+      if(!userSeasons.length){
+        dispatch(painelFetchSeasons("sadasd","sdfsdf"));
+      }
+    }
+    else{
+      if(!rowsForGames.length){
+        dispatch(painelRefreshTableData());
+      }
+    }
+  },[])
+
+  useEffect(()=>{
+
+    const rowsForSeasons = userSeasons.map(seasonItem => {
+
+      const startArray = seasonItem.start.toISOString().split('T')[0].split("-");
+      const startDate = `${startArray[2]}/${startArray[1]}/${startArray[0]}}`;
+
+      const endArray = seasonItem.end.toISOString().split('T')[0].split("-");
+      const endDate = `${endArray[2]}/${endArray[1]}/${endArray[0]}}`;
+      
+      return{
+        name: seasonItem.name,
+        highest: seasonItem.max_score,
+        lowest: seasonItem.min_score,
+        highestBreaks: seasonItem.max_score_count,
+        lowestBreaks: seasonItem.min_score_count,
+        start: startDate,
+        end: endDate,
+      }
+    });
+
+    setRowsForSeasons(rowsForSeasons);
+    setRows(rowsForSeasons);
+  }, [userSeasons])
 
   useEffect(() => {
     if(formDialogueMode == DialogueFormModeType.SEASON){

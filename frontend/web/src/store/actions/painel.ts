@@ -19,7 +19,7 @@ import {
 } from '../actions/actionTypes';
 
 import axios from 'axios';
-import { DialogueFormActionType, PainelActionType } from '../reducers/painel';
+import { DialogueFormActionType, PainelActionType, SeasonType } from '../reducers/painel';
 import { DialogueFormModeType } from '../reducers/painel';
 
 const GAME_URL = `${process.env.REACT_APP_DEV_BACKEND_BASE_URL}/games`;
@@ -88,12 +88,14 @@ export const painelCrudFailed =  () => {
     }
 }
 
-export const painelRefreshTableData =  (mode: DialogueFormModeType) => {
+export const painelRefreshTableData =  (mode: DialogueFormModeType, seasons: SeasonType[] = [], selectedRow:any = null) => {
     console.log("Refresh na tabela!")
     return {
         type: PAINEL_REFRESH_TABLE_DATA,
         payload: {
-            formMode: mode
+            formMode: mode,
+            seasons: seasons,
+            selectedRow: selectedRow
         }
     }
 }
@@ -117,4 +119,61 @@ export const painelLogout = () => {
     return{
         type: PAINEL_LOGOUT
     }
+}
+
+export const painelFetchSeasons = (token: string, userId: string) => {
+
+    const set_delay = (ms: any): Promise<any> => {
+        return new Promise( (resolve, reject) => {
+            console.log("iniciando contagem do login...")
+            setTimeout(resolve, ms)
+            
+        });
+    }
+
+    return async (dispatch:any) => {
+        dispatch(painelCrudStart());
+        await set_delay(2000);
+        const seasons = fetchSeasons();
+        dispatch(painelRefreshTableData(DialogueFormModeType.SEASON, seasons, null));
+        dispatch(painelCrudSuccess());
+    }
+}
+
+export const painelFetchGames = (token: string, forUserId: string, forSeason: SeasonType) => {
+
+}
+
+const fetchSeasons = (): SeasonType[] => {
+    return [
+        createSeasonData("ABsd",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData("AfffB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData("AeeeB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData("ArtfB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData("AdvbhB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData("AgfhfB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData("AbnnbB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData("AghfB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData("Acvb klB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData("AuuuiiB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData("AB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData("AkjllB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData("AmB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData(" bnmmm  ",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData("AnbmbB",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+        createSeasonData("AghBg",'Cupcake', new Date('02/03/2020'), new Date('03/03/2020'), 305, 3.7, 67, 4.3),
+    ];
+};
+
+export const createSeasonData = (
+    id: string,
+    name: string, 
+    start: Date, 
+    end: Date,
+    min_score: number, 
+    max_score: number, 
+    min_score_count: number, 
+    max_score_count: number,
+    ) => {
+    return { id, name, start, end, max_score,min_score, min_score_count, max_score_count};
 }
