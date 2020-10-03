@@ -19,7 +19,7 @@ import {
 } from '../actions/actionTypes';
 
 import axios from 'axios';
-import { DialogueFormActionType, PainelActionType, SeasonType } from '../reducers/painel';
+import { DialogueFormActionType, PainelActionType, SeasonType, GameType } from '../reducers/painel';
 import { DialogueFormModeType } from '../reducers/painel';
 
 const GAME_URL = `${process.env.REACT_APP_DEV_BACKEND_BASE_URL}/games`;
@@ -88,16 +88,23 @@ export const painelCrudFailed =  () => {
     }
 }
 
-export const painelRefreshTableData =  (mode: DialogueFormModeType, seasons: SeasonType[] = [], selectedRow:any = null) => {
+export const painelRefreshTableData =  (
+    mode: DialogueFormModeType, 
+    seasons: SeasonType[] = [], 
+    games: GameType[] = [] ,
+    selectedRow:any = null) => {
+
     console.log("Refresh na tabela!")
     return {
         type: PAINEL_REFRESH_TABLE_DATA,
         payload: {
             formMode: mode,
             seasons: seasons,
+            games: games,
             selectedRow: selectedRow
         }
     }
+
 }
 
 export const painelOpenDialogueForm = (formMode: DialogueFormModeType, formAction: DialogueFormActionType ): PainelActionType => {
@@ -135,12 +142,28 @@ export const painelFetchSeasons = (token: string, userId: string) => {
         dispatch(painelCrudStart());
         await set_delay(2000);
         const seasons = fetchSeasons();
-        dispatch(painelRefreshTableData(DialogueFormModeType.SEASON, seasons, null));
+        dispatch(painelRefreshTableData(DialogueFormModeType.SEASON, seasons, [], null));
         dispatch(painelCrudSuccess());
     }
 }
 
 export const painelFetchGames = (token: string, forUserId: string, forSeason: SeasonType) => {
+
+    const set_delay = (ms: any): Promise<any> => {
+        return new Promise( (resolve, reject) => {
+            console.log("iniciando contagem do login...")
+            setTimeout(resolve, ms)
+            
+        });
+    }
+
+    return async (dispatch:any) => {
+        dispatch(painelCrudStart());
+        await set_delay(2000);
+        const games = fetchGames();
+        dispatch(painelRefreshTableData(DialogueFormModeType.GAME, [], games, null));
+        dispatch(painelCrudSuccess());
+    }
 
 }
 
@@ -165,6 +188,21 @@ const fetchSeasons = (): SeasonType[] => {
     ];
 };
 
+const fetchGames = (): GameType[] => {
+    return [
+        createGameData('ghgfhfg','Jogo dos migos',150, new Date('01/03/2020')),
+        createGameData('zxcdhgd','Jogo da escola',50, new Date('01/03/2020')),
+        createGameData('werteryt','ajsdajskdk',30, new Date('01/03/2020')),
+        createGameData('wesdfrteryt','ajsdajskdk',30, new Date('01/03/2020')),
+        createGameData('wefgdgrteryt','ajsdajskdk',30, new Date('01/03/2020')),
+        createGameData('werdfawteryt','ajsdajskdk',30, new Date('01/03/2020')),
+        createGameData('wertcberyt','ajsdajskdk',30, new Date('01/03/2020')),
+        createGameData('werertyteryt','ajsdajskdk',30, new Date('01/03/2020')),
+        createGameData('werutuiteryt','ajsdajskdk',30, new Date('01/03/2020')),
+        createGameData('wernvbnkteryt','ajsdajskdk',30, new Date('01/03/2020')),
+    ]
+}
+
 export const createSeasonData = (
     id: string,
     name: string, 
@@ -176,4 +214,18 @@ export const createSeasonData = (
     max_score_count: number,
     ) => {
     return { id, name, start, end, max_score,min_score, min_score_count, max_score_count};
+}
+
+export const createGameData = (
+    id: string,
+    name: string,
+    score: number,
+    date: Date
+) => {
+    return{
+        id,
+        name,
+        score,
+        date
+    }
 }

@@ -34,7 +34,10 @@ export enum DialogueFormActionType {
 };
 
 export interface GameType {
-
+    id: string,
+    name: string,
+    score: number,
+    date: Date
 };
 
 export interface SeasonType {
@@ -51,7 +54,7 @@ export interface SeasonType {
 export interface PainelStateSliceType {
     currentTableSection: DialogueFormModeType,
     seasons: SeasonType[],
-    games: GameType,
+    games: GameType[],
     isLoading: boolean,
     isOnError: boolean,
     isDialogueFormOpen: boolean,
@@ -67,7 +70,8 @@ export interface PainelActionType{
 export interface PainelPayloadType {
     formAction?: DialogueFormActionType,
     formMode?: DialogueFormModeType,
-    seasons?: SeasonType[]
+    seasons?: SeasonType[],
+    games?: GameType[]
 };
 
 const painelCreateGame = (state: PainelStateSliceType, action: PainelActionType) => {
@@ -123,7 +127,14 @@ const painelRefreshTableData =  (state: PainelStateSliceType, action: PainelActi
             dialogueEntityMode: action.payload?.formMode ? action.payload?.formMode : DialogueFormModeType.SEASON,
             seasons: action.payload?.seasons
         }
-    }else{
+    }else if(action.payload?.games?.length){
+        return {
+            ...state,
+            dialogueEntityMode: action.payload?.formMode ? action.payload?.formMode : DialogueFormModeType.GAME,
+            games: action.payload?.games
+        }
+    }
+    else{
         return {
             ...state,
             dialogueEntityMode: action.payload?.formMode ? action.payload?.formMode : DialogueFormModeType.SEASON,

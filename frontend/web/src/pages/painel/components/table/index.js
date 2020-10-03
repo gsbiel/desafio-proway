@@ -24,7 +24,11 @@ import {
   CustomPaper
 } from './styles';
 
-import { painelRefreshTableData, painelFetchSeasons} from '../../../../store/actions/painel';
+import { 
+  painelRefreshTableData, 
+  painelFetchSeasons, 
+  painelFetchGames
+} from '../../../../store/actions/painel';
 
 import { DialogueFormModeType } from '../../../../store/reducers/painel';
 
@@ -88,9 +92,12 @@ function EnhancedTable() {
   const formDialogueMode = useSelector( (state) => state.painel.dialogueEntityMode);
 
   const userSeasons = useSelector( (state) => state.painel.seasons);
-  const rowsForGames = useSelector( (state) => state.painel.games);
+  const userGames = useSelector ((state) => state.painel.games);
+
+  // const rowsForGames = useSelector( (state) => state.painel.games);
 
   const [rowsForSeasons, setRowsForSeasons] = React.useState([])
+  const [rowsForGames, setRowsForGames] = React.useState([])
 
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
@@ -112,22 +119,18 @@ function EnhancedTable() {
       }
     }
     else{
-      if(!rowsForGames.length){
-        dispatch(painelRefreshTableData());
+      if(!userGames.length){
+        dispatch(painelFetchGames("fsdfdsf","fsdfds"));
       }
     }
   },[])
 
   useEffect(()=>{
-
     const rowsForSeasons = userSeasons.map(seasonItem => {
-
       const startArray = seasonItem.start.toISOString().split('T')[0].split("-");
       const startDate = `${startArray[2]}/${startArray[1]}/${startArray[0]}}`;
-
       const endArray = seasonItem.end.toISOString().split('T')[0].split("-");
       const endDate = `${endArray[2]}/${endArray[1]}/${endArray[0]}}`;
-      
       return{
         name: seasonItem.name,
         highest: seasonItem.max_score,
@@ -138,16 +141,33 @@ function EnhancedTable() {
         end: endDate,
       }
     });
-
     setRowsForSeasons(rowsForSeasons);
     setRows(rowsForSeasons);
   }, [userSeasons])
+
+  useEffect(()=>{
+    const rowsForGames = userGames.map(gameItem => {
+      const gameDateArray = gameItem.date.toISOString().split('T')[0].split("-");
+      const gameDate = `${gameDateArray[2]}/${gameDateArray[1]}/${gameDateArray[0]}}`;
+      return{
+        name: gameItem.name,
+        score: gameItem.score,
+        date: gameDate
+      };
+    });
+    setRowsForGames(rowsForGames);
+    setRows(rowsForGames);
+  }, [userGames]) 
 
   useEffect(() => {
     if(formDialogueMode == DialogueFormModeType.SEASON){
       setTablePath(`Season`)
       setHeadCells(headCellsForSeasons)
       setRows(rowsForSeasons)
+    }else{
+      if(!userGames.length){
+        dispatch(painelFetchGames("fsdfdsf","fsdfds"));
+      }
     }
   },[formDialogueMode])
 
@@ -266,6 +286,7 @@ function EnhancedTable() {
                       </TableCell>
                       {
                         Object.keys(row).map(key => {
+                          console.log(`key: ${key}`)
                           if(key==0){
                             return  <TableCell key={characters.shuffle()} component="th" id={labelId} scope="row" padding="none">
                                       {row[key]}
