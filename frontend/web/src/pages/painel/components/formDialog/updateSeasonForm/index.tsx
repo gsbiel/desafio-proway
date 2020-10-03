@@ -60,6 +60,12 @@ const UpdateSeasonForm = () => {
     }, [selectedEndDate]);
 
     useEffect(() => {
+        if(!endDateCheckBoxState){
+            setSelectedEndDate(new Date());
+        }
+    }, [endDateCheckBoxState]);
+
+    useEffect(() => {
         if(nameCheckBoxState){
             if(!seasonName.trim().length){
                 setSeasonNameValidationState(false)
@@ -93,7 +99,6 @@ const UpdateSeasonForm = () => {
         if(endDateCheckBoxState){
             setSelectedEndDate(date);
         }else{
-            console.log("entrei aqui")
             setSelectedEndDate(endDateFreezedValue);
         } 
     }
@@ -183,7 +188,6 @@ const UpdateSeasonForm = () => {
                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                             style={{opacity:0.6, marginLeft:15}}
-                            defaultValue={null}
                             disableToolbar
                             variant="inline"
                             format="MM/dd/yyyy"

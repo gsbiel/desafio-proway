@@ -8,6 +8,7 @@ import {painelCloseDialogueForm} from '../../../../store/actions/painel';
 import CreateSeasonForm from './createSeasonForm';
 import CreateGameForm from './createGameForm';
 import UpdateSeasonForm from './updateSeasonForm';
+import UpdateGameForm from './updateGameForm';
 
 const FormDialog = () => {
 
@@ -25,8 +26,9 @@ const FormDialog = () => {
   return (
       <Dialog open={isDialogueFormOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
         {/* <CreateSeasonForm /> */}
-        {/* <CreateGameForm /> */}
-        <UpdateSeasonForm />
+        <CreateGameForm />
+        {/* <UpdateSeasonForm /> */}
+        {/* <UpdateGameForm /> */}
       </Dialog>
   );
 }
