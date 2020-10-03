@@ -6,6 +6,13 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import { KeyboardDatePicker, MuiPickersUtilsProvider,} from '@material-ui/pickers';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+
+import {
+    GameNameField
+} from './styles';
 
 import {
     painelCloseDialogueForm
@@ -22,6 +29,8 @@ const CreateGameForm = () => {
     const [gameName, setGameName] = useState("");
     const [isGameNameValid, setGameNameValidationState] = useState(true);
     const [gameNameErrorMsg, setGameNameErrorMsg] = useState(TextFieldErrorState.OK);
+
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     const [gameScore, setGameScore] = useState(0);
     
@@ -60,6 +69,10 @@ const CreateGameForm = () => {
         }
     };
 
+    const onDateChangeHandler = (date:any) => {
+        setSelectedDate(date);
+    }
+
     return (
         <Fragment>
             <DialogTitle id="form-dialog-title">Create a new Game</DialogTitle>
@@ -67,7 +80,7 @@ const CreateGameForm = () => {
                 <DialogContentText>
                     In order to create a new game, please, fill in the form below.
                 </DialogContentText>
-                <TextField
+                <GameNameField
                     autoFocus
                     margin="dense"
                     id="gameName"
@@ -78,10 +91,10 @@ const CreateGameForm = () => {
                     error = {!isGameNameValid}
                     helperText = {gameNameErrorMsg}
                 />
-                <TextField
+                <GameNameField
                     style={{marginTop:30, width:"100px"}}
                     id="standard-number"
-                    label="Your score"
+                    label="Game score"
                     type="number"
                     InputLabelProps={{
                         shrink: true,
@@ -90,6 +103,22 @@ const CreateGameForm = () => {
                     value={gameScore}
                     defaultValue={0}
                 />
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                        style = {{marginLeft: 15, marginTop: 30}}
+                        disableToolbar
+                        variant="inline"
+                        format="MM/dd/yyyy"
+                        margin="normal"
+                        id="date-picker-inline"
+                        label="Game date"
+                        value={selectedDate}
+                        onChange={(date) => onDateChangeHandler(date)}
+                        KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                        }}
+                    />
+                </MuiPickersUtilsProvider>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">
