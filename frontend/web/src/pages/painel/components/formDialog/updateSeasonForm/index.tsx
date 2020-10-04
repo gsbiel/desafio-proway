@@ -116,9 +116,13 @@ const UpdateSeasonForm = () => {
     }
 
     const updateSeasonHandler = () => {
-        if((validateSeasonNameForm()) &&  !isNaN(selectedEndDate.getTime())){
+        if(nameCheckBoxState || endDateCheckBoxState){
+            if((validateSeasonNameForm()) &&  !isNaN(selectedEndDate.getTime())){
+                dispatch(painelCloseDialogueForm());
+                dispatch(painelUpdateSeason(userToken, userId, selectedSeasonId, seasonName, selectedEndDate));
+            }
+        }else{
             dispatch(painelCloseDialogueForm());
-            dispatch(painelUpdateSeason(userToken, userId, selectedSeasonId, seasonName, selectedEndDate));
         }
     }
 

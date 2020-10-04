@@ -170,9 +170,25 @@ const painelUpdateGameStart =  (state: PainelStateSliceType, action: PainelActio
 };
 
 const painelUpdateGameSuccess =  (state: PainelStateSliceType, action: PainelActionType) => {
-    return {
-        ...state
-    };
+    const newGame = action.payload?.newGame ? action.payload?.newGame  : null
+    let filteredGames: GameType[] = [] 
+    if(newGame) {
+        filteredGames = state.games.filter(gameItem => {
+            return gameItem.id !== newGame.id;
+        })
+        const newGames = [...filteredGames, newGame]
+        return {
+            ...state,
+            games: newGames,
+            isLoading: false
+        }
+    }
+    else{
+        return {
+            ...state,
+            isLoading: false
+        }
+    }
 };
 
 const painelUpdateGameFailed =  (state: PainelStateSliceType, action: PainelActionType) => {

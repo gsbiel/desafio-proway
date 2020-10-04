@@ -1,5 +1,5 @@
 import React, {Fragment, useState, useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -12,12 +12,18 @@ import { KeyboardDatePicker, MuiPickersUtilsProvider,} from '@material-ui/picker
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 
+
+import {
+    RootState
+} from '../../../../../index';
+
 import {
     TextFieldErrorState
 } from '../../../../auth/components/loginForm/index';
 
 import {
-    painelCloseDialogueForm
+    painelCloseDialogueForm,
+    painelUpdateGame
 } from '../../../../../store/actions/painel';
 
 import {
@@ -28,6 +34,11 @@ import {
 const UpdateGameForm = () => {
 
     const dispatch = useDispatch();
+    const userToken = useSelector( (state: RootState) => state.auth.token );
+    const userId = useSelector( (state: RootState) => state.auth.userId );
+    const selectedSeasonId = useSelector((state: RootState) => state.painel.selectedSeasonId);
+    const selectedGameId = useSelector((state: RootState) => state.painel.selectedGameId);
+    const games = useSelector((state: RootState) => state.painel.games);
 
     const [gameName, setGameName] = useState("");
     const [isGameNameValid, setGameNameValidationState] = useState(true);
@@ -67,6 +78,12 @@ const UpdateGameForm = () => {
     useEffect(() => {
         setGameNameValidationState(true)
         setGameNameErrorMsg(TextFieldErrorState.OK)
+        const gameSelected = games.filter(gameItem => {
+            return gameItem.id == selectedGameId;
+        });
+        setGameName(gameSelected[0].name);
+        setGameScore(gameSelected[0].score);
+        setSelectedGameDate(gameSelected[0].date);
     },[]);
 
     const onGameScoreCheckBoxChangedHandler = () => {
@@ -105,9 +122,28 @@ const UpdateGameForm = () => {
         dispatch(painelCloseDialogueForm());
     };
 
-    const updateSeasonHandler = () => {
-        dispatch(painelCloseDialogueForm());
+    const updateGameHandler = () => {
+        if(gameNameCheckBoxState || gameScoreCheckBoxState || gameDateCheckBoxState){
+            if((validateGameNameForm()) &&  !isNaN(selectedGameDate.getTime())){
+                dispatch(painelCloseDialogueForm());
+                dispatch(painelUpdateGame(userToken, userId, selectedSeasonId, selectedGameId, gameName, gameScore, selectedGameDate));
+            }
+        }else{
+            dispatch(painelCloseDialogueForm());
+        } 
     };
+
+    const validateGameNameForm = ():boolean => {
+        if(!gameName.trim().length){
+            setGameNameValidationState(false)
+            setGameNameErrorMsg(TextFieldErrorState.MISSING_DATA)
+            return false;
+        }else {
+            setGameNameValidationState(true)
+            setGameNameErrorMsg(TextFieldErrorState.OK)
+            return true;
+        }
+    }
 
     return(
         <Fragment>
@@ -207,7 +243,7 @@ const UpdateGameForm = () => {
                 <Button onClick={handleClose} color="primary">
                     Cancel
                 </Button>
-                <Button onClick={() => updateSeasonHandler()} color="primary">
+                <Button onClick={() => updateGameHandler()} color="primary">
                     Update
                 </Button>
             </DialogActions>
