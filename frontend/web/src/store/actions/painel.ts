@@ -617,7 +617,7 @@ export const painelDeleteSeasons = (userToken: string, userId: string, seasonsTo
             url: SEASON_URL,
             data: {
                 userId: userId,
-                seasonsToBeDeleted: seasonsToBeDeleted,
+                seasonsId: seasonsToBeDeleted,
             },
             headers: {
                 'Authorization': `Bearer ${userToken}`
@@ -637,6 +637,7 @@ export const painelDeleteSeasons = (userToken: string, userId: string, seasonsTo
         })
         .catch(err => {
             console.log("Erro!")
+            console.log(err.response.data)
             // console.log(err.response.data)
         });
     }

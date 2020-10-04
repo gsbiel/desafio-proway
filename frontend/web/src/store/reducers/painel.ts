@@ -360,16 +360,16 @@ const painelDeleteSeasonStart = (state: PainelStateSliceType, action: PainelActi
 
 const painelDeleteSeasonSuccess =  (state: PainelStateSliceType, action: PainelActionType) => {
     if(action.payload?.seasonsDeleted?.length){
-        let filteredSeasons: SeasonType[] = [];
+        let newSeasonsState = [...state.seasons];
         action.payload?.seasonsDeleted.map( deletedSeasonItem => {
-            filteredSeasons = state.seasons.filter(stateSeasonItem => {
+            newSeasonsState = newSeasonsState.filter(stateSeasonItem => {
                 return deletedSeasonItem.id !== stateSeasonItem.id
             });
         });
         return {
             ...state,
             isLoading: false,
-            seasons: filteredSeasons
+            seasons: newSeasonsState
         };
     }else{
         return{
