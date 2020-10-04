@@ -73,6 +73,30 @@ export class SeasonsService {
         })
     }
 
+    async deleteSeasonsForUserId(userId: string, seasonsId: string[]){
+
+        const seasons = await this.findAllSeasonsForUser(userId)
+
+        if(!seasons.length){
+            throw new HttpException({
+                status: HttpStatus.NOT_ACCEPTABLE,
+                error: "There is no item to be deleted."
+            }, HttpStatus.NOT_ACCEPTABLE)
+        }
+
+        let seasonsToBeDeleted = []
+        seasonsId.map(seasonId => {
+            const seasonFilteredToBeDeleted = seasons.filter(seasonItem => {
+                return seasonItem.id === seasonId
+            })
+            seasonsToBeDeleted = [...seasonsToBeDeleted, seasonFilteredToBeDeleted[0]]
+        });
+
+        this.seasonRepository.remove(seasonsToBeDeleted);
+        
+        return seasonsToBeDeleted;
+    }
+
     async updateSeasonForUserId(userId: string, seasonId: string, newName?: string, endDate?: string){
 
         if(!newName && !endDate){

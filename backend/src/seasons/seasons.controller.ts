@@ -32,14 +32,9 @@ export class SeasonsController {
 
     @UseGuards(JwtAuthGuard)
     @Delete()
-    async deleteSeasons(@Request() req, @Query() deleteSeasonsDto: DeleteSeasonsDto){
+    async deleteSeasons(@Request() req, @Body() deleteSeasonsDto: DeleteSeasonsDto){
         this.validateAccess(deleteSeasonsDto.userId, req.user.userId)
-        if(deleteSeasonsDto.seasonId){
-            return await this.seasonsService.deleteSeasonForUserId(deleteSeasonsDto.userId,deleteSeasonsDto.seasonId)
-        }
-        else{
-            return await this.seasonsService.deleteAllSeasonsForUserId(deleteSeasonsDto.userId)
-        } 
+        return await this.seasonsService.deleteSeasonsForUserId(deleteSeasonsDto.userId,deleteSeasonsDto.seasonsId)
     }
 
     validateAccess(userIdFromAuthentication, userIdSentByClient){

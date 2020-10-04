@@ -39,10 +39,11 @@ export class DeleteSeasonsDto {
     @IsUUID()
     userId: string
 
-    @IsOptional()
-    @IsString()
-    @IsUUID()
-    seasonId: string
+    @IsNotEmpty()
+    @IsString({
+        each: true,
+    })
+    seasonsId: string[]
 }
 
 export class UpdateSeasonDto {
