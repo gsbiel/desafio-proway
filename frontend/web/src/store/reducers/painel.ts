@@ -1,4 +1,5 @@
 import {
+
     PAINEL_CREATE_GAME,
     PAINEL_DELETE_GAME,
     PAINEL_UPDATE_GAME,
@@ -6,9 +7,9 @@ import {
     PAINEL_SELECT_SEASON,
     PAINEL_UNSELECT_SEASON,
 
-    PAINEL_CREATE_SEASON,
-    PAINEL_DELETE_SEASON,
-    PAINEL_UPDATE_SEASON,
+    PAINEL_CREATE_SEASON_STARTED,
+    PAINEL_CREATE_SEASON_SUCCESS,
+    PAINEL_CREATE_SEASON_FAILED,
 
     PAINEL_REFRESH_TABLE_DATA,
     PAINEL_OPEN_DIALOGUE_FORM,
@@ -81,7 +82,9 @@ export interface PainelPayloadType {
     seasons?: SeasonType[],
     games?: GameType[],
     selectedSeasonId?: string,
-    errorMsg?: string
+    errorMsg?: string,
+    newSeason?: SeasonType,
+    newGame?: GameType
 };
 
 
@@ -111,16 +114,33 @@ const painelUpdateGame =  (state: PainelStateSliceType, action: PainelActionType
     return state;
 };
 
-const painelCreateSeason =  (state: PainelStateSliceType, action: PainelActionType) => {
-    return state;
+const painelCreateSeasonStarted =  (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isLoading: true,
+    };
 };
 
-const painelDeleteSeason = (state: PainelStateSliceType, action: PainelActionType) => {
-    return state;
+const painelCreateSeasonSuccess =  (state: PainelStateSliceType, action: PainelActionType) => {
+    const newSeason = action.payload?.newSeason ? action.payload?.newSeason : null;
+    const newSeasonsState = newSeason ?  [
+        ...state.seasons,
+        newSeason
+    ] : [...state.seasons]
+    return {
+        ...state,
+        isLoading: false,
+        seasons: newSeasonsState
+    };
 };
 
-const painelUpdateSeason =  (state: PainelStateSliceType, action: PainelActionType) => {
-    return state;
+const painelCreateSeasonFailed =  (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isLoading: false,
+        isOnError: true,
+        errorMsg: action.payload?.errorMsg ? action.payload?.errorMsg  : ""
+    };
 };
 
 const painelRefreshTableData =  (state: PainelStateSliceType, action: PainelActionType) => {
@@ -240,12 +260,12 @@ const reducer = (
             return painelDeleteGame(state, action);
         case PAINEL_UPDATE_GAME:
             return painelUpdateGame(state, action);
-        case PAINEL_CREATE_SEASON:
-            return  painelCreateSeason(state, action);
-        case PAINEL_DELETE_SEASON:
-            return painelDeleteSeason(state, action);
-        case PAINEL_UPDATE_SEASON:
-            return painelUpdateSeason(state, action);
+        case PAINEL_CREATE_SEASON_STARTED:
+            return  painelCreateSeasonStarted(state, action);
+        case PAINEL_CREATE_SEASON_SUCCESS:
+            return painelCreateSeasonSuccess(state, action);
+        case PAINEL_CREATE_SEASON_FAILED:
+            return painelCreateSeasonFailed(state, action);
         case PAINEL_REFRESH_TABLE_DATA:
             return painelRefreshTableData(state, action);
         case PAINEL_OPEN_DIALOGUE_FORM:

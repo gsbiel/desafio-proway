@@ -6,10 +6,10 @@ import {
     PAINEL_SELECT_SEASON,
     PAINEL_UNSELECT_SEASON,
 
-    PAINEL_CREATE_SEASON,
-    PAINEL_DELETE_SEASON,
-    PAINEL_UPDATE_SEASON,
-
+    PAINEL_CREATE_SEASON_STARTED,
+    PAINEL_CREATE_SEASON_SUCCESS,
+    PAINEL_CREATE_SEASON_FAILED,
+    
     PAINEL_REFRESH_TABLE_DATA,
     PAINEL_OPEN_DIALOGUE_FORM,
     PAINEL_CLOSE_DIALOGUE_FORM,
@@ -49,6 +49,31 @@ export const painelUnselectSeason = () => {
     };
 };
 
+
+export const painelCreateSeasonStart = () => {
+    return {
+        type: PAINEL_CREATE_SEASON_STARTED,
+    };
+};
+
+export const painelCreateSeasonSuccess = (newSeason : SeasonType) => {
+    return {
+        type: PAINEL_CREATE_SEASON_SUCCESS,
+        payload:{
+            newSeason: newSeason
+        }
+    };
+};
+
+export const painelCreateSeasonFailed = (errorMsg: string) => {
+    return {
+        type: PAINEL_CREATE_SEASON_FAILED,
+        payload:{
+            errorMsg: errorMsg
+        }
+    };
+};
+
 export const painelCreateGame = () => {
     console.log("Criar game!")
     return {
@@ -67,27 +92,6 @@ export const painelUpdateGame = () => {
     console.log("atualizar game!")
     return {
         type: PAINEL_UPDATE_GAME
-    }
-}
-
-export const painelCreateSeason =  () => {
-    console.log("Criar Season!")
-    return {
-        type: PAINEL_CREATE_SEASON
-    }
-}
-
-export const painelDeleteSeason = () => {
-    console.log("Deletar Season!")
-    return {
-        type: PAINEL_DELETE_SEASON
-    }
-}
-
-export const painelUpdateSeason =  () => {
-    console.log("Atualizar Season!!")
-    return {
-        type: PAINEL_UPDATE_SEASON
     }
 }
 
@@ -230,7 +234,7 @@ export const painelFetchGames = (token: string, forUserId: string, forSeason: st
 
         dispatch(painelFetchGamesStart());
 
-        await set_delay(1500);
+        await set_delay(1500); // Esse delay é apenas para permitir a visualização dos spinners :P
 
         axios({
             method: 'get',
@@ -263,35 +267,44 @@ export const painelFetchGames = (token: string, forUserId: string, forSeason: st
 
 }
 
-export const painelCleanGames = () => {
-    return {
-        type: PAINEL_CLEAN_GAMES
+export const painelCreateSeason = (userToken: string, userId: string, seasonName: string, startDate: Date) => {
+
+    return async (dispatch: any) => {
+
+        dispatch(painelCreateSeasonStart());
+
+        axios({
+            method: 'post',
+            url: SEASON_URL,
+            data: {
+                name: seasonName,
+                forUserId: userId,
+                startDate: startDate
+            },
+            headers: {
+                'Authorization': `Bearer ${userToken}`
+            }
+        })
+        .then(async resp => {
+            console.log(resp.data)
+            const data = resp.data
+            const season = {
+                ...data,
+                start: new Date(data.start)
+            }
+            dispatch(painelCreateSeasonSuccess(season));
+            // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
+        })
+        .catch(err => {
+            console.log("Erro!")
+            // console.log(err.response.data)
+        });
+
     }
 }
 
-export const createSeasonData = (
-    id: string,
-    name: string, 
-    start: Date, 
-    end: Date,
-    min_score: number, 
-    max_score: number, 
-    min_score_count: number, 
-    max_score_count: number,
-    ) => {
-    return { id, name, start, end, max_score,min_score, min_score_count, max_score_count};
-}
-
-export const createGameData = (
-    id: string,
-    name: string,
-    score: number,
-    date: Date
-) => {
-    return{
-        id,
-        name,
-        score,
-        date
+export const painelCleanGames = () => {
+    return {
+        type: PAINEL_CLEAN_GAMES
     }
 }

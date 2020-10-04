@@ -1,5 +1,5 @@
 import React, {Fragment, useState, useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -11,7 +11,12 @@ import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 
 import {
-    painelCloseDialogueForm
+    RootState
+} from '../../../../../index';
+
+import {
+    painelCloseDialogueForm,
+    painelCreateSeason
 } from '../../../../../store/actions/painel';
 
 import {
@@ -21,6 +26,8 @@ import {
 const CreateSeasonForm = () => {
 
     const dispatch = useDispatch();
+    const userToken = useSelector( (state: RootState) => state.auth.token );
+    const userId = useSelector( (state: RootState) => state.auth.userId );
 
     const [seasonName, setSeasonName] = useState("");
     const [isSeasonNameValid, setSeasonNameValidationState] = useState(true);
@@ -29,13 +36,7 @@ const CreateSeasonForm = () => {
     const [selectedDate, setSelectedDate] = React.useState(new Date());
 
     useEffect(() => {
-        if(!seasonName.trim().length){
-            setSeasonNameValidationState(false)
-            setSeasonNameErrorMsg(TextFieldErrorState.MISSING_DATA)
-        }else {
-            setSeasonNameValidationState(true)
-            setSeasonNameErrorMsg(TextFieldErrorState.OK)
-        }
+        validateSeasonNameForm();
     },[seasonName]);
 
     useEffect(() => {
@@ -48,15 +49,32 @@ const CreateSeasonForm = () => {
     }
 
     const onSeasonNameChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        setSeasonName(event.target.value)
+        setSeasonName(event.target.value);
+        console.log("entrei aqui");
     }
 
     const subscribeHandler = () => {
-        dispatch(painelCloseDialogueForm());
+        if((validateSeasonNameForm()) &&  !isNaN(selectedDate.getTime())){
+            console.log("Tá de boas menor!")
+            dispatch(painelCloseDialogueForm());
+            dispatch(painelCreateSeason(userToken, userId,seasonName, selectedDate));
+        }
     }
 
     const onDateChangeHandler = (date:any) => {
         setSelectedDate(date);
+    }
+
+    const validateSeasonNameForm = ():boolean => {
+        if(!seasonName.trim().length){
+            setSeasonNameValidationState(false)
+            setSeasonNameErrorMsg(TextFieldErrorState.MISSING_DATA)
+            return false;
+        }else {
+            setSeasonNameValidationState(true)
+            setSeasonNameErrorMsg(TextFieldErrorState.OK)
+            return true;
+        }
     }
 
     return (
