@@ -4,6 +4,10 @@ import { User } from "src/entities/user.entity";
 import { Season } from "src/entities/season.entity";
 import { Repository } from "typeorm";
 
+import {
+    findSeasonForUser
+} from '../utility';
+
 @Injectable()
 export class SeasonsService {
     constructor(
@@ -68,5 +72,37 @@ export class SeasonsService {
             return await this.seasonRepository.remove(season)
         })
     }
+
+    async updateSeasonForUserId(userId: string, seasonId: string, newName?: string, endDate?: string){
+
+        if(!newName && !endDate){
+            throw new HttpException({
+                status: HttpStatus.NOT_MODIFIED,
+                error: "Nothing to be changed."
+            }, HttpStatus.NOT_MODIFIED)
+        }
+
+        const season = await findSeasonForUser(userId, seasonId, this.userRepository);
+
+        if(!season){
+            throw new HttpException({
+                status: HttpStatus.NOT_FOUND
+            }, HttpStatus.NOT_FOUND)
+        }
+
+        if(newName){
+            season.name = newName;
+        }
+
+        if(endDate){
+            season.end = new Date(endDate);
+        }
+
+        this.seasonRepository.save(season);
+
+        return season;
+
+    }
+    
 
 }
