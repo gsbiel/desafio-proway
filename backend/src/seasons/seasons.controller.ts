@@ -20,7 +20,7 @@ export class SeasonsController {
     @Post()
     async createSeason(@Request() req, @Body() createSeasonDto: CreateSeasonDto): Promise<Season>{
         this.validateAccess(createSeasonDto.forUserId, req.user.userId)
-        return await this.seasonsService.createSeason(createSeasonDto.name, createSeasonDto.forUserId)
+        return await this.seasonsService.createSeason(createSeasonDto.name, createSeasonDto.forUserId, createSeasonDto.startDate)
     }
 
     @UseGuards(JwtAuthGuard)

@@ -3,6 +3,8 @@ import {
     IsNotEmpty,
     IsUUID,
     IsOptional,
+    IsDate,
+    IsDateString,
     } from 'class-validator';
 
 export class CreateSeasonDto {
@@ -14,6 +16,10 @@ export class CreateSeasonDto {
     @IsNotEmpty()
     @IsUUID()
     forUserId: string
+
+    @IsNotEmpty()
+    @IsDateString()
+    startDate: string
 }
 
 export class FindAllSeasonsDto {

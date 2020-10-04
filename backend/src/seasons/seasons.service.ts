@@ -20,7 +20,7 @@ export class SeasonsService {
         return user[0] ? user[0].seasons : []
     }
 
-    async createSeason(name: string, forUserId: string): Promise<Season> {
+    async createSeason(name: string, forUserId: string, startDate: string): Promise<any> {
         const user = await this.userRepository.find({
             where: { id: forUserId }
         })
@@ -36,11 +36,16 @@ export class SeasonsService {
         season.max_score_count = 0
         season.max_score = 0
         season.min_score = 0
-        season.start = new Date()
+        season.start = new Date(startDate)
         season.user = user[0]
         season.games = []
         await this.seasonRepository.save(season)
-        return season
+
+        const {password, ...resultUser} = user[0]
+        return {
+            ...season,
+            user: resultUser
+        }
     }
 
     async deleteSeasonForUserId(userId:string, seasonId:string){
