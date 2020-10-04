@@ -18,6 +18,10 @@ import {
     PAINEL_FETCH_SEASONS_SUCCESS,
     PAINEL_FETCH_SEASONS_FAIL,
 
+    PAINEL_FETCH_GAMES_START,
+    PAINEL_FETCH_GAMES_SUCCESS,
+    PAINEL_FETCH_GAMES_FAIL,
+
     PAINEL_CLEAN_GAMES,
 
     PAINEL_LOGOUT,
@@ -87,23 +91,16 @@ export const painelUpdateSeason =  () => {
     }
 }
 
-export const painelRefreshTableData =  (
-    mode: DialogueFormModeType, 
-    seasons: SeasonType[] = [], 
-    games: GameType[] = [] ,
-    selectedRow:any = null) => {
+export const painelRefreshTableData =  (mode: DialogueFormModeType) => {
 
     console.log("Refresh na tabela!");
     return {
         type: PAINEL_REFRESH_TABLE_DATA,
         payload: {
             formMode: mode,
-            seasons: seasons,
-            games: games,
-            selectedSeasonId: selectedRow
         }
-    }
-}
+    };
+};
 
 export const painelOpenDialogueForm = (formMode: DialogueFormModeType, formAction: DialogueFormActionType ): PainelActionType => {
     return {
@@ -141,9 +138,36 @@ export const painelFetchSeasonsSuccess = (seasons: SeasonType[]) => {
     }
 }
 
-export const painelFetchSeasonsFail = () => {
+export const painelFetchSeasonsFail = (errorMsg: string) => {
     return{
-        type: PAINEL_FETCH_SEASONS_FAIL
+        type: PAINEL_FETCH_SEASONS_FAIL,
+        payload: {
+            errorMsg: errorMsg
+        }
+    }
+}
+
+export const painelFetchGamesStart = () => {
+    return{
+        type: PAINEL_FETCH_GAMES_START
+    }
+}
+
+export const painelFetchGamesSuccess = (games: GameType[]) => {
+    return {
+        type: PAINEL_FETCH_GAMES_SUCCESS,
+        payload: {
+            games: games
+        }
+    }
+}
+
+export const painelFetchGamesFail = (errorMsg: string) => {
+    return{
+        type: PAINEL_FETCH_GAMES_FAIL,
+        payload: {
+            errorMsg: errorMsg
+        }
     }
 }
 
@@ -183,7 +207,7 @@ export const painelFetchSeasons = (token: string, userId: string) => {
                 };
             })
             dispatch(painelFetchSeasonsSuccess(seasons))
-            dispatch(painelRefreshTableData(DialogueFormModeType.SEASON, seasons, [], null));
+            dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));
         })
         .catch(err => {
             console.log("Erro!")
@@ -203,6 +227,8 @@ export const painelFetchGames = (token: string, forUserId: string, forSeason: st
     }
 
     return async (dispatch:any) => {
+
+        dispatch(painelFetchGamesStart());
 
         await set_delay(1500);
 
@@ -226,7 +252,8 @@ export const painelFetchGames = (token: string, forUserId: string, forSeason: st
                     date: new Date(dataItem.date),
                 };
             })
-            dispatch(painelRefreshTableData(DialogueFormModeType.SEASON, [], games, null));
+            dispatch(painelFetchGamesSuccess(games));
+            // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
         })
         .catch(err => {
             console.log("Erro!")

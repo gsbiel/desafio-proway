@@ -13,7 +13,8 @@ import {
 
 import {
     painelRefreshTableData,
-    painelCleanGames
+    painelCleanGames,
+    painelUnselectSeason
 } from '../../../../store/actions/painel';
 
 import { DialogueFormModeType } from '../../../../store/reducers/painel';
@@ -25,8 +26,9 @@ const PainelHeader = () => {
     const formDialogueMode = useSelector( (state: RootState) => state.painel.dialogueEntityMode);
 
     const onBackButtonHandler = () => {
+        dispatch(painelUnselectSeason());
         dispatch(painelCleanGames());
-        dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));
+        dispatch(painelRefreshTableData(DialogueFormModeType.SEASON)); 
     }
 
     return(

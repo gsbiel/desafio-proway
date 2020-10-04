@@ -75,9 +75,6 @@ function EnhancedTable() {
   const userId = useSelector( (state) => state.auth.userId);
   const userToken = useSelector( (state) => state.auth.token);
 
-  const [rowsForSeasons, setRowsForSeasons] = React.useState([])
-  const [rowsForGames, setRowsForGames] = React.useState([])
-
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
@@ -90,7 +87,6 @@ function EnhancedTable() {
   const [tablePath, setTablePath] = React.useState("Seasons")
 
   let checkBoxClicked = false
-  let seasonIdSelected = ""
 
   useEffect(()=> {
     if(formDialogueMode == DialogueFormModeType.SEASON){
@@ -102,29 +98,13 @@ function EnhancedTable() {
 
   useEffect(() => {
     if(formDialogueMode == DialogueFormModeType.GAME && selectedSeasonId.length){
-      console.log(`Diapachando com seasonID: ${selectedSeasonId}`)
+      console.log(`Diapachando com seasonID: ${selectedSeasonId}`);
       dispatch(painelFetchGames(userToken,userId, selectedSeasonId));
     }
   }, [selectedSeasonId])
 
   useEffect(()=>{
-    const rowsForSeasons = userSeasons.map(seasonItem => {
-      const startArray = seasonItem.start.toISOString().split('T')[0].split("-");
-      const startDate = `${startArray[2]}/${startArray[1]}/${startArray[0]}`;
-      const endArray = seasonItem.end ? seasonItem.end.toISOString().split('T')[0].split("-") : null;
-      const endDate = endArray ? `${endArray[2]}/${endArray[1]}/${endArray[0]}` : "";
-      return{
-        name: seasonItem.name,
-        highest: seasonItem.max_score,
-        lowest: seasonItem.min_score,
-        highestBreaks: seasonItem.max_score_count,
-        lowestBreaks: seasonItem.min_score_count,
-        start: startDate,
-        end: endDate,
-        id: seasonItem.id
-      }
-    });
-    setRowsForSeasons(rowsForSeasons);
+    const rowsForSeasons = adaptSeasonForTable(userSeasons);
     setRows(rowsForSeasons);
   }, [userSeasons])
 
@@ -141,23 +121,38 @@ function EnhancedTable() {
           id: gameItem.id
         };
       });
-      setRowsForGames(rowsForGames);
       setRows(rowsForGames);
     } 
-  }, [userGames]) 
+  }, [userGames]) ;
 
-  useEffect(() => {
-    if(formDialogueMode == DialogueFormModeType.SEASON){
-      setTablePath(`Season`)
+  useEffect(()=>{
+    if(formDialogueMode == DialogueFormModeType.SEASON && userSeasons.length > 0){
+      const rowsForSeasons = adaptSeasonForTable(userSeasons);
+      setTablePath(`Seasons`)
       setHeadCells(headCellsForSeasons)
-      setRows(rowsForSeasons)
+      setRows(rowsForSeasons);
     }
-    // else{
-    //   if(!userGames.length){
-    //     dispatch(painelFetchGames(userToken,userId));
-    //   }
-    // }
   },[formDialogueMode])
+
+  const adaptSeasonForTable = (userSeasons) => {
+    const rowsForSeasons = userSeasons.map(seasonItem => {
+      const startArray = seasonItem.start.toISOString().split('T')[0].split("-");
+      const startDate = `${startArray[2]}/${startArray[1]}/${startArray[0]}`;
+      const endArray = seasonItem.end ? seasonItem.end.toISOString().split('T')[0].split("-") : null;
+      const endDate = endArray ? `${endArray[2]}/${endArray[1]}/${endArray[0]}` : "";
+      return{
+        name: seasonItem.name,
+        highest: seasonItem.max_score,
+        lowest: seasonItem.min_score,
+        highestBreaks: seasonItem.max_score_count,
+        lowestBreaks: seasonItem.min_score_count,
+        start: startDate,
+        end: endDate,
+        id: seasonItem.id
+      }
+    });
+    return rowsForSeasons;
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -181,9 +176,10 @@ function EnhancedTable() {
       setSelected([])
       if(formDialogueMode == DialogueFormModeType.SEASON){
         setTablePath(`Games for <${name}>`)
-        dispatch(painelSelectSeason(id));
         setHeadCells(headCellsForGames)
-        // dispatch(painelRefreshTableData(DialogueFormModeType.GAME,[],[], id));
+        setRows([])
+        dispatch(painelRefreshTableData(DialogueFormModeType.GAME));
+        dispatch(painelSelectSeason(id));
       }
     }
     checkBoxClicked = false

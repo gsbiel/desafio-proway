@@ -20,6 +20,10 @@ import {
     PAINEL_FETCH_SEASONS_SUCCESS,
     PAINEL_FETCH_SEASONS_FAIL,
 
+    PAINEL_FETCH_GAMES_START,
+    PAINEL_FETCH_GAMES_SUCCESS,
+    PAINEL_FETCH_GAMES_FAIL,
+
     PAINEL_CLEAN_GAMES
 } from '../actions/actionTypes';
 
@@ -120,34 +124,11 @@ const painelUpdateSeason =  (state: PainelStateSliceType, action: PainelActionTy
 };
 
 const painelRefreshTableData =  (state: PainelStateSliceType, action: PainelActionType) => {
-    if(action.payload?.seasons?.length){
-        console.log("First case")
-        return {
-            ...state,
-        }
-    }else if(action.payload?.games?.length){
-        console.log("Second case")
-        return {
-            ...state,
-            dialogueEntityMode: action.payload?.formMode ? action.payload?.formMode : DialogueFormModeType.GAME,
-            games: action.payload?.games
-        }
-    }else if(action.payload?.selectedSeasonId?.length){
-        console.log("Third case")
-            return {
-                ...state,
-                dialogueEntityMode: action.payload?.formMode ? action.payload?.formMode : DialogueFormModeType.GAME,
-                selectedSeasonId: action.payload?.selectedSeasonId
-            }
-    }
-    else{
-        console.log("Fourth Case")
-        return {
-            ...state,
-            dialogueEntityMode: action.payload?.formMode ? action.payload?.formMode : DialogueFormModeType.SEASON,
-            selectedSeasonId: ""
-        }
-    }
+    console.log(`Alterando modo para: ${action.payload?.formMode}`);
+    return {
+        ...state,
+        dialogueEntityMode: action.payload?.formMode ? action.payload?.formMode : DialogueFormModeType.SEASON
+    };
 };
 
 const painelOpenDialogueForm = (state: PainelStateSliceType, action: PainelActionType) => {
@@ -184,7 +165,7 @@ const painelFetchSeasonsSuccess  = (state: PainelStateSliceType, action: PainelA
     return {
         ...state,
         isLoading: false,
-        seasons: action.payload?.seasons ? action.payload?.seasons : []
+        seasons: action.payload?.seasons?.length ? action.payload?.seasons : []
     };
 };
 
@@ -196,6 +177,32 @@ const painelFetchSeasonsFail  = (state: PainelStateSliceType, action: PainelActi
         errorMsg: action.payload?.errorMsg ? action.payload?.errorMsg : ""
     };
 };
+
+const painelFetchGamesStart = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isLoading: true
+    };
+}
+
+const painelFetchGamesSuccess = (state: PainelStateSliceType, action: PainelActionType) => {
+    console.log(`Reducer: painelFetchSeasonsSuccess. Seasons:`)
+    console.log(action.payload?.games)
+    return {
+        ...state,
+        isLoading: false,
+        games: action.payload?.games?.length ? action.payload?.games : []
+    };
+}
+
+const painelFetchGamesFail = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isLoading: false,
+        isOnError: true,
+        errorMsg: action.payload?.errorMsg ? action.payload?.errorMsg : ""
+    };
+}
 
 const painelCleanGames =  (state: PainelStateSliceType, action: PainelActionType) => {
     return {
@@ -251,6 +258,12 @@ const reducer = (
             return painelFetchSeasonsSuccess(state, action);
         case PAINEL_FETCH_SEASONS_FAIL:
             return painelFetchSeasonsFail(state, action);
+        case PAINEL_FETCH_GAMES_START:
+            return painelFetchGamesStart(state, action);
+        case PAINEL_FETCH_GAMES_SUCCESS:
+            return painelFetchGamesSuccess(state, action);
+        case PAINEL_FETCH_GAMES_FAIL:
+            return painelFetchGamesFail(state, action);
         case PAINEL_CLEAN_GAMES:
             return painelCleanGames(state, action);
         case PAINEL_LOGOUT:
