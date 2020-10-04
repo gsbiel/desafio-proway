@@ -31,7 +31,7 @@ export class GamesService {
         const game = new Game()
         game.name = createGameDto.name
         game.score = createGameDto.score ? createGameDto.score : 0
-        game.date = new Date()
+        game.date = new Date(createGameDto.gameDate)
 
         const season = await findSeasonForUser(createGameDto.userId, createGameDto.seasonId, this.userRepository)
 

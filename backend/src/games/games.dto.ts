@@ -5,6 +5,7 @@ import {
     IsPositive,
     IsOptional,
     IsUUID,
+    IsDateString,
     } from 'class-validator';
 
 /* 
@@ -47,6 +48,11 @@ export class CreateGameDto extends UserSeasonBaseDto {
     @IsPositive()
     @IsInt()
     score: number
+
+    @IsNotEmpty()
+    @IsString()
+    @IsDateString()
+    gameDate: string
 
 }
 
