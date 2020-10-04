@@ -16,16 +16,16 @@ export class Season extends Content {
     end: Date
 
     @Column("int",{ default:0 })
-    min_score: Number
+    min_score: number
 
     @Column("int",{ default:0 })
-    max_score: Number
+    max_score: number
 
     @Column("int",{ default:0 })
-    min_score_count:Number
+    min_score_count:number
 
     @Column("int",{ default:0 })
-    max_score_count:Number
+    max_score_count:number
 
     @ManyToOne(type => User, user => user.seasons,
         { 

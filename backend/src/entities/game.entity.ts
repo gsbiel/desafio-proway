@@ -6,7 +6,7 @@ import { Season } from "./season.entity"
 export class Game extends Content {
 
     @Column("int",{ default:0 })
-    score: Number
+    score: number
 
     @Column("date")
     date: Date

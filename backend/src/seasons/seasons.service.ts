@@ -93,7 +93,7 @@ export class SeasonsService {
         });
 
         this.seasonRepository.remove(seasonsToBeDeleted);
-        
+
         return seasonsToBeDeleted;
     }
 
@@ -125,8 +125,5 @@ export class SeasonsService {
         this.seasonRepository.save(season);
 
         return season;
-
     }
-    
-
 }
