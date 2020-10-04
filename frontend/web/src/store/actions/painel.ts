@@ -338,7 +338,6 @@ export const painelFetchSeasons = (token: string, userId: string) => {
 
     const set_delay = (ms: any): Promise<any> => {
         return new Promise( (resolve, reject) => {
-            console.log("iniciando contagem do login...")
             setTimeout(resolve, ms)
             
         });
@@ -373,8 +372,7 @@ export const painelFetchSeasons = (token: string, userId: string) => {
             dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));
         })
         .catch(err => {
-            console.log("Erro!")
-            // console.log(err.response.data)
+            dispatch(painelFetchSeasonsFail(err.response.data))
         });
     }
 }
@@ -383,7 +381,6 @@ export const painelFetchGames = (token: string, forUserId: string, forSeason: st
 
     const set_delay = (ms: any): Promise<any> => {
         return new Promise( (resolve, reject) => {
-            console.log("iniciando contagem do login...")
             setTimeout(resolve, ms)
             
         });
@@ -408,7 +405,6 @@ export const painelFetchGames = (token: string, forUserId: string, forSeason: st
             }
         })
         .then(async resp => {
-            console.log(resp.data)
             const games = resp.data.map((dataItem: any) => {
                 return {
                     ...dataItem,
@@ -419,8 +415,7 @@ export const painelFetchGames = (token: string, forUserId: string, forSeason: st
             // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
         })
         .catch(err => {
-            console.log("Erro!")
-            // console.log(err.response.data)
+            dispatch(painelFetchGamesFail(err.response.data))
         });
     }
 
@@ -445,7 +440,6 @@ export const painelCreateSeason = (userToken: string, userId: string, seasonName
             }
         })
         .then(async resp => {
-            console.log(resp.data)
             const data = resp.data
             const season = {
                 ...data,
@@ -455,8 +449,7 @@ export const painelCreateSeason = (userToken: string, userId: string, seasonName
             // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
         })
         .catch(err => {
-            console.log("Erro!")
-            // console.log(err.response.data)
+            dispatch(painelCreateSeasonFailed(err.response.data))
         });
 
     };
@@ -482,7 +475,6 @@ export const painelUpdateSeason = (userToken: string, userId: string, seasonId: 
             }
         })
         .then(async resp => {
-            console.log(resp.data)
             const data = resp.data
             const season = {
                 ...data,
@@ -493,8 +485,7 @@ export const painelUpdateSeason = (userToken: string, userId: string, seasonId: 
             // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
         })
         .catch(err => {
-            console.log("Erro!")
-            // console.log(err.response.data)
+            dispatch(painelUpdateSeasonFailed())
         });
 
     };
@@ -530,8 +521,7 @@ export const painelCreateGame = (userToken: string, userId: string, seasonId: st
             // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
         })
         .catch(err => {
-            console.log("Erro!")
-            // console.log(err.response.data)
+            dispatch(painelCreateGameFailed())
         });
 
     };
@@ -568,8 +558,7 @@ export const painelUpdateGame = (userToken: string, userId: string, seasonId: st
             // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
         })
         .catch(err => {
-            console.log("Erro!")
-            // console.log(err.response.data)
+            dispatch(painelUpdateGameFailed())
         });
     };
 };
@@ -583,7 +572,7 @@ export const painelDeleteGames = (userToken: string, userId: string, seasonId: s
             data: {
                 userId: userId,
                 seasonId: seasonId,
-                gamesToBeDeleted: gamesToBeDeleted,
+                gamesId: gamesToBeDeleted,
             },
             headers: {
                 'Authorization': `Bearer ${userToken}`
@@ -598,11 +587,11 @@ export const painelDeleteGames = (userToken: string, userId: string, seasonId: s
                 }
             });
             dispatch(painelDeleteGameSuccess(gamesDeleted));
+            dispatch(painelFetchGames(userToken, userId, seasonId));
             // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
         })
         .catch(err => {
-            console.log("Erro!")
-            // console.log(err.response.data)
+            dispatch(painelDeleteGameFailed(err.response.data))
         });
     }
 }
@@ -633,12 +622,10 @@ export const painelDeleteSeasons = (userToken: string, userId: string, seasonsTo
                 }
             });
             dispatch(painelDeleteSeasonSuccess(seasonsDeleted));
-            // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
+            dispatch(painelFetchSeasons(userToken, userId));
         })
         .catch(err => {
-            console.log("Erro!")
-            console.log(err.response.data)
-            // console.log(err.response.data)
+            dispatch(painelDeleteSeasonFailed(err.response.data))
         });
     }
 }

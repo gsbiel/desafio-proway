@@ -96,7 +96,8 @@ export interface PainelStateSliceType {
     errorMsg: string,
     isDialogueFormOpen: boolean,
     dialogueEntityMode: DialogueFormModeType,
-    dialogueActionMode: DialogueFormActionType
+    dialogueActionMode: DialogueFormActionType,
+    shouldSeasonTableReload: boolean,
 };
 
 export interface PainelActionType{
@@ -189,7 +190,8 @@ const painelCreateGameSuccess = (state: PainelStateSliceType, action: PainelActi
         return {
             ...state,
             games: newGames,
-            isLoading: false
+            isLoading: false,
+            shouldSeasonTableReload: true,
         };
     }else{
         return {
@@ -226,7 +228,8 @@ const painelUpdateGameSuccess =  (state: PainelStateSliceType, action: PainelAct
         return {
             ...state,
             games: newGames,
-            isLoading: false
+            isLoading: false,
+            shouldSeasonTableReload: true,
         }
     }
     else{
@@ -254,24 +257,11 @@ const painelDeleteGameStart = (state: PainelStateSliceType, action: PainelAction
 }
 
 const painelDeleteGameSuccess = (state: PainelStateSliceType, action: PainelActionType) => {
-    if(action.payload?.gamesDeleted?.length){
-        let filteredGames: GameType[] = [];
-        action.payload?.gamesDeleted.map( deletedGameItem => {
-            filteredGames = state.games.filter(stateGameItem => {
-                return deletedGameItem.id !== stateGameItem.id
-            });
-        });
-        return {
-            ...state,
-            isLoading: false,
-            games: filteredGames
-        };
-    }else{
         return{
             ...state,
-            isLoading: false
+            isLoading: false,
+            shouldSeasonTableReload: true,
         }
-    }
 }
 
 const painelDeleteGameFailed = (state: PainelStateSliceType, action: PainelActionType) => {
@@ -389,7 +379,6 @@ const painelDeleteSeasonFailed =  (state: PainelStateSliceType, action: PainelAc
 }
 
 const painelRefreshTableData =  (state: PainelStateSliceType, action: PainelActionType) => {
-    console.log(`Alterando modo para: ${action.payload?.formMode}`);
     return {
         ...state,
         dialogueEntityMode: action.payload?.formMode ? action.payload?.formMode : DialogueFormModeType.SEASON
@@ -425,12 +414,11 @@ const painelFetchSeasonsStart  = (state: PainelStateSliceType, action: PainelAct
 };
 
 const painelFetchSeasonsSuccess  = (state: PainelStateSliceType, action: PainelActionType) => {
-    console.log(`Reducer: painelFetchSeasonsSuccess. Seasons:`)
-    console.log(action.payload?.seasons)
     return {
         ...state,
         isLoading: false,
-        seasons: action.payload?.seasons?.length ? action.payload?.seasons : []
+        seasons: action.payload?.seasons?.length ? action.payload?.seasons : [],
+        shouldSeasonTableReload: false,
     };
 };
 
@@ -451,8 +439,6 @@ const painelFetchGamesStart = (state: PainelStateSliceType, action: PainelAction
 }
 
 const painelFetchGamesSuccess = (state: PainelStateSliceType, action: PainelActionType) => {
-    console.log(`Reducer: painelFetchSeasonsSuccess. Seasons:`)
-    console.log(action.payload?.games)
     return {
         ...state,
         isLoading: false,
@@ -490,6 +476,7 @@ const initialState: PainelStateSliceType = {
     isDialogueFormOpen: false,
     dialogueEntityMode: DialogueFormModeType.SEASON,
     dialogueActionMode: DialogueFormActionType.NONE,
+    shouldSeasonTableReload: false,
 }
 
 const reducer = (

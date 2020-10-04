@@ -35,7 +35,8 @@ const Auth = () => {
         history.goBack()
     }
 
-    // console.log(location.pahname)
+    
+    
 
     return(
         <AuthContainer>

@@ -27,7 +27,7 @@ export class GamesService {
         private gameRepository: Repository<Game>
     ){}
 
-    async createGame(createGameDto: CreateGameDto): Promise<Game> {
+    async createGame(createGameDto: CreateGameDto): Promise<any> {
 
         const game = new Game()
         game.name = createGameDto.name
@@ -44,17 +44,20 @@ export class GamesService {
 
         this.validateDates(season, game);
        
-        const resultGame = {...game}
-
         const updatedSeason = this.updateSeasonScore(season, game)
 
         game.season = updatedSeason
         
-        await this.gameRepository.save(game)
+        const newGameCreated = await this.gameRepository.save(game)
 
         await this.seasonRepository.save(updatedSeason);
 
-        return resultGame
+        return {
+            name: newGameCreated.name,
+            score: newGameCreated.score,
+            date: newGameCreated.date,
+            id: newGameCreated.id
+        }
     }
 
     async findAllGames(listGamesDto: ListGamesDto): Promise<Game[]> {
@@ -172,27 +175,6 @@ export class GamesService {
 
     }
 
-    // async deleteGameById(deleteGameByIdDto: DeleteGameDto){
-
-    //     const season = await findSeasonForUser(deleteGameByIdDto.userId, deleteGameByIdDto.seasonId, this.userRepository)
-
-    //     if(!season){
-    //         throw new HttpException({
-    //             status: HttpStatus.NOT_FOUND
-    //         }, HttpStatus.NOT_FOUND)
-    //     }
-
-    //     const game = await findGameForSeason(season.id, deleteGameByIdDto.gameId, this.seasonRepository)
-
-    //     if(!game){
-    //         throw new HttpException({
-    //             status: HttpStatus.NOT_FOUND
-    //         }, HttpStatus.NOT_FOUND)
-    //     }
-
-    //     return await this.gameRepository.remove(game)
-    // }
-
     async deleteGames(deleteGamesDto: DeleteGameDto): Promise<Game[]>{
 
         const season = await findSeasonForUser(deleteGamesDto.userId, deleteGamesDto.seasonId, this.userRepository);
@@ -305,6 +287,8 @@ export class GamesService {
                 }
             })
             season.min_score = newMinScore
+            return season;
+        }else{
             return season;
         }
     }

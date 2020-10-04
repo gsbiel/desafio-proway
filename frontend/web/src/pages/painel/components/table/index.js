@@ -110,7 +110,7 @@ function EnhancedTable() {
 
   useEffect(() => {
     if(formDialogueMode == DialogueFormModeType.GAME && selectedSeasonId.length){
-      console.log(`Diapachando com seasonID: ${selectedSeasonId}`);
+
       dispatch(painelFetchGames(userToken,userId, selectedSeasonId));
     }
   }, [selectedSeasonId])
@@ -122,7 +122,6 @@ function EnhancedTable() {
 
   useEffect(()=>{
     if(userGames.length){
-      console.log(userGames)
       const rowsForGames = userGames.map(gameItem => {
         const gameDateArray = gameItem.date.toISOString().split('T')[0].split("-");
         const gameDate = `${gameDateArray[2]}/${gameDateArray[1]}/${gameDateArray[0]}`;
@@ -182,7 +181,6 @@ function EnhancedTable() {
   };
 
   const handleClick = async (event, name, id) => {
-    console.log(`Clicou na celula de id: ${id}`);
     await set_delay(50)
     if(!checkBoxClicked){
       setSelected([])
@@ -291,7 +289,7 @@ function EnhancedTable() {
                       </TableCell>
                       {
                         Object.keys(row).map(key => {
-                          // console.log(`key: ${key}`)
+                          
                           if(key==0){
                             return  <TableCell key={characters.shuffle()} component="th" id={labelId} scope="row" padding="none">
                                       {row[key]}

@@ -88,7 +88,6 @@ export const auth = (props: AuthArgsType) => {
 
     const set_delay = (ms: any): Promise<any> => {
         return new Promise( (resolve, reject) => {
-            console.log("iniciando contagem do login...")
             setTimeout(resolve, ms)
             
         });
@@ -144,8 +143,6 @@ export const auth = (props: AuthArgsType) => {
                 if(!isSignup){
                     dispatch(authFail(err.response?.data.error ? err.response?.data.error : "Serviço indisponível."));
                 }else{
-                    // console.log(err.response?.data);
-                    // console.log(JSON.parse(err.response?.data.error))
                     dispatch(signupfail(JSON.parse(err.response?.data.error))) 
                 }
             });

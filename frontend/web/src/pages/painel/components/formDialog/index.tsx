@@ -10,6 +10,7 @@ import CreateGameForm from './createGameForm';
 import UpdateSeasonForm from './updateSeasonForm';
 import UpdateGameForm from './updateGameForm';
 import DeleteSeasonForm from './deleteSeasonsForm';
+import DeleteGameForm from './deleGamesForm';
 import { DialogueFormModeType, DialogueFormActionType } from '../../../../store/reducers/painel';
 
 const FormDialog = () => {
@@ -35,8 +36,10 @@ const FormDialog = () => {
   }else{
     if(dialogueActionMode == DialogueFormActionType.ADD){
       dialogueForm = <CreateGameForm />
-    }else{
+    }else if(dialogueActionMode == DialogueFormActionType.EDIT){
       dialogueForm = <UpdateGameForm />
+    }else{
+      dialogueForm = <DeleteGameForm />
     }
   }
 
