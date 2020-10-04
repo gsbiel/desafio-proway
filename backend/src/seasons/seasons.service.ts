@@ -73,7 +73,7 @@ export class SeasonsService {
         })
     }
 
-    async deleteSeasonsForUserId(userId: string, seasonsId: string[]){
+    async deleteSeasonsForUserId(userId: string, seasonsId: string[]): Promise<Season[]>{
 
         const seasons = await this.findAllSeasonsForUser(userId)
 
@@ -92,7 +92,7 @@ export class SeasonsService {
             seasonsToBeDeleted = [...seasonsToBeDeleted, seasonFilteredToBeDeleted[0]]
         });
 
-        this.seasonRepository.remove(seasonsToBeDeleted);
+        await this.seasonRepository.remove(seasonsToBeDeleted);
 
         return seasonsToBeDeleted;
     }

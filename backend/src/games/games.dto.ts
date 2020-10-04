@@ -6,6 +6,7 @@ import {
     IsOptional,
     IsUUID,
     IsDateString,
+    IsArray,
     } from 'class-validator';
 
 /* 
@@ -77,11 +78,14 @@ export class UpdateGameDto extends UserSeasonGameBaseDto {
 
 }
 
-export class DeleteGameDto extends UserSeasonGameBaseDto{
+export class DeleteGameDto extends UserSeasonBaseDto{
 
-    @IsOptional()
-    @IsString()
-    @IsUUID()
-    gameId:string
+    
+    @IsNotEmpty()
+    @IsArray()
+    @IsString({
+        each: true
+    })
+    gamesId:string[]
 
 }

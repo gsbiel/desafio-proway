@@ -172,25 +172,65 @@ export class GamesService {
 
     }
 
-    async deleteGameById(deleteGameByIdDto: DeleteGameDto){
+    // async deleteGameById(deleteGameByIdDto: DeleteGameDto){
 
-        const season = await findSeasonForUser(deleteGameByIdDto.userId, deleteGameByIdDto.seasonId, this.userRepository)
+    //     const season = await findSeasonForUser(deleteGameByIdDto.userId, deleteGameByIdDto.seasonId, this.userRepository)
 
+    //     if(!season){
+    //         throw new HttpException({
+    //             status: HttpStatus.NOT_FOUND
+    //         }, HttpStatus.NOT_FOUND)
+    //     }
+
+    //     const game = await findGameForSeason(season.id, deleteGameByIdDto.gameId, this.seasonRepository)
+
+    //     if(!game){
+    //         throw new HttpException({
+    //             status: HttpStatus.NOT_FOUND
+    //         }, HttpStatus.NOT_FOUND)
+    //     }
+
+    //     return await this.gameRepository.remove(game)
+    // }
+
+    async deleteGames(deleteGamesDto: DeleteGameDto): Promise<Game[]>{
+
+        const season = await findSeasonForUser(deleteGamesDto.userId, deleteGamesDto.seasonId, this.userRepository);
+        
         if(!season){
             throw new HttpException({
                 status: HttpStatus.NOT_FOUND
             }, HttpStatus.NOT_FOUND)
         }
 
-        const game = await findGameForSeason(season.id, deleteGameByIdDto.gameId, this.seasonRepository)
+        const games = await findGamesForSeason(season.id,this.seasonRepository)
 
-        if(!game){
+        if(!games){
             throw new HttpException({
                 status: HttpStatus.NOT_FOUND
             }, HttpStatus.NOT_FOUND)
         }
 
-        return await this.gameRepository.remove(game)
+        let gamesToBeDeleted = []
+        deleteGamesDto.gamesId.map(gameIdToBeDeleted => {
+            const gameFilteredToBeDeleted = games.filter(gameItem => {
+                return gameItem.id === gameIdToBeDeleted
+            })
+            if(gameFilteredToBeDeleted.length){
+                gamesToBeDeleted = [...gamesToBeDeleted, gameFilteredToBeDeleted[0]]
+            }
+        });
+
+        let rollBackedSeason = null;
+        gamesToBeDeleted.forEach(async gameToBeDeleted => {
+            rollBackedSeason = await this.rollBackOldGameEffectOnSeason(season, gameToBeDeleted, this.seasonRepository);
+        })
+
+        await this.gameRepository.remove(gamesToBeDeleted);
+        await this.seasonRepository.save(rollBackedSeason);
+
+        return gamesToBeDeleted;
+        
     }
 
     validateDates(season: Season, game: Game): boolean{

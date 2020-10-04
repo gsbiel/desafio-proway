@@ -41,11 +41,7 @@ export class GamesController {
     @Delete()
     async deleteGames(@Request() req, @Body() deleteGamesDto: DeleteGameDto){
         this.validateAccess(req.user.userId, deleteGamesDto.userId)
-        if(deleteGamesDto.gameId){
-            return await this.gamesService.deleteGameById(deleteGamesDto)
-        }else{
-            return await this.gamesService.deleteAllGames(deleteGamesDto)
-        }
+        return await this.gamesService.deleteGames(deleteGamesDto)
     }
 
     validateAccess(userIdFromAuthentication, userIdSentByClient){
