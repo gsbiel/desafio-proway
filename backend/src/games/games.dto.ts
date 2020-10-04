@@ -70,6 +70,11 @@ export class UpdateGameDto extends UserSeasonGameBaseDto {
     @IsInt()
     score: number
 
+    @IsOptional()
+    @IsString()
+    @IsDateString()
+    gameDate: string
+
 }
 
 export class DeleteGameDto extends UserSeasonGameBaseDto{

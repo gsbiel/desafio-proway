@@ -94,7 +94,7 @@ export class GamesService {
 
     async updateGame(updateGameDto: UpdateGameDto): Promise<Game>{
 
-        if(!updateGameDto.name && !updateGameDto.score){
+        if(!updateGameDto.name && !updateGameDto.score && !updateGameDto.gameDate){
             throw new HttpException({
                 status: HttpStatus.BAD_REQUEST,
                 error:"Invalid data"
@@ -122,6 +122,9 @@ export class GamesService {
         }
         if(updateGameDto.score){
             game.score = updateGameDto.score
+        }
+        if(updateGameDto.gameDate){
+            game.date = new Date(updateGameDto.gameDate)
         }
 
         await this.gameRepository.save(game)
