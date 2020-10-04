@@ -186,7 +186,7 @@ function EnhancedTable() {
   };
 
   const handleCheckboxClick = (event, name, id) => {
-    console.log(`selecionada célula de id: ${id}`)
+    dispatch(painelSelectSeason(id));
     checkBoxClicked = true
     let selectedIndex = selected.indexOf(id);
     let newSelected = [];

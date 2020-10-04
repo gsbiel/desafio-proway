@@ -1,5 +1,5 @@
 import React, {Fragment, useState, useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -13,6 +13,10 @@ import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 
 import {
+    RootState
+} from '../../../../../index';
+
+import {
     UpdateNameField,
     SeasonNameField
 } from './styles';
@@ -22,13 +26,17 @@ import {
 } from '../../../../auth/components/loginForm/index';
 
 import {
-    painelCloseDialogueForm
+    painelCloseDialogueForm,
+    painelUpdateSeason
 } from '../../../../../store/actions/painel';
 
 
 const UpdateSeasonForm = () => {
 
     const dispatch = useDispatch()
+    const userToken = useSelector( (state: RootState) => state.auth.token );
+    const userId = useSelector( (state: RootState) => state.auth.userId );
+    const selectedSeasonId = useSelector( (state: RootState) => state.painel.selectedSeasonId );
 
     const [nameCheckBoxState, setNameCheckboxState] = useState(false);
 
@@ -108,11 +116,26 @@ const UpdateSeasonForm = () => {
     }
 
     const updateSeasonHandler = () => {
-        dispatch(painelCloseDialogueForm());
+        if((validateSeasonNameForm()) &&  !isNaN(selectedEndDate.getTime())){
+            dispatch(painelCloseDialogueForm());
+            dispatch(painelUpdateSeason(userToken, userId, selectedSeasonId, seasonName, selectedEndDate));
+        }
     }
 
     const handleClose = () => {
         dispatch(painelCloseDialogueForm());
+    }
+    
+    const validateSeasonNameForm = ():boolean => {
+        if(!seasonName.trim().length){
+            setSeasonNameValidationState(false)
+            setSeasonNameErrorMsg(TextFieldErrorState.MISSING_DATA)
+            return false;
+        }else {
+            setSeasonNameValidationState(true)
+            setSeasonNameErrorMsg(TextFieldErrorState.OK)
+            return true;
+        }
     }
 
     return(

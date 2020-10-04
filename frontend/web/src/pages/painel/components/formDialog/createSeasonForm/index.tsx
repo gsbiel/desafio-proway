@@ -55,7 +55,6 @@ const CreateSeasonForm = () => {
 
     const subscribeHandler = () => {
         if((validateSeasonNameForm()) &&  !isNaN(selectedDate.getTime())){
-            console.log("Tá de boas menor!")
             dispatch(painelCloseDialogueForm());
             dispatch(painelCreateSeason(userToken, userId,seasonName, selectedDate));
         }

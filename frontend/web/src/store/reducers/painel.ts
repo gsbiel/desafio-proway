@@ -11,6 +11,10 @@ import {
     PAINEL_CREATE_SEASON_SUCCESS,
     PAINEL_CREATE_SEASON_FAILED,
 
+    PAINEL_UPDATE_SEASON_STARTED,
+    PAINEL_UPDATE_SEASON_SUCCESS,
+    PAINEL_UPDATE_SEASON_FAILED,
+
     PAINEL_REFRESH_TABLE_DATA,
     PAINEL_OPEN_DIALOGUE_FORM,
     PAINEL_CLOSE_DIALOGUE_FORM,
@@ -143,6 +147,45 @@ const painelCreateSeasonFailed =  (state: PainelStateSliceType, action: PainelAc
     };
 };
 
+const painelUpdateSeasonStarted =  (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isLoading: true,
+    };
+}
+
+const painelUpdateSeasonSuccess =  (state: PainelStateSliceType, action: PainelActionType) => {
+
+    const newSeason = action.payload?.newSeason ? action.payload?.newSeason  : null
+    let filteredSeasons: SeasonType[] = [] 
+    if(newSeason) {
+        filteredSeasons = state.seasons.filter(season => {
+            return season.id !== newSeason.id;
+        })
+        const newSeasons = [...filteredSeasons, newSeason]
+        return {
+            ...state,
+            seasons: newSeasons,
+            isLoading: false
+        }
+    }
+    else{
+        return {
+            ...state,
+            isLoading: false
+        }
+    }
+}
+
+const painelUpdateSeasonFailed =  (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isLoading: false,
+        isOnError: true,
+        errorMsg: action.payload?.errorMsg ? action.payload?.errorMsg  : ""
+    };
+}
+
 const painelRefreshTableData =  (state: PainelStateSliceType, action: PainelActionType) => {
     console.log(`Alterando modo para: ${action.payload?.formMode}`);
     return {
@@ -266,6 +309,12 @@ const reducer = (
             return painelCreateSeasonSuccess(state, action);
         case PAINEL_CREATE_SEASON_FAILED:
             return painelCreateSeasonFailed(state, action);
+        case PAINEL_UPDATE_SEASON_STARTED:
+            return painelUpdateSeasonStarted(state, action);
+        case PAINEL_UPDATE_SEASON_SUCCESS:
+            return painelUpdateSeasonSuccess(state, action);
+        case PAINEL_UPDATE_SEASON_FAILED:
+            return painelUpdateSeasonFailed(state, action);
         case PAINEL_REFRESH_TABLE_DATA:
             return painelRefreshTableData(state, action);
         case PAINEL_OPEN_DIALOGUE_FORM:

@@ -9,6 +9,10 @@ import {
     PAINEL_CREATE_SEASON_STARTED,
     PAINEL_CREATE_SEASON_SUCCESS,
     PAINEL_CREATE_SEASON_FAILED,
+
+    PAINEL_UPDATE_SEASON_STARTED,
+    PAINEL_UPDATE_SEASON_SUCCESS,
+    PAINEL_UPDATE_SEASON_FAILED,
     
     PAINEL_REFRESH_TABLE_DATA,
     PAINEL_OPEN_DIALOGUE_FORM,
@@ -73,6 +77,27 @@ export const painelCreateSeasonFailed = (errorMsg: string) => {
         }
     };
 };
+
+export const painelUpdateSeasonStart = () => {
+    return{
+        type: PAINEL_UPDATE_SEASON_STARTED
+    }
+}
+
+export const painelUpdateSeasonSuccess = (season: SeasonType) => {
+    return{
+        type: PAINEL_UPDATE_SEASON_SUCCESS,
+        payload:{
+            newSeason: season
+        }
+    }
+}
+
+export const painelUpdateSeasonFailed = () => {
+    return{
+        type: PAINEL_UPDATE_SEASON_FAILED
+    }
+}
 
 export const painelCreateGame = () => {
     console.log("Criar game!")
@@ -293,6 +318,44 @@ export const painelCreateSeason = (userToken: string, userId: string, seasonName
                 start: new Date(data.start)
             }
             dispatch(painelCreateSeasonSuccess(season));
+            // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
+        })
+        .catch(err => {
+            console.log("Erro!")
+            // console.log(err.response.data)
+        });
+
+    } 
+}
+
+export const painelUpdateSeason = (userToken: string, userId: string, seasonId: string, name?: string, endDate?: Date) => {
+
+    return async (dispatch:any) => {
+
+        dispatch(painelUpdateSeasonStart());
+
+        axios({
+            method: 'put',
+            url: SEASON_URL,
+            data: {
+                name: name,
+                endDate: endDate,
+                seasonId: seasonId,
+                userId: userId
+            },
+            headers: {
+                'Authorization': `Bearer ${userToken}`
+            }
+        })
+        .then(async resp => {
+            console.log(resp.data)
+            const data = resp.data
+            const season = {
+                ...data,
+                start: new Date(data.start),
+                end: data.end ? new Date(data.end) : null
+            }
+            dispatch(painelUpdateSeasonSuccess(season));
             // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
         })
         .catch(err => {
