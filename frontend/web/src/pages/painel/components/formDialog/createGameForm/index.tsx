@@ -1,21 +1,26 @@
 import React, {Fragment, useState, useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import { KeyboardDatePicker, MuiPickersUtilsProvider,} from '@material-ui/pickers';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
+
+
+import {
+    RootState
+} from '../../../../../index';
 
 import {
     GameNameField
 } from './styles';
 
 import {
-    painelCloseDialogueForm
+    painelCloseDialogueForm,
+    painelCreateGame
 } from '../../../../../store/actions/painel';
 
 import {
@@ -25,6 +30,9 @@ import {
 const CreateGameForm = () => {
 
     const dispatch = useDispatch();
+    const userToken = useSelector( (state: RootState) => state.auth.token );
+    const userId = useSelector( (state: RootState) => state.auth.userId );
+    const selectedSeasonId = useSelector((state: RootState) => state.painel.selectedSeasonId);
 
     const [gameName, setGameName] = useState("");
     const [isGameNameValid, setGameNameValidationState] = useState(true);
@@ -54,7 +62,10 @@ const CreateGameForm = () => {
     };
 
     const onCreateHandler = () => {
-        dispatch(painelCloseDialogueForm());
+        if((validateGameNameForm()) &&  !isNaN(selectedDate.getTime())){
+            dispatch(painelCloseDialogueForm());
+            dispatch(painelCreateGame(userToken, userId, selectedSeasonId, gameName, gameScore, selectedDate));
+        }
     };
 
     const onGameNameChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -71,6 +82,18 @@ const CreateGameForm = () => {
 
     const onDateChangeHandler = (date:any) => {
         setSelectedDate(date);
+    }
+
+    const validateGameNameForm = ():boolean => {
+        if(!gameName.trim().length){
+            setGameNameValidationState(false)
+            setGameNameErrorMsg(TextFieldErrorState.MISSING_DATA)
+            return false;
+        }else {
+            setGameNameValidationState(true)
+            setGameNameErrorMsg(TextFieldErrorState.OK)
+            return true;
+        }
     }
 
     return (

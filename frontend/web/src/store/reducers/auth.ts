@@ -64,7 +64,7 @@ const authResetState =(state: AuthStateSliceType, action:ActionType) => {
 
 const initialState: AuthStateSliceType = {
     isUserLogged: true,
-    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNhcmxhaCIsInN1YiI6IjgyMzllZWM4LTM2ZjQtNDU0Yy05ZDlmLTE1NDZmZDQxMTE5ZSIsImlhdCI6MTYwMTc4MzYxMiwiZXhwIjoxNjAxNzg3MjEyfQ.2tgdDQLmuRQzwMfA8cuNK6Fee08I1vBfaMZNMnPuCwg",
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNhcmxhaCIsInN1YiI6IjgyMzllZWM4LTM2ZjQtNDU0Yy05ZDlmLTE1NDZmZDQxMTE5ZSIsImlhdCI6MTYwMTc5MDEyMCwiZXhwIjoxNjAxNzkzNzIwfQ.obcyCs28SGSYcsEmoj_4i9AU-uSMsElwbVBOtr6pSsM",
     userName:'Carla Steffanie do Nascimento',
     userId: '8239eec8-36f4-454c-9d9f-1546fd41119e',
     error: '',

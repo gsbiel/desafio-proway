@@ -1,7 +1,12 @@
 import {
-    PAINEL_CREATE_GAME,
-    PAINEL_DELETE_GAME,
-    PAINEL_UPDATE_GAME,
+
+    PAINEL_CREATE_GAME_START,
+    PAINEL_CREATE_GAME_SUCCESS,
+    PAINEL_CREATE_GAME_FAILED,
+
+    PAINEL_UPDATE_GAME_START,
+    PAINEL_UPDATE_GAME_SUCCESS,
+    PAINEL_UPDATE_GAME_FAILED,
 
     PAINEL_SELECT_SEASON,
     PAINEL_UNSELECT_SEASON,
@@ -99,26 +104,59 @@ export const painelUpdateSeasonFailed = () => {
     }
 }
 
-export const painelCreateGame = () => {
+export const painelCreateGameStart = () => {
     console.log("Criar game!")
     return {
-        type: PAINEL_CREATE_GAME
+        type: PAINEL_CREATE_GAME_START
     }
 }
 
-export const painelDeleteGame =  () => {
-    console.log("Deletar game!")
+export const painelCreateGameSuccess = (newGame: GameType) => {
+    console.log("Criar game!")
     return {
-        type: PAINEL_DELETE_GAME
+        type: PAINEL_CREATE_GAME_SUCCESS,
+        payload:{
+            newGame: newGame
+        }
     }
 }
 
-export const painelUpdateGame = () => {
+export const painelCreateGameFailed = () => {
+    console.log("Criar game!")
+    return {
+        type: PAINEL_CREATE_GAME_FAILED
+    }
+}
+
+export const painelUpdateGameStart = () => {
     console.log("atualizar game!")
     return {
-        type: PAINEL_UPDATE_GAME
+        type: PAINEL_UPDATE_GAME_START
     }
 }
+
+export const painelUpdateGameSuccess = () => {
+    console.log("atualizar game!")
+    return {
+        type: PAINEL_UPDATE_GAME_SUCCESS
+    }
+}
+
+export const painelUpdateGameFailed = () => {
+    console.log("atualizar game!")
+    return {
+        type: PAINEL_UPDATE_GAME_FAILED
+    }
+}
+
+// export const painelDeleteGame =  () => {
+//     console.log("Deletar game!")
+//     return {
+//         type: PAINEL_DELETE_GAME
+//     }
+// }
+
+
 
 export const painelRefreshTableData =  (mode: DialogueFormModeType) => {
 
@@ -356,6 +394,43 @@ export const painelUpdateSeason = (userToken: string, userId: string, seasonId: 
                 end: data.end ? new Date(data.end) : null
             }
             dispatch(painelUpdateSeasonSuccess(season));
+            // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
+        })
+        .catch(err => {
+            console.log("Erro!")
+            // console.log(err.response.data)
+        });
+
+    }
+}
+
+export const painelCreateGame = (userToken: string, userId: string, seasonId: string, gameName: string, gameScore: number, gameDate: Date) => {
+
+    return async (dispatch: any) => {
+
+        dispatch(painelCreateGameStart());
+
+        axios({
+            method: 'post',
+            url: GAME_URL,
+            data: {
+                name: gameName,
+                score: gameScore,
+                seasonId: seasonId,
+                userId: userId,
+                gameDate: gameDate
+            },
+            headers: {
+                'Authorization': `Bearer ${userToken}`
+            }
+        })
+        .then(async resp => {
+            const data = resp.data
+            const game = {
+                ...data,
+                date: new Date(data.date),
+            }
+            dispatch(painelCreateGameSuccess(game));
             // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
         })
         .catch(err => {

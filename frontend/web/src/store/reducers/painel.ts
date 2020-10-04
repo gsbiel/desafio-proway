@@ -1,8 +1,12 @@
 import {
 
-    PAINEL_CREATE_GAME,
-    PAINEL_DELETE_GAME,
-    PAINEL_UPDATE_GAME,
+    PAINEL_CREATE_GAME_START,
+    PAINEL_CREATE_GAME_SUCCESS,
+    PAINEL_CREATE_GAME_FAILED,
+
+    PAINEL_UPDATE_GAME_START,
+    PAINEL_UPDATE_GAME_SUCCESS,
+    PAINEL_UPDATE_GAME_FAILED,
 
     PAINEL_SELECT_SEASON,
     PAINEL_UNSELECT_SEASON,
@@ -106,17 +110,66 @@ const painelUnselectSeason = (state: PainelStateSliceType, action: PainelActionT
     };
 };
 
-const painelCreateGame = (state: PainelStateSliceType, action: PainelActionType) => {
-    return state;
+const painelCreateGameStart = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isLoading: true,
+    };
 };
+
+const painelCreateGameSuccess = (state: PainelStateSliceType, action: PainelActionType) => {
+    if(action.payload?.newGame){
+        const currentGames = state.games;
+        const newGames = [...currentGames, action.payload?.newGame]
+        return {
+            ...state,
+            games: newGames,
+            isLoading: false
+        };
+    }else{
+        return {
+            ...state,
+            isLoading: false
+        };
+    }
+};
+
+const painelCreateGameFailed = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isLoading: false,
+        isOnError: true,
+        errorMsg: action.payload?.errorMsg ? action.payload?.errorMsg  : ""
+    };
+};
+
+const painelUpdateGameStart =  (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isLoading: true,
+    };
+};
+
+const painelUpdateGameSuccess =  (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state
+    };
+};
+
+const painelUpdateGameFailed =  (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isLoading: false,
+        isOnError: true,
+        errorMsg: action.payload?.errorMsg ? action.payload?.errorMsg  : ""
+    };
+};
+
 
 const painelDeleteGame =  (state: PainelStateSliceType, action: PainelActionType) => {
     return state;
 };
 
-const painelUpdateGame =  (state: PainelStateSliceType, action: PainelActionType) => {
-    return state;
-};
 
 const painelCreateSeasonStarted =  (state: PainelStateSliceType, action: PainelActionType) => {
     return {
@@ -297,42 +350,56 @@ const reducer = (
             return painelSelectSeason(state, action);
         case PAINEL_UNSELECT_SEASON:
             return painelUnselectSeason(state, action);
-        case PAINEL_CREATE_GAME:
-            return painelCreateGame(state, action);
-        case PAINEL_DELETE_GAME:
-            return painelDeleteGame(state, action);
-        case PAINEL_UPDATE_GAME:
-            return painelUpdateGame(state, action);
+
+        case PAINEL_CREATE_GAME_START:
+            return painelCreateGameStart(state, action);
+        case PAINEL_CREATE_GAME_SUCCESS:
+            return painelCreateGameSuccess(state, action);
+        case PAINEL_CREATE_GAME_FAILED:
+            return painelCreateSeasonFailed(state, action);
+
+        case PAINEL_UPDATE_GAME_START:
+            return painelUpdateGameStart(state, action);
+        case PAINEL_UPDATE_GAME_SUCCESS:
+            return painelUpdateGameSuccess(state, action);
+        case PAINEL_UPDATE_GAME_FAILED:
+            return painelUpdateSeasonFailed(state, action);
+
         case PAINEL_CREATE_SEASON_STARTED:
             return  painelCreateSeasonStarted(state, action);
         case PAINEL_CREATE_SEASON_SUCCESS:
             return painelCreateSeasonSuccess(state, action);
         case PAINEL_CREATE_SEASON_FAILED:
             return painelCreateSeasonFailed(state, action);
+
         case PAINEL_UPDATE_SEASON_STARTED:
             return painelUpdateSeasonStarted(state, action);
         case PAINEL_UPDATE_SEASON_SUCCESS:
             return painelUpdateSeasonSuccess(state, action);
         case PAINEL_UPDATE_SEASON_FAILED:
             return painelUpdateSeasonFailed(state, action);
+
         case PAINEL_REFRESH_TABLE_DATA:
             return painelRefreshTableData(state, action);
         case PAINEL_OPEN_DIALOGUE_FORM:
             return painelOpenDialogueForm(state, action);
         case PAINEL_CLOSE_DIALOGUE_FORM:
             return painelCloseDialogueForm(state,action);
+
         case PAINEL_FETCH_SEASONS_START:
             return painelFetchSeasonsStart(state, action);
         case PAINEL_FETCH_SEASONS_SUCCESS:
             return painelFetchSeasonsSuccess(state, action);
         case PAINEL_FETCH_SEASONS_FAIL:
             return painelFetchSeasonsFail(state, action);
+
         case PAINEL_FETCH_GAMES_START:
             return painelFetchGamesStart(state, action);
         case PAINEL_FETCH_GAMES_SUCCESS:
             return painelFetchGamesSuccess(state, action);
         case PAINEL_FETCH_GAMES_FAIL:
             return painelFetchGamesFail(state, action);
+
         case PAINEL_CLEAN_GAMES:
             return painelCleanGames(state, action);
         case PAINEL_LOGOUT:

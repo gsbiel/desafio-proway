@@ -50,7 +50,6 @@ const CreateSeasonForm = () => {
 
     const onSeasonNameChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setSeasonName(event.target.value);
-        console.log("entrei aqui");
     }
 
     const subscribeHandler = () => {
