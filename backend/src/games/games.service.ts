@@ -41,11 +41,13 @@ export class GamesService {
             }, HttpStatus.NOT_FOUND)
         }
 
+        const resultGame = {...game}
+
         game.season = season
 
         await this.gameRepository.save(game)
 
-        return game
+        return resultGame
     }
 
     async findAllGames(listGamesDto: ListGamesDto): Promise<Game[]> {
