@@ -1,5 +1,8 @@
 import {
 
+    PAINEL_SELECT_GAME,
+    PAINEL_UNSELECT_GAME,
+
     PAINEL_CREATE_GAME_START,
     PAINEL_CREATE_GAME_SUCCESS,
     PAINEL_CREATE_GAME_FAILED,
@@ -55,6 +58,21 @@ export const painelSelectSeason = (seasonId: string) => {
 export const painelUnselectSeason = () => {
     return {
         type: PAINEL_UNSELECT_SEASON
+    };
+};
+
+export const painelSelectGame = (gameId: string) => {
+    return {
+        type: PAINEL_SELECT_GAME,
+        payload:{
+            selectedGameId: gameId
+        }
+    };
+};
+
+export const painelUnSelectGame = (gameId: string) => {
+    return {
+        type: PAINEL_UNSELECT_GAME,
     };
 };
 

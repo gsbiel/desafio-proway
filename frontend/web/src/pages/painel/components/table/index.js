@@ -26,7 +26,8 @@ import {
   painelFetchSeasons, 
   painelFetchGames,
   painelSelectSeason,
-  painelUnselectSeason
+  painelUnselectSeason,
+  painelSelectGame
 } from '../../../../store/actions/painel';
 
 import { DialogueFormModeType } from '../../../../store/reducers/painel';
@@ -186,7 +187,14 @@ function EnhancedTable() {
   };
 
   const handleCheckboxClick = (event, name, id) => {
-    dispatch(painelSelectSeason(id));
+
+    if(formDialogueMode == DialogueFormModeType.SEASON){
+      dispatch(painelSelectSeason(id));
+    }
+    if(formDialogueMode == DialogueFormModeType.GAME){
+      dispatch(painelSelectGame(id));
+    }
+    
     checkBoxClicked = true
     let selectedIndex = selected.indexOf(id);
     let newSelected = [];

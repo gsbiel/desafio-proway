@@ -1,5 +1,8 @@
 import {
 
+    PAINEL_SELECT_GAME,
+    PAINEL_UNSELECT_GAME,
+
     PAINEL_CREATE_GAME_START,
     PAINEL_CREATE_GAME_SUCCESS,
     PAINEL_CREATE_GAME_FAILED,
@@ -70,6 +73,7 @@ export interface PainelStateSliceType {
     currentTableSection: DialogueFormModeType,
     seasons: SeasonType[],
     selectedSeasonId: string,
+    selectedGameId: string,
     games: GameType[],
     isLoading: boolean,
     isOnError: boolean,
@@ -90,6 +94,7 @@ export interface PainelPayloadType {
     seasons?: SeasonType[],
     games?: GameType[],
     selectedSeasonId?: string,
+    selectedGameId?: string,
     errorMsg?: string,
     newSeason?: SeasonType,
     newGame?: GameType
@@ -107,6 +112,20 @@ const painelUnselectSeason = (state: PainelStateSliceType, action: PainelActionT
     return {
         ...state,
         selectedSeasonId: ""
+    };
+};
+
+const painelSelectGame = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        selectedGameId: action.payload?.selectedGameId ? action.payload?.selectedGameId : ""
+    };
+};
+
+const painelUnSelectGame = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        selectedGameId: ""
     };
 };
 
@@ -331,6 +350,7 @@ const initialState: PainelStateSliceType = {
     currentTableSection: DialogueFormModeType.SEASON,
     seasons: [],
     selectedSeasonId: "",
+    selectedGameId: "",
     games: [],
     isLoading: false,
     isOnError: false,
@@ -350,6 +370,11 @@ const reducer = (
             return painelSelectSeason(state, action);
         case PAINEL_UNSELECT_SEASON:
             return painelUnselectSeason(state, action);
+
+        case PAINEL_SELECT_GAME:
+            return painelSelectGame(state, action);
+        case PAINEL_UNSELECT_GAME:
+            return painelUnSelectGame(state, action);
 
         case PAINEL_CREATE_GAME_START:
             return painelCreateGameStart(state, action);
