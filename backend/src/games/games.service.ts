@@ -5,6 +5,12 @@ import { User } from "src/entities/user.entity";
 import { Repository } from "typeorm";
 import { Season } from "src/entities/season.entity";
 import { Game } from "src/entities/game.entity";
+import {
+    findSeasonForUser,
+    findGameForSeason,
+    findGamesForSeason,
+    findUserJoinedWithSeasons
+} from '../utility';
 
 @Injectable()
 export class GamesService {
@@ -27,7 +33,7 @@ export class GamesService {
         game.score = createGameDto.score ? createGameDto.score : 0
         game.date = new Date()
 
-        const season = await this.findSeasonForUser(createGameDto.userId, createGameDto.seasonId, this.userRepository)
+        const season = await findSeasonForUser(createGameDto.userId, createGameDto.seasonId, this.userRepository)
 
         if(!season){
             throw new HttpException({
@@ -44,7 +50,7 @@ export class GamesService {
 
     async findAllGames(listGamesDto: ListGamesDto): Promise<Game[]> {
 
-        const season = await this.findSeasonForUser(listGamesDto.userId, listGamesDto.seasonId, this.userRepository)
+        const season = await findSeasonForUser(listGamesDto.userId, listGamesDto.seasonId, this.userRepository)
 
         if(!season){
             throw new HttpException({
@@ -52,7 +58,7 @@ export class GamesService {
             }, HttpStatus.NOT_FOUND)
         }
 
-        const games = await this.findGamesForSeason(season.id,this.seasonRepository)
+        const games = await findGamesForSeason(season.id,this.seasonRepository)
 
         if(!games){
             throw new HttpException({
@@ -65,7 +71,7 @@ export class GamesService {
 
     async findGameById(findGameDto: FindGameDto): Promise<Game> { 
 
-        const season = await this.findSeasonForUser(findGameDto.userId, findGameDto.seasonId, this.userRepository)
+        const season = await findSeasonForUser(findGameDto.userId, findGameDto.seasonId, this.userRepository)
 
         if(!season){
             throw new HttpException({
@@ -73,7 +79,7 @@ export class GamesService {
             }, HttpStatus.NOT_FOUND)
         }
 
-        const game = await this.findGameForSeason(season.id, findGameDto.gameId, this.seasonRepository)
+        const game = await findGameForSeason(season.id, findGameDto.gameId, this.seasonRepository)
 
         if(!game){
             throw new HttpException({
@@ -93,7 +99,7 @@ export class GamesService {
             }, HttpStatus.BAD_REQUEST)
         }
 
-        const season = await this.findSeasonForUser(updateGameDto.userId, updateGameDto.seasonId, this.userRepository)
+        const season = await findSeasonForUser(updateGameDto.userId, updateGameDto.seasonId, this.userRepository)
 
         if(!season){
             throw new HttpException({
@@ -101,7 +107,7 @@ export class GamesService {
             }, HttpStatus.NOT_FOUND)
         }
 
-        const game = await this.findGameForSeason(season.id, updateGameDto.gameId, this.seasonRepository)
+        const game = await findGameForSeason(season.id, updateGameDto.gameId, this.seasonRepository)
 
         if(!game){
             throw new HttpException({
@@ -123,7 +129,7 @@ export class GamesService {
 
     async deleteAllGames(deleteGamesDto: DeleteGameDto){
 
-        const season = await this.findSeasonForUser(deleteGamesDto.userId, deleteGamesDto.seasonId, this.userRepository)
+        const season = await findSeasonForUser(deleteGamesDto.userId, deleteGamesDto.seasonId, this.userRepository)
 
         if(!season){
             throw new HttpException({
@@ -131,7 +137,7 @@ export class GamesService {
             }, HttpStatus.NOT_FOUND)
         }
 
-        const games = await this.findGamesForSeason(season.id, this.seasonRepository)
+        const games = await findGamesForSeason(season.id, this.seasonRepository)
 
         if(!games){
             throw new HttpException({
@@ -147,7 +153,7 @@ export class GamesService {
 
     async deleteGameById(deleteGameByIdDto: DeleteGameDto){
 
-        const season = await this.findSeasonForUser(deleteGameByIdDto.userId, deleteGameByIdDto.seasonId, this.userRepository)
+        const season = await findSeasonForUser(deleteGameByIdDto.userId, deleteGameByIdDto.seasonId, this.userRepository)
 
         if(!season){
             throw new HttpException({
@@ -155,7 +161,7 @@ export class GamesService {
             }, HttpStatus.NOT_FOUND)
         }
 
-        const game = await this.findGameForSeason(season.id, deleteGameByIdDto.gameId, this.seasonRepository)
+        const game = await findGameForSeason(season.id, deleteGameByIdDto.gameId, this.seasonRepository)
 
         if(!game){
             throw new HttpException({
@@ -164,55 +170,6 @@ export class GamesService {
         }
 
         return await this.gameRepository.remove(game)
-    }
-
-
-/* 
------------------------------------------------------------------------------------------------------------------
-    HELPER FUNCTIONS
------------------------------------------------------------------------------------------------------------------
-*/
-    async findSeasonForUser(userId: string, seasonId: string, userRepository: Repository<User>): Promise<Season>{
-
-        const user = await this.findUserJoinedWithSeasons(userId, userRepository)
-
-        const season = user ? user.seasons.filter(seasonItem => {
-            return seasonItem.id == seasonId
-        }) : []
-
-        return season[0]
-    }
-
-    async findUserJoinedWithSeasons(userId: string, repository: Repository<User>): Promise<User> {
-
-        const user = await repository.findOne({
-            where: {id: userId},
-            relations:["seasons"]
-        })
-
-        return user
-    }
-
-    async findGameForSeason(seasonId: string, gameId: string, repository: Repository<Season>): Promise<Game> {
-
-        const games = await this.findGamesForSeason(seasonId,repository)
-
-        const game = games.filter(gameItem => {
-            return gameItem.id == gameId
-        })
-
-        return game.length ? game[0] : null
-
-    }
-
-    async findGamesForSeason(seasonId: string, repository: Repository<Season>): Promise<Game[]>{
-
-        const seasonEntity = await repository.find({
-            where:{id: seasonId},
-            relations:["games"]
-        })
-
-        return seasonEntity.length ? seasonEntity[0].games : []
     }
 
 }
