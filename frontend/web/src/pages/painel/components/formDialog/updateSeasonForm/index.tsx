@@ -116,7 +116,17 @@ const UpdateSeasonForm = () => {
     }
 
     const updateSeasonHandler = () => {
-        if(nameCheckBoxState || endDateCheckBoxState){
+        if(nameCheckBoxState && !endDateCheckBoxState){
+            if((validateSeasonNameForm())){
+                dispatch(painelCloseDialogueForm());
+                dispatch(painelUpdateSeason(userToken, userId, selectedSeasonId, seasonName, undefined));
+            }
+        }else if(!nameCheckBoxState && endDateCheckBoxState){
+            if(!isNaN(selectedEndDate.getTime())){
+                dispatch(painelCloseDialogueForm());
+                dispatch(painelUpdateSeason(userToken, userId, selectedSeasonId, undefined, selectedEndDate));
+            }
+        }else if(nameCheckBoxState && endDateCheckBoxState){
             if((validateSeasonNameForm()) &&  !isNaN(selectedEndDate.getTime())){
                 dispatch(painelCloseDialogueForm());
                 dispatch(painelUpdateSeason(userToken, userId, selectedSeasonId, seasonName, selectedEndDate));
