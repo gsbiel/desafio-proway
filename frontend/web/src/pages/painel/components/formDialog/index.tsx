@@ -9,6 +9,7 @@ import CreateSeasonForm from './createSeasonForm';
 import CreateGameForm from './createGameForm';
 import UpdateSeasonForm from './updateSeasonForm';
 import UpdateGameForm from './updateGameForm';
+import DeleteSeasonForm from './deleteSeasonsForm';
 import { DialogueFormModeType, DialogueFormActionType } from '../../../../store/reducers/painel';
 
 const FormDialog = () => {
@@ -26,8 +27,10 @@ const FormDialog = () => {
   if(dialogueFormMode == DialogueFormModeType.SEASON){
     if(dialogueActionMode == DialogueFormActionType.ADD){
       dialogueForm = <CreateSeasonForm />
-    }else{
+    }else if(dialogueActionMode == DialogueFormActionType.EDIT){
       dialogueForm = <UpdateSeasonForm />
+    }else{
+      dialogueForm = <DeleteSeasonForm />
     }
   }else{
     if(dialogueActionMode == DialogueFormActionType.ADD){

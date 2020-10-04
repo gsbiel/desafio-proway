@@ -3,6 +3,12 @@ import {
     PAINEL_SELECT_GAME,
     PAINEL_UNSELECT_GAME,
 
+    PAINEL_ADD_GAME_TO_TRASH_LIST,
+    PAINEL_REMOVE_GAME_FROM_TRASH_LIST,
+
+    PAINEL_ADD_SEASON_TO_TRASH_LIST,
+    PAINEL_REMOVE_SEASON_FROM_TRASH_LIST,
+
     PAINEL_CREATE_GAME_START,
     PAINEL_CREATE_GAME_SUCCESS,
     PAINEL_CREATE_GAME_FAILED,
@@ -10,6 +16,10 @@ import {
     PAINEL_UPDATE_GAME_START,
     PAINEL_UPDATE_GAME_SUCCESS,
     PAINEL_UPDATE_GAME_FAILED,
+
+    PAINEL_DELETE_GAME_START,
+    PAINEL_DELETE_GAME_SUCCESS,
+    PAINEL_DELETE_GAME_FAILED,
 
     PAINEL_SELECT_SEASON,
     PAINEL_UNSELECT_SEASON,
@@ -21,6 +31,10 @@ import {
     PAINEL_UPDATE_SEASON_STARTED,
     PAINEL_UPDATE_SEASON_SUCCESS,
     PAINEL_UPDATE_SEASON_FAILED,
+
+    PAINEL_DELETE_SEASON_STARTED,
+    PAINEL_DELETE_SEASON_SUCCESS,
+    PAINEL_DELETE_SEASON_FAILED,
 
     PAINEL_REFRESH_TABLE_DATA,
     PAINEL_OPEN_DIALOGUE_FORM,
@@ -74,6 +88,8 @@ export interface PainelStateSliceType {
     seasons: SeasonType[],
     selectedSeasonId: string,
     selectedGameId: string,
+    seasonsIdTrashList: string[],
+    gamesIdTrashList: string[],
     games: GameType[],
     isLoading: boolean,
     isOnError: boolean,
@@ -97,7 +113,11 @@ export interface PainelPayloadType {
     selectedGameId?: string,
     errorMsg?: string,
     newSeason?: SeasonType,
-    newGame?: GameType
+    newGame?: GameType,
+    gamesIdTrash?: string[],
+    seasonsIdTrash?: string[],
+    seasonsDeleted?: SeasonType[],
+    gamesDeleted?: GameType[]
 };
 
 
@@ -128,6 +148,32 @@ const painelUnSelectGame = (state: PainelStateSliceType, action: PainelActionTyp
         selectedGameId: ""
     };
 };
+
+const painelAddGameToTrashList = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        gamesIdTrashList: action.payload?.gamesIdTrash ? action.payload?.gamesIdTrash : [""]
+    };
+};
+
+const painelRemoveGameFromTrashList = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+    }
+}
+
+const painelAddSeasonToTrashList = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        seasonsIdTrashList: action.payload?.seasonsIdTrash ? action.payload?.seasonsIdTrash : [""]
+    }
+}
+
+const painelRemoveSeasonFromTrashList = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+    }
+}
 
 const painelCreateGameStart = (state: PainelStateSliceType, action: PainelActionType) => {
     return {
@@ -200,11 +246,42 @@ const painelUpdateGameFailed =  (state: PainelStateSliceType, action: PainelActi
     };
 };
 
+const painelDeleteGameStart = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isLoading: true,
+    };
+}
 
-const painelDeleteGame =  (state: PainelStateSliceType, action: PainelActionType) => {
-    return state;
-};
+const painelDeleteGameSuccess = (state: PainelStateSliceType, action: PainelActionType) => {
+    if(action.payload?.gamesDeleted?.length){
+        let filteredGames: GameType[] = [];
+        action.payload?.gamesDeleted.map( deletedGameItem => {
+            filteredGames = state.games.filter(stateGameItem => {
+                return deletedGameItem.id !== stateGameItem.id
+            });
+        });
+        return {
+            ...state,
+            isLoading: false,
+            games: filteredGames
+        };
+    }else{
+        return{
+            ...state,
+            isLoading: false
+        }
+    }
+}
 
+const painelDeleteGameFailed = (state: PainelStateSliceType, action: PainelActionType) => {
+    return {
+        ...state,
+        isLoading: false,
+        isOnError: true,
+        errorMsg: action.payload?.errorMsg ? action.payload?.errorMsg  : ""
+    };
+}
 
 const painelCreateSeasonStarted =  (state: PainelStateSliceType, action: PainelActionType) => {
     return {
@@ -272,6 +349,43 @@ const painelUpdateSeasonFailed =  (state: PainelStateSliceType, action: PainelAc
         isOnError: true,
         errorMsg: action.payload?.errorMsg ? action.payload?.errorMsg  : ""
     };
+}
+
+const painelDeleteSeasonStart = (state: PainelStateSliceType, action: PainelActionType) => {
+    return{
+        ...state,
+        isLoading: true
+    }
+}
+
+const painelDeleteSeasonSuccess =  (state: PainelStateSliceType, action: PainelActionType) => {
+    if(action.payload?.seasonsDeleted?.length){
+        let filteredSeasons: SeasonType[] = [];
+        action.payload?.seasonsDeleted.map( deletedSeasonItem => {
+            filteredSeasons = state.seasons.filter(stateSeasonItem => {
+                return deletedSeasonItem.id !== stateSeasonItem.id
+            });
+        });
+        return {
+            ...state,
+            isLoading: false,
+            seasons: filteredSeasons
+        };
+    }else{
+        return{
+            ...state,
+            isLoading: false
+        }
+    }
+}
+
+const painelDeleteSeasonFailed =  (state: PainelStateSliceType, action: PainelActionType) => {
+    return{
+        ...state,
+        isLoading: false,
+        isOnError: true,
+        errorMsg: action.payload?.errorMsg ? action.payload?.errorMsg : ""
+    }
 }
 
 const painelRefreshTableData =  (state: PainelStateSliceType, action: PainelActionType) => {
@@ -367,6 +481,8 @@ const initialState: PainelStateSliceType = {
     seasons: [],
     selectedSeasonId: "",
     selectedGameId: "",
+    seasonsIdTrashList: [""],
+    gamesIdTrashList: [""],
     games: [],
     isLoading: false,
     isOnError: false,
@@ -392,6 +508,16 @@ const reducer = (
         case PAINEL_UNSELECT_GAME:
             return painelUnSelectGame(state, action);
 
+        case PAINEL_ADD_SEASON_TO_TRASH_LIST:
+            return painelAddSeasonToTrashList(state, action);
+        case PAINEL_REMOVE_SEASON_FROM_TRASH_LIST:
+            return painelRemoveSeasonFromTrashList(state, action);
+
+        case PAINEL_ADD_GAME_TO_TRASH_LIST:
+            return painelAddGameToTrashList(state, action);
+        case PAINEL_REMOVE_GAME_FROM_TRASH_LIST:
+            return painelRemoveGameFromTrashList(state, action);
+
         case PAINEL_CREATE_GAME_START:
             return painelCreateGameStart(state, action);
         case PAINEL_CREATE_GAME_SUCCESS:
@@ -406,6 +532,13 @@ const reducer = (
         case PAINEL_UPDATE_GAME_FAILED:
             return painelUpdateSeasonFailed(state, action);
 
+        case PAINEL_DELETE_GAME_START:
+            return painelDeleteGameStart(state, action);
+        case PAINEL_DELETE_GAME_SUCCESS:
+            return painelDeleteGameSuccess(state, action);
+        case PAINEL_DELETE_GAME_FAILED:
+            return painelDeleteGameFailed(state, action);
+
         case PAINEL_CREATE_SEASON_STARTED:
             return  painelCreateSeasonStarted(state, action);
         case PAINEL_CREATE_SEASON_SUCCESS:
@@ -419,6 +552,13 @@ const reducer = (
             return painelUpdateSeasonSuccess(state, action);
         case PAINEL_UPDATE_SEASON_FAILED:
             return painelUpdateSeasonFailed(state, action);
+
+        case PAINEL_DELETE_SEASON_STARTED:
+            return painelDeleteSeasonStart(state, action);
+        case PAINEL_DELETE_SEASON_SUCCESS:
+            return painelDeleteSeasonSuccess(state, action);
+        case PAINEL_DELETE_SEASON_FAILED:
+            return painelDeleteSeasonFailed(state, action);
 
         case PAINEL_REFRESH_TABLE_DATA:
             return painelRefreshTableData(state, action);

@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
 import {useSelector} from 'react-redux';
-
 import {RootState} from '../../index';
 import DialogForm from './components/formDialog';
 import PainelHeader from './components/painelHeader'
-
 import {
     PainelContainer,
     StaticBar,

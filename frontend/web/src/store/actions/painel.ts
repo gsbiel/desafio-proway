@@ -3,6 +3,12 @@ import {
     PAINEL_SELECT_GAME,
     PAINEL_UNSELECT_GAME,
 
+    PAINEL_ADD_GAME_TO_TRASH_LIST,
+    PAINEL_REMOVE_GAME_FROM_TRASH_LIST,
+
+    PAINEL_ADD_SEASON_TO_TRASH_LIST,
+    PAINEL_REMOVE_SEASON_FROM_TRASH_LIST,
+
     PAINEL_CREATE_GAME_START,
     PAINEL_CREATE_GAME_SUCCESS,
     PAINEL_CREATE_GAME_FAILED,
@@ -10,6 +16,10 @@ import {
     PAINEL_UPDATE_GAME_START,
     PAINEL_UPDATE_GAME_SUCCESS,
     PAINEL_UPDATE_GAME_FAILED,
+
+    PAINEL_DELETE_GAME_START,
+    PAINEL_DELETE_GAME_SUCCESS,
+    PAINEL_DELETE_GAME_FAILED,
 
     PAINEL_SELECT_SEASON,
     PAINEL_UNSELECT_SEASON,
@@ -21,6 +31,10 @@ import {
     PAINEL_UPDATE_SEASON_STARTED,
     PAINEL_UPDATE_SEASON_SUCCESS,
     PAINEL_UPDATE_SEASON_FAILED,
+
+    PAINEL_DELETE_SEASON_STARTED,
+    PAINEL_DELETE_SEASON_SUCCESS,
+    PAINEL_DELETE_SEASON_FAILED,
     
     PAINEL_REFRESH_TABLE_DATA,
     PAINEL_OPEN_DIALOGUE_FORM,
@@ -76,6 +90,36 @@ export const painelUnSelectGame = (gameId: string) => {
     };
 };
 
+export const painelAddGameToTrashList = (gamesId: string[]) => {
+    return {
+        type: PAINEL_ADD_GAME_TO_TRASH_LIST,
+        payload: {
+            gamesIdTrash: gamesId
+        }
+    }
+}
+
+export const painelRemoveGameFromTrashList = (gameId: string) => {
+    return {
+        type: PAINEL_REMOVE_GAME_FROM_TRASH_LIST
+    }
+}
+
+export const painelAddSeasonToTrashList = (seasonsId: string[]) => {
+    return {
+        type: PAINEL_ADD_SEASON_TO_TRASH_LIST,
+        payload:{
+            seasonsIdTrash: seasonsId
+        }
+    }
+}
+
+export const painelRemoveSeasonFromTrashList = (seasonId:string) => {
+    return {
+        type: PAINEL_REMOVE_SEASON_FROM_TRASH_LIST
+    }
+}
+
 
 export const painelCreateSeasonStart = () => {
     return {
@@ -122,6 +166,30 @@ export const painelUpdateSeasonFailed = () => {
     }
 }
 
+export const painelDeleteSeasonStart = () => {
+    return{
+        type: PAINEL_DELETE_SEASON_STARTED
+    }
+}
+
+export const painelDeleteSeasonSuccess = (seasonsDeleted: SeasonType[]) => {
+    return{
+        type: PAINEL_DELETE_SEASON_SUCCESS,
+        payload:{
+            seasonsDeleted: seasonsDeleted
+        }
+    }
+}
+
+export const painelDeleteSeasonFailed = (errorMsg: string) => {
+    return{
+        type: PAINEL_DELETE_SEASON_FAILED,
+        payload:{
+            errorMsg: errorMsg
+        }
+    }
+}
+
 export const painelCreateGameStart = () => {
     return {
         type: PAINEL_CREATE_GAME_START
@@ -164,14 +232,29 @@ export const painelUpdateGameFailed = () => {
     }
 }
 
-// export const painelDeleteGame =  () => {
-//     console.log("Deletar game!")
-//     return {
-//         type: PAINEL_DELETE_GAME
-//     }
-// }
+export const painelDeleteGameStart =  () => {
+    return {
+        type: PAINEL_DELETE_GAME_START
+    }
+}
 
+export const painelDeleteGameSuccess =  (gamesDeleted: GameType[]) => {
+    return {
+        type: PAINEL_DELETE_GAME_SUCCESS,
+        payload:{
+            gamesDeleted: gamesDeleted
+        }
+    }
+}
 
+export const painelDeleteGameFailed=  (errorMsg: string) => {
+    return {
+        type: PAINEL_DELETE_GAME_FAILED,
+        payload:{
+            errorMsg: errorMsg
+        }
+    }
+}
 
 export const painelRefreshTableData =  (mode: DialogueFormModeType) => {
     return {
@@ -490,6 +573,74 @@ export const painelUpdateGame = (userToken: string, userId: string, seasonId: st
         });
     };
 };
+
+export const painelDeleteGames = (userToken: string, userId: string, seasonId: string, gamesToBeDeleted: string[]) => {
+    return async (dispatch: any) => {
+        dispatch(painelDeleteGameStart());
+        axios({
+            method: 'delete',
+            url: GAME_URL,
+            data: {
+                userId: userId,
+                seasonId: seasonId,
+                gamesToBeDeleted: gamesToBeDeleted,
+            },
+            headers: {
+                'Authorization': `Bearer ${userToken}`
+            }
+        })
+        .then(async resp => {
+            const data = resp.data
+            const gamesDeleted = data.map((gameDeletedData:any )=> {
+                return {
+                    ...gameDeletedData,
+                    date: new Date(gameDeletedData.date)
+                }
+            });
+            dispatch(painelDeleteGameSuccess(gamesDeleted));
+            // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
+        })
+        .catch(err => {
+            console.log("Erro!")
+            // console.log(err.response.data)
+        });
+    }
+}
+
+export const painelDeleteSeasons = (userToken: string, userId: string, seasonsToBeDeleted: string[]) => {
+
+    return async (dispatch: any) => {
+        dispatch(painelDeleteSeasonStart());
+
+        axios({
+            method: 'delete',
+            url: SEASON_URL,
+            data: {
+                userId: userId,
+                seasonsToBeDeleted: seasonsToBeDeleted,
+            },
+            headers: {
+                'Authorization': `Bearer ${userToken}`
+            }
+        })
+        .then(async resp => {
+            const data = resp.data
+            const seasonsDeleted = resp.data.map((seasonDeletedData:any )=> {
+                return {
+                    ...seasonDeletedData,
+                    start: new Date(seasonDeletedData.start),
+                    end: seasonDeletedData.end ? new Date(seasonDeletedData.end) : null
+                }
+            });
+            dispatch(painelDeleteSeasonSuccess(seasonsDeleted));
+            // dispatch(painelRefreshTableData(DialogueFormModeType.SEASON));  
+        })
+        .catch(err => {
+            console.log("Erro!")
+            // console.log(err.response.data)
+        });
+    }
+}
 
 export const painelCleanGames = () => {
     return {

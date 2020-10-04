@@ -27,7 +27,9 @@ import {
   painelFetchGames,
   painelSelectSeason,
   painelUnselectSeason,
-  painelSelectGame
+  painelSelectGame,
+  painelAddGameToTrashList,
+  painelAddSeasonToTrashList
 } from '../../../../store/actions/painel';
 
 import { DialogueFormModeType } from '../../../../store/reducers/painel';
@@ -96,6 +98,15 @@ function EnhancedTable() {
       }
     }
   },[])
+
+  useEffect(()=>{
+    if(formDialogueMode === DialogueFormModeType.GAME){
+      dispatch(painelAddGameToTrashList(selected));
+    }
+    else if(formDialogueMode === DialogueFormModeType.SEASON){
+      dispatch(painelAddSeasonToTrashList(selected));
+    }
+  }, [selected]);
 
   useEffect(() => {
     if(formDialogueMode == DialogueFormModeType.GAME && selectedSeasonId.length){
