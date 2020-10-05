@@ -13,7 +13,6 @@
 
 # misc
 /frontend/web/.DS_Store
-/frontend/web/.env
 /frontend/web/.env.local
 /frontend/web/.env.development.local
 /frontend/web/.env.test.local
@@ -61,5 +60,4 @@
 /backend/!.vscode/extensions.json
 
 # Sensitive Data
-/backend/.env
 /backend/constants.ts
