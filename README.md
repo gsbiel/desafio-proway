@@ -104,8 +104,8 @@ Você pode consumir a aplicação de três formas diferentes. Qualquer que seja 
 ### :camera: - Screenshots
 1 | 2 | 3 | 4
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-<img src="/screenshots/photo1.jpeg" width="200">  |  <img src="/screenshots/photo2.jpeg" width="200"> | <img src="/screenshots/photo3.jpeg" width="200"> | <img src="/screenshots/photo4.jpeg" width="200">
+<img src="/screenshots/photo8.jpeg" width="200">  |  <img src="/screenshots/photo7.jpeg" width="200"> | <img src="/screenshots/photo6.jpeg" width="200"> | <img src="/screenshots/photo5.jpeg" width="200">
 
 5 | 6 | 7 | 8
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-<img src="/screenshots/photo5.jpeg" width="200">  |  <img src="/screenshots/photo6.jpeg" width="200"> | <img src="/screenshots/photo7.jpeg" width="200"> | <img src="/screenshots/photo8.jpeg" width="200">
+<img src="/screenshots/photo4.jpeg" width="200">  |  <img src="/screenshots/photo3.jpeg" width="200"> | <img src="/screenshots/photo2.jpeg" width="200"> | <img src="/screenshots/photo1.jpeg" width="200">
