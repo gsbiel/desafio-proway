@@ -1,0 +1,18 @@
+version: '3.2'
+
+services:
+  my.proway.solution.backend:
+    container_name: my.proway.solution.backend
+    image: gsbiel/proway_backend:1.0
+    ports:
+      - '3002:3002'
+    environment:
+      JWT_SECRET: esseemeusegredo
+
+  my.proway.solution.frontend:
+    container_name: my.proway.solution.frontend
+    image: gsbiel/proway_frontend:latest
+    ports:
+      - '3003:80'
+    environment:
+      REACT_APP_DEV_BACKEND_BASE_URL: http://my.proway.solution.backend:3002
