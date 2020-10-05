@@ -1,4 +1,4 @@
-<h3 align="center">OliBot</h3>
+<h3 align="center">Desafio-Proway</h3>
 
 <div align="center">
 
@@ -9,7 +9,7 @@
 
 ---
 
-<p align="center">🧐 Desafio proposto pela Proway como parte do processo de seleção de Trainees da Pública Tecnologia.
+<p align="center">🧐 Desafio proposto pela Proway como parte do processo de seleção de Trainees da Pública Tecnologia para Gestão de Cidades.
     <br>
 </p>
 
@@ -19,7 +19,7 @@
 - [Inicializando a aplicação](#getting_started)
 - [Ferramentas](#built_using)
 - [Autores](#authors)
-- [Considerações finais](#acknowledgement)
+- [Fotos](#acknowledgement)
 ---
 
 ## 🏁 Sobre o desafio <a name = "getting_started"></a>
@@ -98,3 +98,10 @@ Você pode consumir a aplicação de três formas diferentes. Qualquer que seja 
 ## ✍️ Autor <a name = "authors"></a>
 
 - [@gsbiel](https://github.com/gsbiel)
+
+## Fotos 
+
+### :camera: - Screenshots
+1 | 2 | 3 | 4
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+<img src="/screenshots/photo1.jpeg" width="200">  |  <img src="/screenshots/photo2.jpeg" width="200"> | <img src="/screenshots/photo3.jpeg" width="200"> | <img src="/screenshots/photo4.jpeg" width="200">
